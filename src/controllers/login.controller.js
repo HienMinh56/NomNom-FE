@@ -7,12 +7,12 @@
 
 
 const login = (req, res) => {
-    const { access_token, refresh_token } = req.cookies;
-    if (access_token && refresh_token) {
-        return res.redirect('/');
+    const { username, password } = req.cookies;
+    if (username && password) {
+        return res.redirect('/dashboard');
     } else {
         res.render('./pages/login');
-    }    
+    }
 }
 
 

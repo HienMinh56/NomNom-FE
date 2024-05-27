@@ -1,36 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     
-    <!--
-        Meta tags
-    -->
-    <title>Login | Nom Nom</title>
-    <meta name="title" content="Login | Nom Nom">
-    <meta name="description" content="Best project ever">
-
-     <!--
-        Google font links
-    -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;900&display=swap" rel="stylesheet">
-
-    <!--
-        Custom Css
-    -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <%- include('../layouts/head', { title: 'Login | Nom Nom' })%>
     <link rel="stylesheet" href="/css/login.css">
-
-    <!--
-        Custom js restricted links 
-    -->
-    <script type="module" src="/js/login.js"></script>
     <script type="module" src="/js/auth.js"></script>
-
 </head>
 <body>
     <div class="container">
@@ -62,22 +37,14 @@
                         <i class="fab fa-linkedin-in"></i>
                     </a>
                 </div>
-                <p class="account-text">Forgot your password ?<a href="#" id="sign-up-btn2">Sign up</a></p>
+                <p class="account-text">Forgot your password ?<a href="#" id="sign-up-btn2"> Reset password</a></p>
             </form>
             <form action="" class="sign-up-form">
                 <h2 class="title">Forgot your password ?</h2>
-                <!-- <div class="input-field">
-                    <i class="fas fa-user"></i>
-                    <input type="text" placeholder="Username">
-                </div> -->
                 <div class="input-field">
                     <i class="fas fa-envelope"></i>
                     <input type="text" placeholder="Email">
                 </div>
-                <!-- <div class="input-field">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Password">
-                </div> -->
                 <input type="submit" value="send" class="btn">
                 <p class="social-text">Or Sign in with social platform</p>
                 <div class="social-media">
@@ -116,6 +83,6 @@
             </div>
         </div>
     </div>
-    <script src="app.js"></script>
+    <script type="module" src="/js/login.js"></script>
 </body>
 </html>

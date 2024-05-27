@@ -1,42 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!--
-        Meta tags
-    -->
-    <title>Page not found | Nom Nom</title>
-    <meta name="title" content="Login | Musify" />
-    <meta
-      name="description"
-      content="Musify is a way to listen to millions of song without having to download them."
-    />
-
-    <!--
-        Google font links
-    -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;900&display=swap"
-      rel="stylesheet"
-    />
-
-    <!--
-        Custom Css
-    -->
+    <%- include ('../layouts/head', { title: '404 | Nom Nom' }) %>
     <link rel="stylesheet" href="/css/404.css" />
   </head>
 
   <body>
     <article class="error-page">
       <img
-        src="/images/favicon.svg"
+        src="/images/logo.png"
         width="48"
         height="48"
-        alt="Musify logo"
+        alt="NomNom logo"
         class="logo"
       />
 
@@ -48,7 +23,7 @@
         </p>
       </div>
 
-      <a href="/" class="btn">
+      <a href="/dashboard" class="btn">
         <span class="label-large">Back to home</span>
 
         <div class="state-layer"></div>

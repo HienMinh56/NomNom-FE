@@ -1,0 +1,60 @@
+<% 
+    const navItems = [
+        {
+            href: '/dashboard',
+            icon: 'estate',
+            text: 'Dashboard'
+        },{
+            href: '/user',
+            icon: 'user',
+            text: 'User'
+        },{
+            href: '/product',
+            icon: 'box',
+            text: 'Product'
+        },{
+            href: '/transaction',
+            icon: 'transaction',
+            text: 'Transaction'
+        },{
+            href: '/order',
+            icon: 'bill',
+            text: 'order'
+        }
+    ]
+%>
+
+<nav>
+    <div class="logo-name">
+        <div class="logo-image">
+           <img src="/images/logo.png" alt="">
+        </div>
+        <span class="logo_name">Nom Nom</span>
+    </div>
+    <div class="menu-items">
+        <ul class="nav-links">
+            <% navItems.forEach(({ href, icon, text }) => { %>
+                <li><a href="<%=href%>" class="nav-items">
+                    <i class="uil uil-<%=icon%>"></i>
+                    <span class="link-name"><%=text%></span>
+                </a></li>
+            <% }) %>
+        </ul>
+        
+        <ul class="logout-mode">
+            <li><a href="#">
+                <i class="uil uil-signout"></i>
+                <span id="logout-button" class="link-name">Logout</span>
+            </a></li>
+            <li class="mode">
+                <a href="#">
+                    <i class="uil uil-moon"></i>
+                <span class="link-name">Theme</span>
+            </a>
+            <div class="mode-toggle">
+              <span class="switch"></span>
+            </div>
+        </li>
+        </ul>
+    </div>
+</nav>

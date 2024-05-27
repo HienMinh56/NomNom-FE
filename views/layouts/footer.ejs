@@ -1,0 +1,48 @@
+<div class="footer section">
+
+    <style>
+        
+        .footer {
+            color: var(--on-surface-variant);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-block-start: 1px solid var(--outline-variant);
+            padding-block-start: var(--space-4);
+            gap: var(--space-3);
+        }
+
+        .social-link:where(:hover, :focus-visible) { text-decoration: underline; }
+
+        .footer-text { opacity: 0.8; }
+
+    </style>
+
+    <div class="has-separator">
+
+        <a href="https://www.youtube.com/@hiezmusic" target="_blank" class="social-link">Youtube</a>
+
+        <span class="separator"></span>
+
+        <a href="https://twitter.com/oan_fancy" target="_blank" class="social-link">X</a>
+
+        <span class="separator"></span>
+
+        <a href="https://www.facebook.com/DoanLeHienMinh" target="_blank" class="social-link">Facebook</a>
+
+        <span class="separator"></span>
+
+        <a href="https://www.linkedin.com/in/hienminh56/" target="_blank" class="social-link">LinkedIn</a>
+
+    </div>
+
+    <p class="footer-text body-medium" id="footer">
+        <!-- &copy; <span id="year"></span> Musify. Developed by Fancy-->
+    </p>
+
+</div>
+
+<script>
+    document.getElementById('footer').innerHTML = '&copy ' + new Date().getFullYear() + ' Musify. Developed by Fancy';
+</script>

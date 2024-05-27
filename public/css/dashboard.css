@@ -18,6 +18,7 @@
     --box1-color: #4DA3FF;
     --box2-color: #FFE6AC;
     --box3-color: #E7D1FC;
+    --box4-color: #00FBFF;
     --title-icon-color: #fff;
     
     /* ====== Transition ====== */
@@ -40,6 +41,7 @@ body.dark{
     --box1-color: #3A3B3C;
     --box2-color: #3A3B3C;
     --box3-color: #3A3B3C;
+    --box4-color: #3A3B3C;
     --title-icon-color: #CCC;
 }
 /* === Custom Scroll Bar CSS === */
@@ -94,11 +96,12 @@ nav .logo-image img{
 }
 
 nav .logo-name .logo_name{
-    font-size: 22px;
+    font-size: 28px; /* Default: 22px */
     font-weight: 600;
     color: var(--text-color);
-    margin-left: 14px;
+    margin-left: 14px; /* Default: 14px */
     transition: var(--tran-05);
+    text-wrap: nowrap;
 }
 nav.close .logo_name{
     opacity: 0;
@@ -277,7 +280,7 @@ nav.close ~ .dashboard .top{
 .dash-content .title{
     display: flex;
     align-items: center;
-    margin: 60px 0 30px 0;
+    margin: 30px 0 30px 0;
 }
 .dash-content .title i{
     position: relative;
@@ -308,10 +311,19 @@ nav.close ~ .dashboard .top{
     flex-direction: column;
     align-items: center;
     border-radius: 12px;
-    width: calc(100% / 3 - 15px);
+    width: calc(100% / 4 - 15px);
     padding: 15px 20px;
     background-color: var(--box1-color);
     transition: var(--tran-05);
+}
+.boxes .box.box2{
+    background-color: var(--box2-color);
+}
+.boxes .box.box3{
+    background-color: var(--box3-color);
+}
+.boxes .box.box4{
+    background-color: var(--box4-color);
 }
 .boxes .box i{
     font-size: 35px;
@@ -324,44 +336,86 @@ nav.close ~ .dashboard .top{
     color: var(--text-color);
 }
 .boxes .box .number{
-    font-size: 40px;
-    font-weight: 500;
+    font-size: 35px;
+    font-weight: 400;
     color: var(--text-color);
-}
-.boxes .box.box2{
-    background-color: var(--box2-color);
-}
-.boxes .box.box3{
-    background-color: var(--box3-color);
+    white-space: nowrap;
+    overflow: hidden;
 }
 .dash-content .activity .activity-data{
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    width: 100%;
+    align-items: center;    
 }
-.activity .activity-data{
+.activity-data .square {
     display: flex;
-}
-.activity-data .data{
-    display: flex;
-    flex-direction: column;
+    flex-direction: column;  
     margin: 0 15px;
+    border-radius: 12px;
+    width: calc(100% / 2 - 15px);
+    padding: 15px 20px;
+    background-color: #767676;
+    transition: var(--tran-05);
+    border-radius: 12px;
+    width: calc(100% / 2 - 15px);
+    padding: 15px 20px;
+    flex-wrap: wrap;
 }
 .activity-data .data-title{
+    float: left;
     font-size: 20px;
     font-weight: 500;
-    color: var(--text-color);
+    color: #F1E05A;
+}
+.activity-data .data-names {
+    float: left;
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+}
+.activity-data .data-orders {
+    float: right;
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+}
+.activity-data .data-sub-title{
+    font-size: 20px;
+    float: right;
+    font-weight: 500;
+    color: #F1E05A;
 }
 .activity-data .data .data-list{
     font-size: 18px;
     font-weight: 400;
-    margin-top: 20px;
+    margin-top: 10px;
     white-space: nowrap;
+    
     color: var(--text-color);
+    line-height: 30px;
 }
 
-@media (max-width: 1000px) {
+.chartsBx{
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    display: grid;
+    /* grid-template-columns: 1fr 2fr; */
+    grid-gap: 30px;
+  }
+  
+  .chartsBx .chart{
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    width: 80%;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    border: 1px solid var(--blue);
+  }
+
+@media (max-width: 1400px) {
     nav{
         width: 73px;
     }
@@ -405,18 +459,42 @@ nav.close ~ .dashboard .top{
     }
 }
 
-@media (max-width: 780px) {
+@media (max-width: 1000px) {
     .dash-content .boxes .box{
         width: calc(100% / 2 - 15px);
         margin-top: 15px;
     }
+    .dash-content .activity-data .square{
+        width: calc(100% / 1 - 15px);
+        margin-top: 15px;
+    }
+    .chartsBx{
+        grid-template-columns: 1fr 1fr;
+        height: auto;
+      }
 }
 @media (max-width: 560px) {
     .dash-content .boxes .box{
         width: 100% ;
     }
+    .dash-content .activity .activity-data{
+        display: flex;
+        flex-direction: column;    
+    }
 }
 @media (max-width: 400px) {
+    .dash-content .boxes .box{
+        width: calc(100% / 1 - 15px);
+        margin-top: 15px;
+    }
+    .dash-content .activity-data .square{
+        width: calc(100% / 1 - 15px);
+        margin-top: 15px;
+    }
+    .dash-content .activity .activity-data{
+        display: flex;
+        flex-direction: column;    
+    }
     nav{
         width: 0px;
     }
