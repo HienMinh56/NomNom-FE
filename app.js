@@ -11,14 +11,16 @@
  */
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const { parseISO, differenceInMilliseconds } = require('date-fns');
 
 
 /**
  * Custom modules
  */
-const login = require('./src/routes/login.route');
-const authenticatedUser = require('./src/middlewares/auth_user.middleware');
-const dashboard = require('./src/routes/dashboard.route');
+const { login } = require('./src/api/login.api');
+const { tokenMiddleware } = require('./src/middlewares/auth.middleware');
+const { getUsers } = require('./src/api/user.api');
 
 
 // Initial express app
@@ -42,6 +44,7 @@ app.use(express.static(`${__dirname}/public`));
  * Enable cors & cookie parser
  */
 app.use(cors()).use(cookieParser());
+app.use(bodyParser.json());
 
 
 /**
@@ -50,22 +53,69 @@ app.use(cors()).use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 
-/**
- * Login page
- */
-app.use('/login', login);
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  next();
+});
 
 
-/**
- * Check user is authenticated
- */
-app.use(authenticatedUser);
+app.get('/login', (req, res) => {
+    res.render('./pages/login');
+});
 
 
-/**
- * Login page
- */
-app.use('/dashboard', dashboard);
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const result = await login(username, password);
+
+    console.log('Login API response:', result); // Debug log
+
+    if (result.success) {
+      const now = new Date();
+      
+      // Manually set the accessToken expiry to 10 minutes from now
+      const accessTokenExpiry = new Date(now.getTime() + 10 * 60 * 1000); // 10 minutes from now
+      const accessTokenMaxAge = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+      const oneWeek = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
+
+      // Save the tokens into cookies
+      res.cookie('accessToken', result.accessToken, { httpOnly: true, secure: true, maxAge: accessTokenMaxAge });
+      res.cookie('refreshToken', result.refreshToken, { httpOnly: true, secure: true, maxAge: oneWeek });
+      res.redirect('/dashboard');
+    } else {
+      res.render('pages/login', { error: result.message });
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.render('pages/login', { error: 'An error occurred during login' });
+  }
+});
+
+
+
+app.use(tokenMiddleware);
+
+
+app.get('/', (req, res) => {
+  res.redirect('/dashboard');
+});
+
+
+app.get('/dashboard', (req, res) => {
+  res.render('pages/dashboard', { text: 'Dashboard'});
+});
+
+
+app.get('/user', async (req, res) => {
+  try {
+    const userData = await getUsers();
+    res.render('./pages/user', { text: 'User', ...userData});
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+});
 
 
 /**

@@ -1,48 +1,31 @@
-<div class="footer section">
-
-    <style>
-        
-        .footer {
-            color: var(--on-surface-variant);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            border-block-start: 1px solid var(--outline-variant);
-            padding-block-start: var(--space-4);
-            gap: var(--space-3);
-        }
-
-        .social-link:where(:hover, :focus-visible) { text-decoration: underline; }
-
-        .footer-text { opacity: 0.8; }
-
-    </style>
-
-    <div class="has-separator">
-
-        <a href="https://www.youtube.com/@hiezmusic" target="_blank" class="social-link">Youtube</a>
-
-        <span class="separator"></span>
-
-        <a href="https://twitter.com/oan_fancy" target="_blank" class="social-link">X</a>
-
-        <span class="separator"></span>
-
-        <a href="https://www.facebook.com/DoanLeHienMinh" target="_blank" class="social-link">Facebook</a>
-
-        <span class="separator"></span>
-
-        <a href="https://www.linkedin.com/in/hienminh56/" target="_blank" class="social-link">LinkedIn</a>
-
+<footer class="footer pt-3  ">
+    <div class="container-fluid">
+      <div class="row align-items-center justify-content-lg-between">
+        <div class="col-lg-6 mb-lg-0 mb-4">
+          <div class="copyright text-center text-sm text-muted text-lg-start">
+            © <script>
+              document.write(new Date().getFullYear())
+            </script>,
+            made <!-- with <i class="fa fa-heart"></i> --> by
+            <a href="https://dev.fancy.io.vn/" class="font-weight-bold" target="_blank">Fancy</a>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+            <li class="nav-item">
+              <a href="https://github.com/HienMinh56" class="nav-link text-muted" target="_blank">Github</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="nav-link text-muted" target="_blank">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://www.apache.org/licenses/" class="nav-link text-muted" target="_blank">Licenses</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://hienminh56-contact.netlify.app/" class="nav-link pe-0 text-muted" target="_blank">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-
-    <p class="footer-text body-medium" id="footer">
-        <!-- &copy; <span id="year"></span> Musify. Developed by Fancy-->
-    </p>
-
-</div>
-
-<script>
-    document.getElementById('footer').innerHTML = '&copy ' + new Date().getFullYear() + ' Musify. Developed by Fancy';
-</script>
+  </footer>
