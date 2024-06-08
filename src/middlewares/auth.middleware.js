@@ -9,30 +9,32 @@
 const { refresh } = require('../api/refresh_token.api');
 
 async function tokenMiddleware(req, res, next) {
-  const { accessToken, refreshToken } = req.cookies;
+  let { accessToken, refreshToken } = req.cookies;
 
   if (!accessToken) {
     if (!refreshToken) {
       return res.redirect('/login');
     } else {
-      // Call the refresh token API
+      // Gọi API refresh token
       const refreshResponse = await refresh(refreshToken, accessToken);
 
       if (refreshResponse.success) {
-        // Set new access token in cookies
+        // Cập nhật access token mới vào cookie và localStorage
         res.cookie('accessToken', refreshResponse.accessToken, { httpOnly: true });
-        // Proceed to the next middleware or route handler
+        localStorage.setItem('accessToken', refreshResponse.accessToken);
+        // Tiếp tục tới middleware hoặc route handler tiếp theo
         return next();
       } else {
-        // Redirect to login if refresh failed
+        // Chuyển tới trang login nếu refresh thất bại
         return res.redirect('/login');
       }
     }
   } else {
-    // Proceed to the next middleware or route handler if accessToken is valid
+    // Tiếp tục tới middleware hoặc route handler tiếp theo nếu accessToken hợp lệ
     return next();
   }
 }
+
 
 module.exports = {
   tokenMiddleware

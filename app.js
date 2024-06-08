@@ -12,6 +12,7 @@
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 const { parseISO, differenceInMilliseconds } = require('date-fns');
 
 
@@ -20,7 +21,8 @@ const { parseISO, differenceInMilliseconds } = require('date-fns');
  */
 const { login } = require('./src/api/login.api');
 const { tokenMiddleware } = require('./src/middlewares/auth.middleware');
-const { getUsers } = require('./src/api/user.api');
+const { config } = require('./src/config/config');
+const { getUsers, updateUser, deleteUser } = require('./src/api/user.api');
 
 
 // Initial express app
@@ -53,17 +55,17 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+// Get current URL
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
   next();
 });
 
-
-app.get('/login', (req, res) => {
-    res.render('./pages/login');
-});
+// 
+require('dotenv').config();
 
 
+// Login Function
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -72,18 +74,19 @@ app.post('/login', async (req, res) => {
     console.log('Login API response:', result); // Debug log
 
     if (result.success) {
-      const now = new Date();
-      
-      // Manually set the accessToken expiry to 10 minutes from now
-      const accessTokenExpiry = new Date(now.getTime() + 10 * 60 * 1000); // 10 minutes from now
-      const accessTokenMaxAge = 10 * 60 * 1000; // 10 minutes in milliseconds
+      // Check if the user role is equal to 1
+      if (result.userInfo.Role == "1") {
+        const oneWeek = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
 
-      const oneWeek = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
-
-      // Save the tokens into cookies
-      res.cookie('accessToken', result.accessToken, { httpOnly: true, secure: true, maxAge: accessTokenMaxAge });
-      res.cookie('refreshToken', result.refreshToken, { httpOnly: true, secure: true, maxAge: oneWeek });
-      res.redirect('/dashboard');
+        // Save the tokens into cookies
+        // Generate access token with no specific expiration time (valid until the session ends)
+        const accessToken = jwt.sign({ user: result.userInfo }, process.env.SECRET_KEY);
+        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true });
+        res.cookie('refreshToken', result.refreshToken, { httpOnly: true, secure: true, maxAge: oneWeek });
+        res.redirect('/dashboard');
+      } else {
+        res.render('pages/login', { error: 'You do not have permission to access the dashboard' });
+      }
     } else {
       res.render('pages/login', { error: result.message });
     }
@@ -94,10 +97,17 @@ app.post('/login', async (req, res) => {
 });
 
 
+// Login Page
+app.get('/login', (req, res) => {
+  res.render('./pages/login');
+});
 
+
+// Middleware
 app.use(tokenMiddleware);
 
 
+// Dashboard Page
 app.get('/', (req, res) => {
   res.redirect('/dashboard');
 });
@@ -108,6 +118,7 @@ app.get('/dashboard', (req, res) => {
 });
 
 
+// User Page
 app.get('/user', async (req, res) => {
   try {
     const userData = await getUsers();
@@ -116,6 +127,39 @@ app.get('/user', async (req, res) => {
     console.error('Error fetching users:', error);
   }
 });
+
+
+// Xử lý route /updateUser
+app.put('/updateUser', async (req, res) => {
+  const userId = req.query.userId;
+  const userData = req.body;
+
+  try {
+    const result = await updateUser(userId, userData);
+    res.json(result);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ error: 'An error occurred while updating the user' });
+  }
+});
+
+
+// Xử lý route /deleteUser
+app.delete('/deleteUser', async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const result = await deleteUser(userId);
+    res.json(result);
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the user' });
+  }
+});
+
+
+// Thêm axios interceptor để tự động thêm accessToken vào tất cả các yêu cầu
+// app.use(config);
 
 
 /**
