@@ -33,8 +33,53 @@ async function getUsers() {
       // Trả về lỗi nếu có lỗi xảy ra
       return { error: 'An error occurred while fetching users' };
     }
+}
+
+async function updateUser(userId, userData) {
+  try {
+    const response = await axios.put(
+      `https://localhost:7253/api/User/updateUser?userId=${userId}`, 
+      userData, 
+      {
+        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return { error: 'An error occurred while updating the user' };
   }
+}
+
+
+async function deleteUser(userId) {
+  try {
+    const response = await axios.delete('https://localhost:7253/api/User/delete-user', {
+      httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: { userId },
+    });
+
+    if (response.data.isSuccess) {
+      return response.data;
+    } else {
+      return { error: 'Failed to delete user' };
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return { error: 'An error occurred while deleting the user' };
+  }
+}
+
   
-  module.exports = {
-    getUsers
-  };
+module.exports = {
+  getUsers,
+  updateUser,
+  deleteUser
+};
