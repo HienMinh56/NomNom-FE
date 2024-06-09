@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <%- include('../layouts/head', { title: 'Store | Nom Nom' }) %>
+
+</head>
+<body class="g-sidenav-show   bg-gray-100">
+  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    <%- include('../partials/sidebar') %>
+    <main class="main-content position-relative border-radius-lg ">
+      <!-- Navbar -->
+      <%- include('../partials/navbar') %>
+      <!-- End Navbar -->
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-12">
+            <div class="card mb-4">
+              <div class="card-header pb-0">
+                <h6>Managers's table</h6>
+              </div>
+              <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                  <table class="table align-items-center mb-0">
+                    <thead>
+                      <tr>
+                        <th class="col-4 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
+                        <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
+                        <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">OpenTime</th>
+                        <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CloseTime</th>
+                        <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Status</th>
+                        <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Area</th>
+                        <th class="col-1 text-secondary opacity-7"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <% stores.forEach(store => { %>
+                        <tr>
+                          <td>
+                            <div class="d-flex px-2 py-1">
+                              <div>
+                                <img src="./images/store.png" class="avatar me-3" alt="stores">
+                              </div>
+                              <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm"><%= store.name %></h6>
+                                <p class="text-xs text-secondary mb-0"><%= store.address %></p>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <p class="text-xs font-weight-bold mb-0"><%= store.phone %></p>
+                          </td>
+                          <td>
+                            <p class="text-sm font-weight-bold mb-0"><%= store.openTime %></p>
+                          </td>
+                          <td>
+                            <p class="text-sm font-weight-bold mb-0"><%= store.closeTime %></p>
+                          </td>
+                          <td class="align-middle text-center text-sm">
+                            <span class="badge badge-sm bg-gradient-<%= store.status === 1 ? 'success' : 'danger' %>">
+                                <%= store.status === 1 ? 'Active' : 'Inactive' %>
+                            </span>
+                          </td>
+                          <td class="align-middle text-center">
+                            <span class="text-secondary text-xs font-weight-bold"><%= store.areaId %></span>
+                          </td>
+                          <td class="align-middle">
+                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editStoreModal" onclick="storeModal('<%= store.storeId %>', '<%= store.name %>', '<%= store.address %>', '<%= store.phone %>', '<%= store.openTime %>', '<%= store.closeTime %>', '<%= store.status %>', '<%= store.areaId %>')">
+                                Edit
+                            </a>
+                        </td>
+                        </tr>
+                    <% }) %>                        
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%- include('../layouts/footer') %>
+      </div>
+    </main>
+    <div class="fixed-plugin">
+        <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+          <i class="fa fa-cog py-2"> </i>
+        </a>
+        <div class="card shadow-lg">
+          <div class="card-header pb-0 pt-3 ">
+            <div class="float-start">
+              <h5 class="mt-3 mb-0">Argon Configurator</h5>
+              <p>See our dashboard options.</p>
+            </div>
+            <div class="float-end mt-4">
+              <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+                <i class="fa fa-close"></i>
+              </button>
+            </div>
+            <!-- End Toggle Button -->
+          </div>
+          <hr class="horizontal dark my-1">
+          <div class="card-body pt-sm-3 pt-0 overflow-auto">
+            <!-- Sidebar Backgrounds -->
+            <div>
+              <h6 class="mb-0">Sidebar Colors</h6>
+            </div>
+            <a href="javascript:void(0)" class="switch-trigger background-color">
+              <div class="badge-colors my-2 text-start">
+                <span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
+                <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
+                <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
+                <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
+                <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
+                <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
+              </div>
+            </a>
+            <!-- Sidenav Type -->
+            <div class="mt-3">
+              <h6 class="mb-0">Sidenav Type</h6>
+              <p class="text-sm">Choose between 2 different sidenav types.</p>
+            </div>
+            <div class="d-flex">
+              <button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+              <button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default" onclick="sidebarType(this)">Dark</button>
+            </div>
+            <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+            <!-- Navbar Fixed -->
+            <div class="d-flex my-3">
+              <h6 class="mb-0">Navbar Fixed</h6>
+              <div class="form-check form-switch ps-0 ms-auto my-auto">
+                <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+              </div>
+            </div>
+            <hr class="horizontal dark my-sm-4">
+            <div class="mt-2 mb-5 d-flex">
+              <h6 class="mb-0">Light / Dark</h6>
+              <div class="form-check form-switch ps-0 ms-auto my-auto">
+                <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Edit Store Modal -->
+    <div class="modal fade" id="editStoreModal" tabindex="-1" aria-labelledby="editStoreModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-bottom">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="editUserModalLabel">Edit Store</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="editUserForm">
+                      <div class="mb-3">
+                          <label for="storeId" class="form-label">Store ID</label>
+                          <input type="text" class="form-control" id="storeId" readonly>
+                      </div>
+                      <div class="mb-3">
+                          <label for="storeName" class="form-label">Name</label>
+                          <input type="text" class="form-control" id="storeName" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="storeAddress" class="form-label">Address</label>
+                          <input type="text" class="form-control" id="storeAddress" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="storePhone" class="form-label">Phone</label>
+                          <input type="text" class="form-control" id="storePhone" required>
+                      </div>
+                      <div class="mb-3" id="roleField">
+                          <label for="storeOpenTime" class="form-label">OpenTIme</label>
+                          <input type="time" class="form-control" id="storeOpenTime" required>                          
+                      </div>
+                      <div class="mb-3" id="balanceField">
+                          <label for="storeCloseTime" class="form-label">CloseTime</label>
+                          <input type="time" class="form-control" id="storeCloseTime">
+                      </div>
+                      <div class="mb-3">
+                        <label for="userStatus" class="form-label">Status</label>
+                        <select class="form-select" id="storeStatus">
+                            <option value="1">Active</option>
+                            <option value="2">Inactive</option>
+                        </select>
+                    </div>
+                      <div class="mb-3">
+                          <label for="storeArea" class="form-label">Area</label>
+                          <select class="form-select" id="storeArea">
+                            <option value="1">AREA001</option>
+                            <option value="2">AREA002</option>
+                            <option value="3">AREA003</option>
+                            <option value="4">AREA004</option>
+                        </select>
+                      </div>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" id="deleteStoreBtn">Delete</button>
+                  <div class="ms-auto">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" id="updateStoreBtn" class="btn btn-primary" form="editStoreForm">Save changes</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Get selected store -->
+    <script>
+        function storeModal(id, name, address, phone, openTime, closeTime, status, areaId) {
+            document.getElementById('storeId').value = id;
+            document.getElementById('storeName').value = name;
+            document.getElementById('storeAddress').value = address;
+            document.getElementById('storePhone').value = phone;
+            document.getElementById('storeOpenTime').value = openTime;
+            document.getElementById('storeCloseTime').value = closeTime;
+            document.getElementById('storeStatus').value = status;
+            document.getElementById('storeArea').value = areaId; // Thiết lập giá trị cho storeArea
+        }
+    </script>
+
+    <!-- Update and Delete User -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const editStoreForm = document.getElementById("editStoreForm");
+        const updateStoreBtn = document.getElementById("updateStoreBtn");
+        const deleteStoreBtn = document.getElementById("deleteStoreBtn");
+    
+        // Sự kiện click cho nút "Update"
+        document.getElementById('updateStoreBtn').addEventListener('click', async function(event) {
+          event.preventDefault(); // Prevent form submission
+
+          const storeId = document.getElementById('storeId').value;
+          const storeName = document.getElementById('storeName').value;
+          const storeAddress = document.getElementById('storeAddress').value;
+          const storePhone = document.getElementById('storePhone').value;
+          const storeOpenTime = document.getElementById('storeOpenTime').value;
+          const storeCloseTime = document.getElementById('storeCloseTime').value;
+          const storeStatus = document.getElementById('storeStatus').value;
+          const storeArea = document.getElementById('storeArea').value;
+
+          const areaMap = {
+            1: 'AREA001',
+            2: 'AREA002',
+            3: 'AREA003',
+            4: 'AREA004'
+          };
+
+          const statusMap = {
+            1: 'Active',
+            2: 'Inactive',
+          };
+
+          const storeData = {
+            name: storeName,
+            address: storeAddress,
+            phone: storePhone,
+            openTime: storeOpenTime,
+            closeTime: storeCloseTime,
+            status: storeStatus ? parseInt(storeStatus, 10) : null,
+            areaId: areaMap[storeArea]
+          };
+
+        try {
+            const response = await fetch(`/updateStore?storeId=${storeId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+              body: JSON.stringify(storeData)
+          });
+
+        if (response.ok) {
+            const updateResult = await response.json();
+            if (updateResult.isSuccess) {
+                alert('Store updated successfully!');
+            } else {
+                alert('Failed to update store: ' + (updateResult.data ? updateResult.data.message : updateResult.error));
+            }
+        } else {
+            alert('Failed to connect to the server. Please try again later.');
+        }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred: ' + error.message);
+            }
+        });
+    
+        // Sự kiện click cho nút "Delete"
+        deleteUserBtn.addEventListener("click", async function() {
+          const userId = document.getElementById("userId").value;
+    
+          // Gửi yêu cầu xóa người dùng đến server
+          const response = await fetch('/deleteUser', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              userId: userId
+            })
+          });
+    
+          const deleteResult = await response.json();
+          if (!deleteResult.error) {
+            // Xử lý thành công
+            alert("User deleted successfully!");
+            modal.hide();
+          } else {
+            // Xử lý lỗi
+            alert("Failed to delete user: " + deleteResult.error);
+          }
+        });
+      });
+    </script>    
+
+    <!--   Core JS Files   -->
+    <script src="./js/core/popper.min.js"></script>
+    <script src="./js/core/bootstrap.min.js"></script>
+    <script src="./js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="./js/plugins/smooth-scrollbar.min.js"></script>
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+          var options = {
+            damping: '0.5'
+          }
+          Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="./js/argon-dashboard.min.js?v=2.0.4"></script>
+  </body>
+</html>

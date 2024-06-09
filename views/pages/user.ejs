@@ -35,40 +35,43 @@
                     </thead>
                     <tbody>
                       <% adminsAndShippers.forEach(user => { %>
-                      <tr>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div>
-                              <img src="<%= user.role === 1 ? './images/admin.png' : './images/shipper.png' %>" class="avatar me-3" alt="managers">
+                        <tr>
+                          <td>
+                            <div class="d-flex px-2 py-1">
+                              <div>
+                                <img src="<%= user.role === 1 ? './images/admin.png' : './images/shipper.png' %>" class="avatar me-3" alt="managers">
+                              </div>
+                              <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm"><%= user.name %></h6>
+                                <p class="text-xs text-secondary mb-0"><%= user.email %></p>
+                              </div>
                             </div>
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm"><%=user.name%></h6>
-                              <p class="text-xs text-secondary mb-0"><%=user.email%></p>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <p class="text-xs font-weight-bold mb-0"><%=user.phone%></p>
-                        </td>
-                        <td>
-                          <p class="text-xs font-weight-bold mb-0"><%= user.role === 1 ? 'Admin' : 'Shipper' %></p>
-                        </td>
-                        <td class="d-none">
-                          <p class="text-sm font-weight-bold mb-0"><%=user.balance%></p>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                          <span class="badge badge-sm bg-gradient-success"><%= user.status === 1 ? 'Active' : 'Inactive' %></span>
-                        </td>
-                        <td class="align-middle text-center">
-                          <span class="text-secondary text-xs font-weight-bold"><%=user.campusId%></span>
-                        </td>
-                        <td class="align-middle">
-                          <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%=user.userId%>', '<%=user.name%>', '<%=user.email%>', '<%=user.phone%>', '<%=user.role%>', '<%=user.balance%>', '<%=user.status%>', '<%=user.campusId%>')">
-                              Edit
-                          </a>
-                        </td>
-                      </tr>
-                      <% }) %>
+                          </td>
+                          <td>
+                            <p class="text-xs font-weight-bold mb-0"><%= user.phone %></p>
+                          </td>
+                          <td>
+                            <p class="text-xs font-weight-bold mb-0"><%= user.role === 1 ? 'Admin' : 'Shipper' %></p>
+                          </td>
+                          <td class="d-none">
+                            <p class="text-sm font-weight-bold mb-0"><%= user.balance %></p>
+                          </td>
+                          <td class="align-middle text-center text-sm">
+                            <span class="badge badge-sm bg-gradient-<%= user.status === 1 ? 'success' : 'danger' %>">
+                                <%= user.status === 1 ? 'Active' : 'Inactive' %>
+                            </span>
+                          </td>
+                          <td class="align-middle text-center">
+                            <span class="text-secondary text-xs font-weight-bold"><%= user.campus.name %></span>
+                          </td>
+                          <td class="align-middle">
+                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>', '<%= user.campus.name %>')">
+                                Edit
+                            </a>
+                          </td>
+                        </tr>
+                        <% }) %>
+                        
                     </tbody>
                   </table>
                 </div>
@@ -120,16 +123,18 @@
                           <p class="text-sm font-weight-bold mb-0"><%=user.balance%></p>
                         </td>
                         <td class="align-middle text-center text-sm">
-                          <span class="badge badge-sm bg-gradient-success"><%= user.status === 1 ? 'Active' : 'Inactive' %></span>
+                          <span class="badge badge-sm bg-gradient-<%= user.status === 1 ? 'success' : 'danger' %>">
+                              <%= user.status === 1 ? 'Active' : 'Inactive' %>
+                          </span>
                         </td>
                         <td class="align-middle text-center">
-                          <span class="text-secondary text-xs font-weight-bold"><%=user.campusId%></span>
+                          <span class="text-secondary text-xs font-weight-bold"><%=user.campus.name%></span>
                         </td>
                         <td class="align-middle">
                           <!-- <button class="btn btn-link text-secondary mb-0">
                             
                           </button> -->
-                          <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%=user.userId%>', '<%=user.name%>', '<%=user.email%>', '<%=user.phone%>', '<%=user.role%>', '<%=user.balance%>', '<%=user.status%>', '<%=user.campusId%>')">
+                          <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%=user.userId%>', '<%=user.name%>', '<%=user.email%>', '<%=user.phone%>', '<%=user.role%>', '<%=user.balance%>', '<%=user.status%>', '<%=user.campus.name%>')">
                             <i class="fa fa-ellipsis-v text-xs"></i>
                           </a>
                         </td>
