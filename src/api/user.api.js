@@ -10,30 +10,48 @@ const axios = require('axios');
 const https = require('https');
 
 
-async function getUsers() {
-    try {
+async function getUsers(filters = {}) {
+  try {
       const agent = new https.Agent({ rejectUnauthorized: false });
-      const response = await axios.get('https://localhost:7253/api/User/view-all-users', { httpsAgent: agent });
-  
+      const queryParams = new URLSearchParams(filters).toString();
+      const response = await axios.get(`https://localhost:7253/api/User/getUsersList?${queryParams}`, { httpsAgent: agent });
+
       if (response.data.isSuccess) {
-        const users = response.data.data;
-  
-        // Separate users by role
-        const adminsAndShippers = users.filter(user => user.role === 1 || user.role === 3);
-        const customers = users.filter(user => user.role === 2);
-  
-        // Trả về tất cả người dùng cùng với phân loại của họ
-        return { users, adminsAndShippers, customers };
+          const users = response.data.data;
+
+          const adminsAndShippers = users.filter(user => user.role === 1 || user.role === 3);
+          const customers = users.filter(user => user.role === 2);
+
+          return { users, adminsAndShippers, customers };
       } else {
-        // Trả về lỗi nếu không thành công
-        return { error: 'Failed to fetch users' };
+          return { error: 'Failed to fetch users' };
       }
-    } catch (error) {
+  } catch (error) {
       console.error('Error fetching users:', error);
-      // Trả về lỗi nếu có lỗi xảy ra
       return { error: 'An error occurred while fetching users' };
-    }
+  }
 }
+
+
+async function addUser(userData) {
+  try {
+      const response = await axios.post(
+          'https://localhost:7253/api/Account/AddNewUser',
+          userData,
+          {
+              httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          }
+      );
+      return response.data;
+  } catch (error) {
+      console.error('Error adding user:', error);
+      return { error: 'An error occurred while adding the user' };
+  }
+}
+
 
 async function updateUser(userId, userData) {
   try {
@@ -58,7 +76,7 @@ async function updateUser(userId, userData) {
 
 async function deleteUser(userId) {
   try {
-    const response = await axios.delete('https://localhost:7253/api/User/delete-user', {
+    const response = await axios.delete('https://localhost:7253/api/User/deleteUser', {
       httpsAgent: new https.Agent({ rejectUnauthorized: false }),
       headers: {
         'Content-Type': 'application/json',
@@ -80,6 +98,7 @@ async function deleteUser(userId) {
   
 module.exports = {
   getUsers,
+  addUser,
   updateUser,
   deleteUser
 };
