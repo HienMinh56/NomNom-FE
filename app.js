@@ -13,7 +13,6 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
-const { parseISO, differenceInMilliseconds } = require('date-fns');
 
 
 /**
@@ -22,8 +21,10 @@ const { parseISO, differenceInMilliseconds } = require('date-fns');
 const { login } = require('./src/api/login.api');
 const { tokenMiddleware } = require('./src/middlewares/auth.middleware');
 const { config } = require('./src/config/config');
-const { getUsers, updateUser, deleteUser } = require('./src/api/user.api');
-const { getStores, updateStore } = require('./src/api/store.api');
+const { getUsers, addUser, updateUser, deleteUser } = require('./src/api/user.api');
+const { getStores, addStore, updateStore } = require('./src/api/store.api');
+const { getCampus } = require('./src/api/campus.api');
+const { getAreas } = require('./src/api/area.api');
 
 
 // Initial express app
@@ -120,7 +121,7 @@ app.get('/dashboard', async (req, res) => {
     if (storeData.error) {
       res.render('pages/dashboard', { text: 'Dashboard', stores: [] });
     } else {
-      res.render('pages/dashboard', { text: 'Dashboard', stores: storeData });
+      res.render('pages/dashboard', { text: 'Dashboard', ...storeData });
     }
   } catch (error) {
     console.error('Error fetching stores:', error);
@@ -131,16 +132,39 @@ app.get('/dashboard', async (req, res) => {
 
 // User Page
 app.get('/user', async (req, res) => {
+  const { status, campusName } = req.query;
+
+  // Create a filters object with only defined values
+  const filters = {};
+  if (status !== undefined) filters.status = status;
+  if (campusName !== undefined) filters.campusName = campusName;
+
   try {
-    const userData = await getUsers();
-    if (userData.error) {
-      res.render('pages/user', { text: 'User', users: [], adminsAndShippers: [], customers: [] });
-    } else {
-      res.render('pages/user', { text: 'User', ...userData });
-    }
+      const userData = await getUsers(filters);
+      const campusData = await getCampus();
+
+      if (userData.error || campusData.error) {
+          res.render('pages/user', { text: 'User', users: [], adminsAndShippers: [], customers: [], campuses: [] });
+      } else {
+          res.render('pages/user', { text: 'User', ...userData, campuses: campusData.campuses });
+      }
   } catch (error) {
-    console.error('Error fetching users:', error);
-    res.render('pages/user', { text: 'User', users: [], adminsAndShippers: [], customers: [] });
+      console.error('Error fetching users:', error);
+      res.render('pages/user', { text: 'User', users: [], adminsAndShippers: [], customers: [], campuses: [] });
+  }
+});
+
+
+// Xử lý route /addUser
+app.post('/addUser', async (req, res) => {
+  const userData = req.body;
+
+  try {
+    const result = await addUser(userData);
+    res.json(result);
+  } catch (error) {
+    console.error('Error adding user:', error);
+    res.status(500).json({ error: 'An error occurred while adding the user' });
   }
 });
 
@@ -178,14 +202,28 @@ app.delete('/deleteUser', async (req, res) => {
 app.get('/store', async (req, res) => {
   try {
     const storeData = await getStores();
+    const areaData = await getAreas();
     if (storeData.error) {
-      res.render('pages/store', { text: 'Store', stores: [] });
+      res.render('pages/store', { text: 'Store', stores: [], areas: [] });
     } else {
-      res.render('pages/store', { text: 'Store', stores: storeData });
+      res.render('pages/store', { text: 'Store', ...storeData, areas: areaData.areas });
     }
   } catch (error) {
     console.error('Error fetching users:', error);
-    res.render('pages/store', { text: 'Store', stores: [] });
+    res.render('pages/store', { text: 'Store', stores: [], areas: [] });
+  }
+});
+
+
+app.post('/addStore', async (req, res) => {
+  const storeData = req.body;
+
+  try {
+    const result = await addStore(storeData);
+    res.json(result);
+  } catch (error) {
+    console.error('Error adding store:', error);
+    res.status(500).json({ error: 'An error occurred while adding the store' });
   }
 });
 

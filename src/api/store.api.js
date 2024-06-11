@@ -13,18 +13,39 @@ const https = require('https');
 async function getStores() {
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
-        const response = await axios.get('https://localhost:7253/api/Store/GetStores', { httpsAgent: agent });
-        const stores = response.data.data;
-        if (response.data.isSuccess) {
-            return stores;
+        const response = await axios.get('https://localhost:7253/api/Store/filterStore', { httpsAgent: agent });
+        const stores = response.data;
+        if (response.data) {
+            return { stores };
         } else {
-            return { error: 'Failed to fetch users' };
+            return { error: 'Failed to fetch stores' };
         }
     } catch (error) {
         console.error('Error fetching stores:', error);
         return { error: 'An error occurred while fetching stores' };
     }
 }
+
+
+async function addStore(storeData) {
+  try {
+      const response = await axios.post(
+          'https://localhost:7253/api/Store/AddStore',
+          storeData,
+          {
+              httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          }
+      );
+      return response.data;
+  } catch (error) {
+      console.error('Error adding store:', error);
+      return { error: 'An error occurred while adding the store' };
+  }
+}
+
 
 async function updateStore(storeId, storeData) {
   try {
@@ -49,5 +70,6 @@ async function updateStore(storeId, storeData) {
 
 module.exports = {
     getStores,
+    addStore,
     updateStore
 };

@@ -2,86 +2,94 @@
 <html lang="en">
 <head>
 
-    <%- include('../layouts/head', { title: 'Store | Nom Nom' }) %>
+  <%- include('../layouts/head', { title: 'Store | Nom Nom' }) %>
 
 </head>
-<body class="g-sidenav-show   bg-gray-100">
+<body class="g-sidenav-show bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    
     <%- include('../partials/sidebar') %>
-    <main class="main-content position-relative border-radius-lg ">
-      <!-- Navbar -->
-      <%- include('../partials/navbar') %>
-      <!-- End Navbar -->
-      <div class="container-fluid py-4">
-        <div class="row">
-          <div class="col-12">
-            <div class="card mb-4">
-              <div class="card-header pb-0">
-                <h6>Managers's table</h6>
-              </div>
-              <div class="card-body px-0 pt-0 pb-2">
-                <div class="table-responsive p-0">
-                  <table class="table align-items-center mb-0">
-                    <thead>
-                      <tr>
-                        <th class="col-4 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
-                        <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
-                        <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">OpenTime</th>
-                        <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CloseTime</th>
-                        <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Status</th>
-                        <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Area</th>
-                        <th class="col-1 text-secondary opacity-7"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    <% stores.forEach(store => { %>
+
+      <main class="main-content position-relative border-radius-lg ">
+
+        <%- include('../partials/navbar') %>
+
+        <div class="container-fluid py-4">
+          <div class="row">
+            <div class="col-12">
+              <div class="card mb-4">
+                <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                  <h6>Store's table</h6>
+                  <a href="javascript:;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFormModal">
+                    Add <i class="ni ni-fat-add fs-7"></i>
+                  </a>
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                  <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                      <thead>
                         <tr>
-                          <td>
-                            <div class="d-flex px-2 py-1">
-                              <div>
-                                <img src="./images/store.png" class="avatar me-3" alt="stores">
-                              </div>
-                              <div class="d-flex flex-column justify-content-center">
-                                <h6 class="mb-0 text-sm"><%= store.name %></h6>
-                                <p class="text-xs text-secondary mb-0"><%= store.address %></p>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <p class="text-xs font-weight-bold mb-0"><%= store.phone %></p>
-                          </td>
-                          <td>
-                            <p class="text-sm font-weight-bold mb-0"><%= store.openTime %></p>
-                          </td>
-                          <td>
-                            <p class="text-sm font-weight-bold mb-0"><%= store.closeTime %></p>
-                          </td>
-                          <td class="align-middle text-center text-sm">
-                            <span class="badge badge-sm bg-gradient-<%= store.status === 1 ? 'success' : 'danger' %>">
-                                <%= store.status === 1 ? 'Active' : 'Inactive' %>
-                            </span>
-                          </td>
-                          <td class="align-middle text-center">
-                            <span class="text-secondary text-xs font-weight-bold"><%= store.areaId %></span>
-                          </td>
-                          <td class="align-middle">
-                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editStoreModal" onclick="storeModal('<%= store.storeId %>', '<%= store.name %>', '<%= store.address %>', '<%= store.phone %>', '<%= store.openTime %>', '<%= store.closeTime %>', '<%= store.status %>', '<%= store.areaId %>')">
-                                Edit
-                            </a>
-                        </td>
+                          <th class="col-4 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
+                          <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
+                          <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">OpenTime</th>
+                          <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CloseTime</th>
+                          <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Status</th>
+                          <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Area</th>
+                          <th class="col-1 text-secondary opacity-7"></th>
                         </tr>
-                    <% }) %>                        
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        <% stores.forEach(store => { %>
+                          <tr>
+                            <td>
+                              <div class="d-flex px-2 py-1">
+                                <div>
+                                  <img src="./images/store.png" class="avatar me-3" alt="stores">
+                                </div>
+                                <div class="d-flex flex-column justify-content-center">
+                                  <h6 class="mb-0 text-sm"><%= store.name %></h6>
+                                  <p class="text-xs text-secondary mb-0"><%= store.address %></p>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <p class="text-xs font-weight-bold mb-0"><%= store.phone %></p>
+                            </td>
+                            <td>
+                              <p class="text-sm font-weight-bold mb-0"><%= store.openTime %></p>
+                            </td>
+                            <td>
+                              <p class="text-sm font-weight-bold mb-0"><%= store.closeTime %></p>
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                              <span class="badge badge-sm bg-gradient-<%= store.status === 1 ? 'success' : 'danger' %>">
+                                  <%= store.status === 1 ? 'Active' : 'Inactive' %>
+                              </span>
+                            </td>
+                            <td class="align-middle text-center">
+                              <span class="text-secondary text-xs font-weight-bold"><%= store.areaName %></span>
+                            </td>
+                            <td class="align-middle">
+                              <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editStoreModal" onclick="storeModal('<%= store.storeId %>', '<%= store.name %>', '<%= store.address %>', '<%= store.phone %>', '<%= store.openTime %>', '<%= store.closeTime %>', '<%= store.status %>')">
+                                  Edit
+                              </a>
+                            </td>
+                          </tr>
+                        <% }) %>                        
+                      </tbody>                      
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <%- include('../layouts/footer') %>
+
         </div>
-        <%- include('../layouts/footer') %>
-      </div>
-    </main>
-    <div class="fixed-plugin">
+      </main>
+      
+      <div class="fixed-plugin">
         <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
           <i class="fa fa-cog py-2"> </i>
         </a>
@@ -140,93 +148,172 @@
             </div>
           </div>
         </div>
-    </div>
+      </div>
 
     <!-- Edit Store Modal -->
     <div class="modal fade" id="editStoreModal" tabindex="-1" aria-labelledby="editStoreModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-bottom">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="editUserModalLabel">Edit Store</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <form id="editUserForm">
-                      <div class="mb-3">
-                          <label for="storeId" class="form-label">Store ID</label>
-                          <input type="text" class="form-control" id="storeId" readonly>
-                      </div>
-                      <div class="mb-3">
-                          <label for="storeName" class="form-label">Name</label>
-                          <input type="text" class="form-control" id="storeName" required>
-                      </div>
-                      <div class="mb-3">
-                          <label for="storeAddress" class="form-label">Address</label>
-                          <input type="text" class="form-control" id="storeAddress" required>
-                      </div>
-                      <div class="mb-3">
-                          <label for="storePhone" class="form-label">Phone</label>
-                          <input type="text" class="form-control" id="storePhone" required>
-                      </div>
-                      <div class="mb-3" id="roleField">
-                          <label for="storeOpenTime" class="form-label">OpenTIme</label>
-                          <input type="time" class="form-control" id="storeOpenTime" required>                          
-                      </div>
-                      <div class="mb-3" id="balanceField">
-                          <label for="storeCloseTime" class="form-label">CloseTime</label>
-                          <input type="time" class="form-control" id="storeCloseTime">
-                      </div>
-                      <div class="mb-3">
-                        <label for="userStatus" class="form-label">Status</label>
-                        <select class="form-select" id="storeStatus">
-                            <option value="1">Active</option>
-                            <option value="2">Inactive</option>
-                        </select>
-                    </div>
-                      <div class="mb-3">
-                          <label for="storeArea" class="form-label">Area</label>
-                          <select class="form-select" id="storeArea">
-                            <option value="1">AREA001</option>
-                            <option value="2">AREA002</option>
-                            <option value="3">AREA003</option>
-                            <option value="4">AREA004</option>
-                        </select>
-                      </div>
-                  </form>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" id="deleteStoreBtn">Delete</button>
-                  <div class="ms-auto">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" id="updateStoreBtn" class="btn btn-primary" form="editStoreForm">Save changes</button>
-                  </div>
-              </div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editStoreModalLabel">Edit Store</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body">
+            <form id="editStoreForm">
+              <div class="mb-3">
+                <label for="storeId" class="form-label">Store ID</label>
+                <input type="text" class="form-control" id="storeId" readonly>
+              </div>
+              <div class="mb-3">
+                <label for="storeName" class="form-label">Name</label>
+                <input type="text" class="form-control" id="storeName" required>
+              </div>
+              <div class="mb-3">
+                <label for="storeAddress" class="form-label">Address</label>
+                <input type="text" class="form-control" id="storeAddress" required>
+              </div>
+              <div class="mb-3">
+                <label for="storePhone" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="storePhone" required>
+              </div>
+              <div class="mb-3">
+                <label for="storeOpenTime" class="form-label">OpenTime</label>
+                <input type="time" class="form-control" id="storeOpenTime" required>
+              </div>
+              <div class="mb-3">
+                <label for="storeCloseTime" class="form-label">CloseTime</label>
+                <input type="time" class="form-control" id="storeCloseTime">
+              </div>
+              <div class="mb-3">
+                <label for="storeStatus" class="form-label">Status</label>
+                <select class="form-select" id="storeStatus">
+                  <option value="1">Active</option>
+                  <option value="2">Inactive</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="storeArea" class="form-label">Area</label>
+                <select class="form-select" id="storeArea">
+                  <% areas.forEach((area, index) => { %>
+                    <option value="<%= area.areaId %>"  <%= index === 0 ? 'selected' : '' %>><%= area.name %></option>
+                  <% }); %>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="ms-auto">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" id="updateStoreBtn" class="btn btn-primary" form="editStoreForm">Save changes</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Get selected store -->
-    <script>
-        function storeModal(id, name, address, phone, openTime, closeTime, status, areaId) {
-            document.getElementById('storeId').value = id;
-            document.getElementById('storeName').value = name;
-            document.getElementById('storeAddress').value = address;
-            document.getElementById('storePhone').value = phone;
-            document.getElementById('storeOpenTime').value = openTime;
-            document.getElementById('storeCloseTime').value = closeTime;
-            document.getElementById('storeStatus').value = status;
-            document.getElementById('storeArea').value = areaId; // Thiết lập giá trị cho storeArea
-        }
-    </script>
+    <!-- Add Store Modal -->
+    <div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-bottom">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addFormModalLabel">Add New User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="addStoreForm">
+              <div class="mb-3">
+                <label for="area-add" class="form-label">Area</label>
+                <select class="form-select" id="area-add">
+                  <% areas.forEach((area, index) => { %>
+                    <option value="<%= area.areaId %>"  <%= index === 0 ? 'selected' : '' %>><%= area.name %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="name-add" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name-add" required>
+              </div>
+              <div class="mb-3">
+                <label for="address-add" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address-add" required>
+              </div>
+              <div class="mb-3">
+                <label for="phone-add" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="phone-add" required>
+              </div>  
+              <div class="mb-3">
+                <label for="openTime-add" class="form-label">OpenTime</label>
+                <input type="time" class="form-control" id="openTime-add" required>
+              </div>
+              <div class="mb-3">
+                <label for="closeTime-add" class="form-label">CloseTime</label>
+                <input type="time" class="form-control" id="closeTime-add">
+              </div>         
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" id="saveUserBtn" class="btn btn-primary" form="addStoreForm">Add Store</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Update and Delete User -->
+    <!-- JS Handle FUNCTION -->
     <script>
+      // Get selected store
+      function storeModal(id, name, address, phone, openTime, closeTime, status) {
+          document.getElementById('storeId').value = id;
+          document.getElementById('storeName').value = name;
+          document.getElementById('storeAddress').value = address;
+          document.getElementById('storePhone').value = phone;
+          document.getElementById('storeOpenTime').value = openTime;
+          document.getElementById('storeCloseTime').value = closeTime;
+          document.getElementById('storeStatus').value = status;
+          // document.getElementById('storeArea').value = areaId;
+      }
+
       document.addEventListener("DOMContentLoaded", function() {
-        const editStoreForm = document.getElementById("editStoreForm");
-        const updateStoreBtn = document.getElementById("updateStoreBtn");
-        const deleteStoreBtn = document.getElementById("deleteStoreBtn");
-    
-        // Sự kiện click cho nút "Update"
+        // Add store
+        document.getElementById('addStoreForm').addEventListener('submit', async function(event) {        
+          event.preventDefault();
+
+          const storeData = {
+            areaId: document.getElementById('area-add').value,
+            name: document.getElementById('name-add').value,
+            address: document.getElementById('address-add').value,
+            phone: document.getElementById('phone-add').value,
+            openTime: document.getElementById('openTime-add').value,
+            closeTime: document.getElementById('closeTime-add').value,            
+          };
+
+          try {
+            const response = await fetch('/addStore', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(storeData)
+            });
+
+            if (response.ok) {
+              const addResult = await response.json();
+                if (addResult.isSuccess && addResult.data && addResult.data.isSuccess) {
+                  alert('Store added successfully!');
+                  location.reload();
+                } else {
+                  alert('Failed to add store: ' + (addResult.data ? addResult.data.message : addResult.error));
+                }
+            } else {
+              alert('Failed to connect to the server. Please try again later.');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred: ' + error.message);
+          }
+        });
+
+        // Update store
         document.getElementById('updateStoreBtn').addEventListener('click', async function(event) {
           event.preventDefault(); // Prevent form submission
 
@@ -238,13 +325,6 @@
           const storeCloseTime = document.getElementById('storeCloseTime').value;
           const storeStatus = document.getElementById('storeStatus').value;
           const storeArea = document.getElementById('storeArea').value;
-
-          const areaMap = {
-            1: 'AREA001',
-            2: 'AREA002',
-            3: 'AREA003',
-            4: 'AREA004'
-          };
 
           const statusMap = {
             1: 'Active',
@@ -258,7 +338,7 @@
             openTime: storeOpenTime,
             closeTime: storeCloseTime,
             status: storeStatus ? parseInt(storeStatus, 10) : null,
-            areaId: areaMap[storeArea]
+            areaId: storeArea
           };
 
         try {
@@ -274,6 +354,7 @@
             const updateResult = await response.json();
             if (updateResult.isSuccess) {
                 alert('Store updated successfully!');
+                location.reload();
             } else {
                 alert('Failed to update store: ' + (updateResult.data ? updateResult.data.message : updateResult.error));
             }
@@ -284,33 +365,7 @@
                 console.error('Error:', error);
                 alert('An error occurred: ' + error.message);
             }
-        });
-    
-        // Sự kiện click cho nút "Delete"
-        deleteUserBtn.addEventListener("click", async function() {
-          const userId = document.getElementById("userId").value;
-    
-          // Gửi yêu cầu xóa người dùng đến server
-          const response = await fetch('/deleteUser', {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              userId: userId
-            })
-          });
-    
-          const deleteResult = await response.json();
-          if (!deleteResult.error) {
-            // Xử lý thành công
-            alert("User deleted successfully!");
-            modal.hide();
-          } else {
-            // Xử lý lỗi
-            alert("Failed to delete user: " + deleteResult.error);
-          }
-        });
+        });        
       });
     </script>    
 
