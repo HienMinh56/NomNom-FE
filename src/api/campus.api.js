@@ -13,7 +13,7 @@ const https = require('https');
 async function getCampus() {
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
-        const response = await axios.get('https://localhost:7253/api/Campus/GetCampus', { httpsAgent: agent });
+        const response = await axios.get('https://localhost:7253/api/v1/campus', { httpsAgent: agent });
         const campuses = response.data.data;
         if (response.data.isSuccess) {
             return { campuses };

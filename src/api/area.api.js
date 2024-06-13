@@ -13,7 +13,7 @@ const https = require('https');
 async function getAreas() {
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
-        const response = await axios.get('https://localhost:7253/api/Area/GetArea', { httpsAgent: agent });
+        const response = await axios.get('https://localhost:7253/api/v1/area', { httpsAgent: agent });
         const areas = response.data.data;
         if (response.data.isSuccess) {
             return { areas };

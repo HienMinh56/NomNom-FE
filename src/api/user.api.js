@@ -14,7 +14,7 @@ async function getUsers(filters = {}) {
   try {
       const agent = new https.Agent({ rejectUnauthorized: false });
       const queryParams = new URLSearchParams(filters).toString();
-      const response = await axios.get(`https://localhost:7253/api/User/getUsersList?${queryParams}`, { httpsAgent: agent });
+      const response = await axios.get(`https://localhost:7253/api/v1/user?${queryParams}`, {httpsAgent: agent});
 
       if (response.data.isSuccess) {
           const users = response.data.data;
@@ -36,7 +36,7 @@ async function getUsers(filters = {}) {
 async function addUser(userData) {
   try {
       const response = await axios.post(
-          'https://localhost:7253/api/Account/AddNewUser',
+          'https://localhost:7253/api/v1/account',
           userData,
           {
               httpsAgent: new https.Agent({ rejectUnauthorized: false }),
@@ -56,7 +56,7 @@ async function addUser(userData) {
 async function updateUser(userId, userData) {
   try {
     const response = await axios.put(
-      `https://localhost:7253/api/User/updateUser?userId=${userId}`, 
+      `https://localhost:7253/api/v1/user?userId=${userId}`, 
       userData, 
       {
         httpsAgent: new https.Agent({ rejectUnauthorized: false }),
@@ -76,7 +76,7 @@ async function updateUser(userId, userData) {
 
 async function deleteUser(userId) {
   try {
-    const response = await axios.delete('https://localhost:7253/api/User/deleteUser', {
+    const response = await axios.delete('https://localhost:7253/api/v1/user', {
       httpsAgent: new https.Agent({ rejectUnauthorized: false }),
       headers: {
         'Content-Type': 'application/json',

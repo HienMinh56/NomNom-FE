@@ -13,7 +13,7 @@ const https = require('https');
 async function getStores() {
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
-        const response = await axios.get('https://localhost:7253/api/Store/filterStore', { httpsAgent: agent });
+        const response = await axios.get('https://localhost:7253/api/v1/store', { httpsAgent: agent });
         const stores = response.data;
         if (response.data) {
             return { stores };
@@ -30,7 +30,7 @@ async function getStores() {
 async function addStore(storeData) {
   try {
       const response = await axios.post(
-          'https://localhost:7253/api/Store/AddStore',
+          'https://localhost:7253/api/v1/store',
           storeData,
           {
               httpsAgent: new https.Agent({ rejectUnauthorized: false }),
@@ -50,7 +50,7 @@ async function addStore(storeData) {
 async function updateStore(storeId, storeData) {
   try {
     const response = await axios.put(
-      `https://localhost:7253/api/Store/UpdateStore?storeId=${storeId}`,
+      `https://localhost:7253/api/v1/store?storeId=${storeId}`,
       storeData,
       {
         httpsAgent: new https.Agent({ rejectUnauthorized: false }),
@@ -68,8 +68,31 @@ async function updateStore(storeId, storeData) {
 }
 
 
+async function deleteStore(storeId) {
+  try {
+    const response = await axios.delete('https://localhost:7253/api/v1/store', {
+      httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: { storeId },
+    });
+
+    if (response.data.isSuccess) {
+      return response.data;
+    } else {
+      return { error: 'Failed to delete store' };
+    }
+  } catch (error) {
+    console.error('Error deleting store:', error);
+    return { error: 'An error occurred while deleting the store' };
+  }
+}
+
+
 module.exports = {
     getStores,
     addStore,
-    updateStore
+    updateStore,
+    deleteStore
 };

@@ -39,7 +39,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% stores.forEach(store => { %>
+                        <% stores.slice(0, 10).forEach(store => { %>
                           <tr>
                             <td>
                               <div class="d-flex px-2 py-1">
@@ -202,6 +202,7 @@
             </form>
           </div>
           <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="deleteStoreBtn">Delete</button>
             <div class="ms-auto">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               <button type="submit" id="updateStoreBtn" class="btn btn-primary" form="editStoreForm">Save changes</button>
@@ -366,6 +367,28 @@
                 alert('An error occurred: ' + error.message);
             }
         });        
+      
+        document.getElementById("deleteStoreBtn").addEventListener("click", async function() {
+          const storeId = document.getElementById("storeId").value;
+    
+          const response = await fetch('/deleteStore', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              storeId: storeId
+            })
+          });
+    
+          const deleteResult = await response.json();
+          if (!deleteResult.error) {
+            alert("Store deleted successfully!");
+            location.reload();
+          } else {
+            alert("Failed to delete store: " + deleteResult.error);
+          }
+        });
       });
     </script>    
 
