@@ -22,7 +22,7 @@ const { login } = require('./src/api/login.api');
 const { tokenMiddleware } = require('./src/middlewares/auth.middleware');
 const { config } = require('./src/config/config');
 const { getUsers, addUser, updateUser, deleteUser } = require('./src/api/user.api');
-const { getStores, addStore, updateStore } = require('./src/api/store.api');
+const { getStores, addStore, updateStore, deleteStore } = require('./src/api/store.api');
 const { getCampus } = require('./src/api/campus.api');
 const { getAreas } = require('./src/api/area.api');
 
@@ -63,11 +63,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// 
+
+// Middleware
+app.use(tokenMiddleware);
 require('dotenv').config();
 
 
-// Login Function
+/*-----------------------------------*\
+  #Login Route
+\*-----------------------------------*/
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -83,7 +87,7 @@ app.post('/login', async (req, res) => {
         // Save the tokens into cookies
         // Generate access token with no specific expiration time (valid until the session ends)
         const accessToken = jwt.sign({ user: result.userInfo }, process.env.SECRET_KEY);
-        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true });
+        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, maxAge: result.userInfo.exp });
         res.cookie('refreshToken', result.refreshToken, { httpOnly: true, secure: true, maxAge: oneWeek });
         res.redirect('/dashboard');
       } else {
@@ -99,17 +103,14 @@ app.post('/login', async (req, res) => {
 });
 
 
-// Login Page
 app.get('/login', (req, res) => {
   res.render('./pages/login');
 });
 
 
-// Middleware
-app.use(tokenMiddleware);
-
-
-// Dashboard Page
+/*-----------------------------------*\
+  #Dashboard Route
+\*-----------------------------------*/
 app.get('/', (req, res) => {
   res.redirect('/dashboard');
 });
@@ -130,7 +131,9 @@ app.get('/dashboard', async (req, res) => {
 });
 
 
-// User Page
+/*-----------------------------------*\
+  #User Route
+\*-----------------------------------*/
 app.get('/user', async (req, res) => {
   const { status, campusName } = req.query;
 
@@ -155,7 +158,6 @@ app.get('/user', async (req, res) => {
 });
 
 
-// Xử lý route /addUser
 app.post('/addUser', async (req, res) => {
   const userData = req.body;
 
@@ -169,7 +171,6 @@ app.post('/addUser', async (req, res) => {
 });
 
 
-// Xử lý route /updateUser
 app.put('/updateUser', async (req, res) => {
   const userId = req.query.userId;
   const userData = req.body;
@@ -184,7 +185,6 @@ app.put('/updateUser', async (req, res) => {
 });
 
 
-// Xử lý route /deleteUser
 app.delete('/deleteUser', async (req, res) => {
   const { userId } = req.body;
 
@@ -198,7 +198,9 @@ app.delete('/deleteUser', async (req, res) => {
 });
 
 
-// Store Page
+/*-----------------------------------*\
+  #User Route
+\*-----------------------------------*/
 app.get('/store', async (req, res) => {
   try {
     const storeData = await getStores();
@@ -209,10 +211,20 @@ app.get('/store', async (req, res) => {
       res.render('pages/store', { text: 'Store', ...storeData, areas: areaData.areas });
     }
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching stores:', error);
     res.render('pages/store', { text: 'Store', stores: [], areas: [] });
   }
 });
+
+
+// app.get(`/store/${storeId}`, async (req, res) => {
+//   try {
+
+//   } catch (error) {
+//     console.error('Error fetching store:', error);
+//     res.render('pages/storeDetail', { text: '', stores: [] })
+//   }
+// })
 
 
 app.post('/addStore', async (req, res) => {
@@ -228,7 +240,6 @@ app.post('/addStore', async (req, res) => {
 });
 
 
-// Xử lý route /updateStore
 app.put('/updateStore', async (req, res) => {
   const storeId = req.query.storeId;
   const storeData = req.body;
@@ -243,7 +254,20 @@ app.put('/updateStore', async (req, res) => {
 });
 
 
-// Thêm axios interceptor để tự động thêm accessToken vào tất cả các yêu cầu
+app.delete('/deleteStore', async (req, res) => {
+  const { storeId } = req.body;  // Đảm bảo là storeId
+
+  try {
+    const result = await deleteStore(storeId);
+    res.json(result);
+  } catch (error) {
+    console.error('Error deleting store:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the store' });
+  }
+});
+
+
+// Add Authorization
 // app.use(config);
 
 
