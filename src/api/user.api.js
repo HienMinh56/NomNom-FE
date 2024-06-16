@@ -22,7 +22,7 @@ async function getUsers(filters = {}) {
           const adminsAndShippers = users.filter(user => user.role === 1 || user.role === 3);
           const customers = users.filter(user => user.role === 2);
 
-          return { users, adminsAndShippers, customers };
+          return { adminsAndShippers, customers };
       } else {
           return { error: 'Failed to fetch users' };
       }
