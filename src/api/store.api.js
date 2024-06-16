@@ -10,20 +10,23 @@ const axios = require('axios');
 const https = require('https');
 
 
-async function getStores() {
-    try {
-        const agent = new https.Agent({ rejectUnauthorized: false });
-        const response = await axios.get('https://localhost:7253/api/v1/store', { httpsAgent: agent });
-        const stores = response.data;
-        if (response.data) {
-            return { stores };
-        } else {
-            return { error: 'Failed to fetch stores' };
-        }
-    } catch (error) {
-        console.error('Error fetching stores:', error);
-        return { error: 'An error occurred while fetching stores' };
-    }
+async function getStores(filters = {}) {
+  try {
+      const agent = new https.Agent({ rejectUnauthorized: false });
+      const queryParams = new URLSearchParams(filters).toString();
+      const response = await axios.get(`https://localhost:7253/api/v1/store?${queryParams}`, {httpsAgent: agent});
+
+      if (response.data.isSuccess) {
+          const stores = response.data.data;
+
+          return { stores };
+      } else {
+          return { error: 'Failed to fetch stores' };
+      }
+  } catch (error) {
+      console.error('Error fetching stores:', error);
+      return { error: 'An error occurred while fetching stores' };
+  }
 }
 
 

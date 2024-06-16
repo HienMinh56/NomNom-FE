@@ -202,17 +202,26 @@ app.delete('/deleteUser', async (req, res) => {
   #User Route
 \*-----------------------------------*/
 app.get('/store', async (req, res) => {
+  const { status, areaName, sessionId } = req.query;
+
+  // Create a filters object with only defined values
+  const filters = {};
+  if (status !== undefined) filters.status = status;
+  if (areaName !== undefined) filters.areaName = areaName;
+  if (sessionId !== undefined) filter.sessionId = sessionId;
+
   try {
-    const storeData = await getStores();
-    const areaData = await getAreas();
-    if (storeData.error) {
-      res.render('pages/store', { text: 'Store', stores: [], areas: [] });
-    } else {
-      res.render('pages/store', { text: 'Store', ...storeData, areas: areaData.areas });
-    }
+      const storeData = await getStores();
+      const areaData = await getAreas();
+
+      if (storeData.error || areaData.error) {
+          res.render('pages/store', { text: 'Store', stores: [], areas: [] });
+      } else {
+          res.render('pages/store', { text: 'Store', ...storeData, areas: areaData.areas });
+      }
   } catch (error) {
-    console.error('Error fetching stores:', error);
-    res.render('pages/store', { text: 'Store', stores: [], areas: [] });
+      console.error('Error fetching stores:', error);
+      res.render('pages/store', { text: 'Store', stores: [], areas: [] });
   }
 });
 
