@@ -8,11 +8,12 @@
 
 const axios = require('axios');
 const https = require('https');
+const agent = new https.Agent({ rejectUnauthorized: false });
+const apiConfig = require('../config/api.config');
 
 async function refresh(refreshToken, accessToken) {
   try {
-    const agent = new https.Agent({ rejectUnauthorized: false });
-    const response = await axios.post('https://localhost:7253/api/Authorize/RefreshAccessToken', {
+    const response = await axios.post(`${apiConfig.BASE_URL}/Authorize/RefreshAccessToken`, {
       accessTokenToken: accessToken,
       refreshToken: refreshToken
     }, { httpsAgent: agent });

@@ -8,17 +8,16 @@
 
 const axios = require('axios');
 const https = require('https');
-
+const agent = new https.Agent({ rejectUnauthorized: false });
+const apiConfig = require('../config/api.config');
 
 async function getStores(filters = {}) {
   try {
-      const agent = new https.Agent({ rejectUnauthorized: false });
       const queryParams = new URLSearchParams(filters).toString();
-      const response = await axios.get(`https://localhost:7253/api/v1/store?${queryParams}`, {httpsAgent: agent});
+      const response = await axios.get(`${apiConfig.BASE_URL}/store?${queryParams}`, { httpsAgent: agent });
 
       if (response.data.isSuccess) {
           const stores = response.data.data;
-
           return { stores };
       } else {
           return { error: 'Failed to fetch stores' };
@@ -29,17 +28,14 @@ async function getStores(filters = {}) {
   }
 }
 
-
 async function addStore(storeData) {
   try {
       const response = await axios.post(
-          'https://localhost:7253/api/v1/store',
+          `${apiConfig.BASE_URL}/store`,
           storeData,
           {
-              httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-              headers: {
-                  'Content-Type': 'application/json',
-              },
+              httpsAgent: agent,
+              headers: { 'Content-Type': 'application/json' },
           }
       );
       return response.data;
@@ -49,20 +45,16 @@ async function addStore(storeData) {
   }
 }
 
-
 async function updateStore(storeId, storeData) {
   try {
     const response = await axios.put(
-      `https://localhost:7253/api/v1/store?storeId=${storeId}`,
+      `${apiConfig.BASE_URL}/store/${storeId}`,
       storeData,
       {
-        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        httpsAgent: agent,
+        headers: { 'Content-Type': 'application/json' },
       }
     );
-
     return response.data;
   } catch (error) {
     console.error('Error updating store:', error);
@@ -70,14 +62,11 @@ async function updateStore(storeId, storeData) {
   }
 }
 
-
 async function deleteStore(storeId) {
   try {
-    const response = await axios.delete('https://localhost:7253/api/v1/store', {
-      httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const response = await axios.delete(`${apiConfig.BASE_URL}/store`, {
+      httpsAgent: agent,
+      headers: { 'Content-Type': 'application/json' },
       data: { storeId },
     });
 
@@ -92,10 +81,4 @@ async function deleteStore(storeId) {
   }
 }
 
-
-module.exports = {
-    getStores,
-    addStore,
-    updateStore,
-    deleteStore
-};
+module.exports = { getStores, addStore, updateStore, deleteStore };

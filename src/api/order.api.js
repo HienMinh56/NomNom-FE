@@ -8,15 +8,15 @@
 
 const axios = require('axios');
 const https = require('https');
-
+const agent = new https.Agent({ rejectUnauthorized: false });
+const apiConfig = require('../config/api.config');
 
 async function getOrders() {
     try {
-        const agent = new https.Agent({ rejectUnauthorized: false });
-        const response = await axios.get('https://localhost:7253/api/v1/order', { httpsAgent: agent });
-
+        const response = await axios.get(`${apiConfig.BASE_URL}/order`, { httpsAgent: agent });
+        const order = response.data.data;
         if (response.data.isSuccess) {
-            return response.data.data;
+            return { order };
         } else {
             return { error: 'Failed to fetch Orders' };
         }

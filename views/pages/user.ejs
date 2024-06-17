@@ -14,474 +14,545 @@
       font-size: 0.75rem; /* Adjust the font size as needed */
       margin-bottom: 0;
     }
-    .card-body, .table-responsive{
-      min-height: calc(5 * 60px);
+    #userTableBody,
+    #customerTableBody{
+      min-height: 500px;
+    }
+    #nav_admin span,
+    #nav_customer span {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin: 0 5px;
+      text-align: center;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    #nav_admin span.active,
+    #nav_customer span.active {
+      background-color: #6a0dad;
+      color: #fff;
+      font-size: 2rem;
     }
   </style>
 
 </head>
-<body class="g-sidenav-show   bg-gray-100">
+<body class="g-sidenav-show bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
-    
-    <%- include('../partials/sidebar') %>
-    
-      <main class="main-content position-relative border-radius-lg ">
+  
+  <%- include('../partials/sidebar') %>
+  
+  <main class="main-content position-relative border-radius-lg ">
+    <%- include('../partials/navbar') %>
 
-        <%- include('../partials/navbar') %>
-
-        <div class="container-fluid py-4">
-          <div class="row">
-            <div class="col-12">
-              <div class="card mb-4">
-                <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                  <h6>Managers's table</h6>
-                  <a href="javascript:;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFormModal">
-                    Add <i class="ni ni-fat-add fs-7"></i>
-                  </a>
-                </div>
-                <div class="card-body px-0 pt-0 pb-2">
-                  <div class="table-responsive p-0">
-                    <table class="table align-items-center mb-0">
-                      <thead>
-                        <tr>
-                          <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
-                          <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
-                          <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Role</th>
-                          <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 d-none">Balance</th>
-                          <th id="statusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                Status
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                                <li><a class="dropdown-item active" href="#" onclick="toggleStatusFilterManager(null); return false;">All</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="toggleStatusFilterManager(1); return false;">Active</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="toggleStatusFilterManager(2); return false;">Inactive</a></li>
-                              </ul>
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+              <h6>Managers's table</h6>
+              <a href="javascript:;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFormModal">
+                Add <i class="ni ni-fat-add fs-7"></i>
+              </a>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">Name</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
+                      <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Role</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 d-none">Balance</th>
+                      <th id="statusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                        <div class="dropdown">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Status
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+                            <li><a class="dropdown-item active" href="#" onclick="toggleStatusFilterManager(null); return false;">All</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleStatusFilterManager(1); return false;">Active</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleStatusFilterManager(2); return false;">Inactive</a></li>
+                          </ul>
+                        </div>
+                      </th>
+                      <th id="campusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                        <div class="dropdown">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Campus
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="campusDropdown">
+                            <li><a class="dropdown-item active" href="#" onclick="filterByCampusManager(null); return false;">All</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus A'); return false;">Campus A</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus B'); return false;">Campus B</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus C'); return false;">Campus C</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus D'); return false;">Campus D</a></li>
+                          </ul>
+                        </div>
+                      </th>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Created Date</th>
+                      <th class="col-1 text-secondary opacity-7"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="userTableBody">
+                    <% adminsAndShippers.forEach(user => { %>
+                      <tr>
+                        <td>
+                          <div class="d-flex px-2 py-1">
+                            <div>
+                              <img src="<%= user.role === 1 ? './images/admin.png' : './images/shipper.png' %>" class="avatar me-3" alt="managers">
                             </div>
-                          </th>
-                          <th id="campusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                Campus
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="campusDropdown">
-                                <li><a class="dropdown-item active" href="#" onclick="filterByCampusManager(null); return false;">All</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus A'); return false;">Campus A</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus B'); return false;">Campus B</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus C'); return false;">Campus C</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus D'); return false;">Campus D</a></li>
-                              </ul>
+                            <div class="d-flex flex-column justify-content-center">
+                              <h6 class="mb-0 text-sm"><%= user.name %></h6>
+                              <p class="text-xs text-secondary mb-0"><%= user.email %></p>
                             </div>
-                          </th>
-                          <th class="col-1 text-secondary opacity-7"></th>
-                        </tr>
-                      </thead>
-                      <tbody id="userTableBody">
-                      <% adminsAndShippers.forEach(user => { %>
-                        <tr>
-                          <td>
-                            <div class="d-flex px-2 py-1">
-                              <div>
-                                <img src="<%= user.role === 1 ? './images/admin.png' : './images/shipper.png' %>" class="avatar me-3" alt="managers">
-                              </div>
-                              <div class="d-flex flex-column justify-content-center">
-                                <h6 class="mb-0 text-sm"><%= user.name %></h6>
-                                <p class="text-xs text-secondary mb-0"><%= user.email %></p>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <p class="text-xs font-weight-bold mb-0"><%= user.phone %></p>
-                          </td>
-                          <td>
-                            <p class="text-xs font-weight-bold mb-0"><%= user.role === 1 ? 'Admin' : 'Shipper' %></p>
-                          </td>
-                          <td class="d-none">
-                            <p class="text-sm font-weight-bold mb-0"><%= user.balance %></p>
-                          </td>
-                          <td class="align-middle text-center text-sm">
-                            <span class="badge badge-sm bg-gradient-<%= user.status === 1 ? 'success' : 'danger' %>">
-                                <%= user.status === 1 ? 'Active' : 'Inactive' %>
-                            </span>
-                          </td>
-                          <td class="align-middle text-center">
-                            <span class="text-secondary text-xs font-weight-bold"><%= user.campus %></span>
-                          </td>
-                          <td class="align-middle justify-content-center">
-                            <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">
-                                Edit
-                            </a>
-                          </td>
-                        </tr>
-                        <% }) %>
-                      </tbody>
-                    </table>
-                    <div id="nav_admin" class="d-flex justify-content-center mt-3"></div>
-                  </div>
-                </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0"><%= user.phone %></p>
+                        </td>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0"><%= user.role === 1 ? 'Admin' : 'Shipper' %></p>
+                        </td>
+                        <td class="d-none">
+                          <p class="text-sm font-weight-bold mb-0"><%= user.balance %></p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="badge badge-sm bg-gradient-<%= user.status === 1 ? 'success' : 'danger' %>">
+                            <%= user.status === 1 ? 'Active' : 'Inactive' %>
+                          </span>
+                        </td>
+                        <td class="align-middle text-center">
+                          <span class="text-secondary text-xs font-weight-bold"><%= user.campus %></span>
+                        </td>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0"><%= user.createdDate %></p>
+                        </td>
+                        <td class="align-middle justify-content-center">
+                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">
+                            Edit
+                          </a>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+                <div id="nav_admin" class="d-flex justify-content-center mt-3"></div>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="card mb-4">
-                <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                  <h6>Customers's table</h6>
-                  <a href="javascript:;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFormModal">
-                    Add <i class="ni ni-fat-add fs-7"></i>
-                  </a>
-                </div>
-                <div class="card-body px-0 pt-0 pb-2">
-                  <div class="table-responsive p-0">
-                    <table class="table align-items-center justify-content-center mb-0">
-                      <thead>
-                        <tr>
-                          <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
-                          <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
-                          <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 d-none">Role</th>
-                          <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Balance</th>
-                          <th id="statusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                Status
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                                <li><a class="dropdown-item active" href="#" onclick="toggleStatusFilter(null); return false;">All</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="toggleStatusFilter(1); return false;">Active</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="toggleStatusFilter(2); return false;">Inactive</a></li>
-                              </ul>
-                            </div>
-                          </th>
-                          <th id="campusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                Campus
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="campusDropdown">
-                                <li><a class="dropdown-item active" href="#" onclick="filterByCampus(null); return false;">All</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus A'); return false;">Campus A</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus B'); return false;">Campus B</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus C'); return false;">Campus C</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus D'); return false;">Campus D</a></li>
-                              </ul>
-                            </div>
-                          </th>
-                          <th class="col-1 text-secondary opacity-7"></th>
-                        </tr>
-                      </thead>
-                      <tbody id="customerTableBody">
-                        <% customers.forEach(user => { %>
-                          <tr>
-                            <td>
-                              <div class="d-flex px-2">
-                                <div>
-                                  <img src="./images/user.png" class="avatar rounded-circle me-2" alt="customers">
-                                </div>
-                                <div class="my-auto">
-                                  <h6 class="mb-0 text-sm"><%= user.name %></h6>
-                                  <p class="text-xs text-secondary mb-0"><%= user.email %></p>
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <p class="text-sm font-weight-bold mb-0"><%= user.phone %></p>
-                            </td>
-                            <td class="d-none">
-                              <p class="text-sm font-weight-bold mb-0"><%= user.role %></p>
-                            </td>
-                            <td>
-                              <p class="text-sm font-weight-bold mb-0"><%= user.balance %></p>
-                            </td>
-                            <td class="align-middle text-center text-sm">
-                              <span class="badge badge-sm bg-gradient-<%= user.status === 1 ? 'success' : 'danger' %>">
-                                <%= user.status === 1 ? 'Active' : 'Inactive' %>
-                              </span>
-                            </td>
-                            <td class="align-middle text-center">
-                              <span class="text-secondary text-xs font-weight-bold"><%= user.campus %></span>
-                            </td>
-                            <td class="align-middle justify-content-center">
-                              <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">
-                                  Edit
-                              </a>
-                            </td>
-                          </tr>
-                        <% }) %>
-                      </tbody>
-                    </table>
-                    <div id="nav_customer" class="d-flex justify-content-center mt-3"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <%- include('../layouts/footer') %>
-
         </div>
-      </main>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+              <h6>Customers's table</h6>
+              <a href="javascript:;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFormModal">
+                Add <i class="ni ni-fat-add fs-7"></i>
+              </a>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 d-none">Role</th>
+                      <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Balance</th>
+                      <th id="statusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                        <div class="dropdown">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Status
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+                            <li><a class="dropdown-item active" href="#" onclick="toggleStatusFilter(null); return false;">All</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleStatusFilter(1); return false;">Active</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleStatusFilter(2); return false;">Inactive</a></li>
+                          </ul>
+                        </div>
+                      </th>
+                      <th id="campusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                        <div class="dropdown">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Campus
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="campusDropdown">
+                            <li><a class="dropdown-item active" href="#" onclick="filterByCampus(null); return false;">All</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus A'); return false;">Campus A</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus B'); return false;">Campus B</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus C'); return false;">Campus C</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus D'); return false;">Campus D</a></li>
+                          </ul>
+                        </div>
+                      </th>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Created Date</th>
+                      <th class="col-1 text-secondary opacity-7"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="customerTableBody">
+                    <% customers.forEach(user => { %>
+                      <tr>
+                        <td>
+                          <div class="d-flex px-2">
+                            <div>
+                              <img src="./images/user.png" class="avatar rounded-circle me-2" alt="customers">
+                            </div>
+                            <div class="my-auto">
+                              <h6 class="mb-0 text-sm"><%= user.name %></h6>
+                              <p class="text-xs text-secondary mb-0"><%= user.email %></p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0"><%= user.phone %></p>
+                        </td>
+                        <td class="d-none">
+                          <p class="text-sm font-weight-bold mb-0"><%= user.role %></p>
+                        </td>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0"><%= user.balance %></p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="badge badge-sm bg-gradient-<%= user.status === 1 ? 'success' : 'danger' %>">
+                            <%= user.status === 1 ? 'Active' : 'Inactive' %>
+                          </span>
+                        </td>
+                        <td class="align-middle text-center">
+                          <span class="text-secondary text-xs font-weight-bold"><%= user.campus %></span>
+                        </td>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0"><%= user.createdDate %></p>
+                        </td>
+                        <td class="align-middle justify-content-center">
+                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">
+                            Edit
+                          </a>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+                <div id="nav_customer" class="d-flex justify-content-center mt-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <!-- Add User Modal -->
-    <div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-bottom">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addFormModalLabel">Add New User</h5>
+      <%- include('../layouts/footer') %>
+
+    </div>
+  </main>
+
+  <!-- Add User Modal -->
+  <div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-bottom">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addFormModalLabel">Add New User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addUserForm">
+            <div class="mb-3">
+              <label for="userName-add" class="form-label">UserName</label>
+              <input type="text" class="form-control" id="userName-add" required>
+            </div>
+            <div class="mb-3">
+              <label for="name-add" class="form-label">Name</label>
+              <input type="text" class="form-control" id="name-add" required>
+            </div>
+            <div class="mb-3">
+              <label for="userEmail-add" class="form-label">Email</label>
+              <input type="email" class="form-control" id="userEmail-add" required>
+            </div>
+            <div class="mb-3">
+              <label for="userPhone-add" class="form-label">Phone</label>
+              <input type="text" class="form-control" id="userPhone-add" required>
+            </div>
+            <div class="mb-3" id="roleField">
+              <label for="userRole-add" class="form-label">Role</label>
+              <select class="form-select" id="userRole-add">
+                <option value="1">Admin</option>
+                <option value="2">Customer</option>
+                <option value="3">Shipper</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="userCampus-add" class="form-label">Campus</label>
+              <select class="form-select" id="userCampus-add">
+                <% campuses.forEach((campus, index) => { %>
+                  <option value="<%= campus.campusId %>"  <%= index === 0 ? 'selected' : '' %>><%= campus.name %></option>
+                <% }); %>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="userPassword-add" class="form-label">Password</label>
+              <input type="password" class="form-control" id="userPassword-add" required>
+            </div>
+            <div class="mb-3">
+              <label for="userConfirmPassword-add" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="userConfirmPassword-add" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="saveUserBtn" class="btn btn-primary" form="addUserForm">Add User</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-bottom">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="addUserForm">
-              <div class="mb-3">
-                <label for="userName-add" class="form-label">UserName</label>
-                <input type="text" class="form-control" id="userName-add" required>
-              </div>
-              <div class="mb-3">
-                <label for="name-add" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name-add" required>
-              </div>
-              <div class="mb-3">
-                <label for="userEmail-add" class="form-label">Email</label>
-                <input type="email" class="form-control" id="userEmail-add" required>
-              </div>
-              <div class="mb-3">
-                <label for="userPhone-add" class="form-label">Phone</label>
-                <input type="text" class="form-control" id="userPhone-add" required>
-              </div>
-              <div class="mb-3" id="roleField">
-                <label for="userRole-add" class="form-label">Role</label>
-                <select class="form-select" id="userRole-add">
-                  <option value="1">Admin</option>
-                  <option value="2">Customer</option>
-                  <option value="3">Shipper</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="userCampus-add class="form-label">Campus</label>
-                <select class="form-select" id="userCampus-add">
-                  <% campuses.forEach((campus, index) => { %>
-                    <option value="<%= campus.campusId %>"  <%= index === 0 ? 'selected' : '' %>><%= campus.name %></option>
-                  <% }); %>
-                </select>
-              </div>            
-              <div class="mb-3">
-                <label for="userPassword-add" class="form-label">Password</label>
-                <input type="password" class="form-control" id="userPassword-add" required>
-              </div>
-              <div class="mb-3">
-                <label for="userConfirmPassword-add" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="userConfirmPassword-add" required>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" id="saveUserBtn" class="btn btn-primary" form="addUserForm">Add User</button>
-          </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Edit User Modal -->
-    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-bottom">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="editUserForm">
-              <div class="mb-3">
-                <label for="userId" class="form-label">User ID</label>
-                <input type="text" class="form-control" id="userId" readonly>
-              </div>
-              <div class="mb-3">
-                <label for="userName" class="form-label">Name</label>
-                <input type="text" class="form-control" id="userName" required>
-              </div>
-              <div class="mb-3">
-                <label for="userEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="userEmail" required>
-              </div>
-              <div class="mb-3">
-                <label for="userPhone" class="form-label">Phone</label>
-                <input type="text" class="form-control" id="userPhone" required>
-              </div>
-              <div class="mb-3" id="roleField">
-                <label for="userRole" class="form-label">Role</label>
-                <select class="form-select" id="userRole">
-                  <option value="1">Admin</option>
-                  <option value="2">Customer</option>
-                  <option value="3">Shipper</option>
-                </select>
-              </div>
-              <div class="mb-3" id="balanceField">
-                  <label for="userBalance" class="form-label">Balance</label>
-                  <input type="number" class="form-control" id="userBalance">
-              </div>
-              <div class="mb-3">
-                <label for="userCampus" class="form-label">Campus</label>
-                <select class="form-select" id="userCampus">
-                  <% campuses.forEach((campus, index) => { %>
-                    <option value="<%= campus.campusId %>"  <%= index === 0 ? 'selected' : '' %>><%= campus.name %></option>
-                  <% }); %>
-                </select>
-              </div>           
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" id="deleteUserBtn">Delete</button>
-            <div class="ms-auto">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" id="updateUserBtn" class="btn btn-primary" form="editUserForm">Save changes</button>
+        <div class="modal-body">
+          <form id="editUserForm">
+            <div class="mb-3">
+              <label for="userId" class="form-label">User ID</label>
+              <input type="text" class="form-control" id="userId" readonly>
             </div>
+            <div class="mb-3">
+              <label for="userName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="userName" required>
+            </div>
+            <div class="mb-3">
+              <label for="userEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="userEmail" required>
+            </div>
+            <div class="mb-3">
+              <label for="userPhone" class="form-label">Phone</label>
+              <input type="text" class="form-control" id="userPhone" required>
+            </div>
+            <div class="mb-3" id="roleField">
+              <label for="userRole" class="form-label">Role</label>
+              <select class="form-select" id="userRole">
+                <option value="1">Admin</option>
+                <option value="2">Customer</option>
+                <option value="3">Shipper</option>
+              </select>
+            </div>
+            <div class="mb-3" id="balanceField">
+                <label for="userBalance" class="form-label">Balance</label>
+                <input type="number" class="form-control" id="userBalance">
+            </div>
+            <div class="mb-3">
+              <label for="userCampus" class="form-label">Campus</label>
+              <select class="form-select" id="userCampus">
+                <% campuses.forEach((campus, index) => { %>
+                  <option value="<%= campus.campusId %>"  <%= index === 0 ? 'selected' : '' %>><%= campus.name %></option>
+                <% }); %>
+              </select>
+            </div>           
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="deleteUserBtn">Delete</button>
+          <div class="ms-auto">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" id="updateUserBtn" class="btn btn-primary" form="editUserForm">Save changes</button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- JS Handle FUNCTION -->
-    <script>
-      // Get selected user
-      function userModal(id, name, email, phone, role, balance) {
-        document.getElementById('userId').value = id;
-        document.getElementById('userName').value = name;
-        document.getElementById('userEmail').value = email;
-        document.getElementById('userPhone').value = phone;
-        document.getElementById('userRole').value = role;
-        document.getElementById('userBalance').value = balance;
-      }
-
-      const filterState = {
-        status: null,
-        campusName: null
-      };
-
-      const navAdmin = document.getElementById('nav_admin');
-      const navCustomer = document.getElementById('nav_customer');
-      const tbodyAdmin = document.getElementById('userTableBody');
-      const tbodyCustomer = document.getElementById('customerTableBody');
-      let pageIndex = 0;
-      let itemsPerPage = 10;
-
-      // ADMIN
-      function toggleStatusFilterManager(status) {
-        console.log('Toggling status filter:', status);
-        filterState.status = status;
-        fetchAdmins(filterState);
-      }
-
-      function filterByCampusManager(campusName) {
-        console.log('Filtering by campus:', campusName);
-        filterState.campusName = campusName;
-        fetchAdmins(filterState);
-      }            
-
-      async function fetchAdmins(filters = {}) {
-        const validFilters = Object.fromEntries(
-          Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
-        );
-
-        const queryParams = new URLSearchParams(validFilters).toString();
-
-        try {
-          const response = await fetch(`/user?${queryParams}`);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-
-          const data = await response.text();
-          tbodyAdmin.innerHTML = '';
-
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(data, 'text/html');
-
-          const newTbody = doc.getElementById('userTableBody');
-          if (newTbody) {
-            const users = Array.from(newTbody.childNodes);
-
-            users.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(user => {
-              tbodyAdmin.appendChild(user);
-            });
-
-            loadPageNavAdmin(users, navAdmin);
-          } else {
-            console.error('New tbody not found in fetched data');
-          }
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        }
-      }
-
-      function loadPageNavAdmin(users, navAdmin) {
-        navAdmin.innerHTML = "";
-        const totalItems = users.length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-        for (let i = 0; i < totalPages; i++) {
-          const span = document.createElement('span');
-          span.innerHTML = i + 1;
-          span.addEventListener('click', (e) => {
-            pageIndex = parseInt(e.target.innerHTML, 10) - 1;
-            fetchAdmins(filterState);
-          });
-          if (i === pageIndex) {
-            span.style.fontSize = "2rem";
-          }
-          navAdmin.append(span);
-        }
-      }
-
-      // USER
-      function toggleStatusFilter(status) {
-        console.log('Toggling status filter:', status);
-        filterState.status = status;
-        fetchUsers(filterState);
+  <!-- JS Form Alert -->
+  <script>
+    document.getElementById('addUserForm').addEventListener('submit', function(event) {
+      const userName = document.getElementById('userName-add').value || document.getElementById('userName').value;
+      const name = document.getElementById('name-add').value || document.getElementById('name').value;
+      const phone = document.getElementById('userPhone-add').value || document.getElementById('userPhone').value;
+    
+      const specialCharPattern = /[^a-zA-Z0-9 ]/g;
+      const phonePattern = /^\d{12}$/;
+    
+      if (specialCharPattern.test(userName)) {
+        alert('UserName should not contain special characters.');
+        event.preventDefault();
+        return;
       }
     
-      function filterByCampus(campusName) {
-        console.log('Filtering by campus:', campusName);
-        filterState.campusName = campusName;
-        fetchUsers(filterState);
-      }      
-
-      async function fetchUsers(filters = {}) {
-        const validFilters = Object.fromEntries(
-          Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
-        );
-
-        const queryParams = new URLSearchParams(validFilters).toString();
-
-        try {
-          const response = await fetch(`/user?${queryParams}`);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.text();
-          tbodyCustomer.innerHTML = '';
-
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(data, 'text/html');
-
-          const newTbody = doc.getElementById('customerTableBody');
-          if (newTbody) {
-            const customers = Array.from(newTbody.childNodes);
-
-            customers.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(customer => {
-              tbodyCustomer.appendChild(customer);
-            });
-
-            loadPageNavCustomer(customers, navCustomer);
-          } else {
-            console.error('New tbody not found in fetched data');
-          }
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        }
+      if (specialCharPattern.test(name)) {
+        alert('Name should not contain special characters.');
+        event.preventDefault();
+        return;
       }
+    
+      if (!phonePattern.test(phone)) {
+        alert('Phone number should be exactly 12 digits.');
+        event.preventDefault();
+        return;
+      }
+    });
+  </script>
 
-      function loadPageNavCustomer(customers, navCustomer) {
+  <!-- JS Handle FUNCTION -->
+  <script>
+    // Get selected user
+    function userModal(id, name, email, phone, role, balance, status) {
+      document.getElementById('userId').value = id;
+      document.getElementById('userName').value = name;
+      document.getElementById('userEmail').value = email;
+      document.getElementById('userPhone').value = phone;
+      document.getElementById('userRole').value = role;
+      document.getElementById('userBalance').value = balance;
+      document.getElementById('userStatus').value = status;
+    }
+
+    const filterState = {
+      status: null,
+      campusName: null
+    };
+
+    const navAdmin = document.getElementById('nav_admin');
+    const navCustomer = document.getElementById('nav_customer');
+    const tbodyAdmin = document.getElementById('userTableBody');
+    const tbodyCustomer = document.getElementById('customerTableBody');
+    let pageIndex = 0;
+    let itemsPerPage = 10;
+
+    // ADMIN
+    function toggleStatusFilterManager(status) {
+      console.log('Toggling status filter:', status);
+      filterState.status = status;
+      fetchAdmins(filterState);
+    }
+
+    function filterByCampusManager(campusName) {
+      console.log('Filtering by campus:', campusName);
+      filterState.campusName = campusName;
+      fetchAdmins(filterState);
+    }            
+
+    async function fetchAdmins(filters = {}) {
+      const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
+      );
+
+      const queryParams = new URLSearchParams(validFilters).toString();
+
+      try {
+        const response = await fetch(`/user?${queryParams}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        tbodyAdmin.innerHTML = '';
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+
+        const newTbody = doc.getElementById('userTableBody');
+        if (newTbody) {
+          const users = Array.from(newTbody.childNodes);
+
+          users.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(user => {
+            tbodyAdmin.appendChild(user);
+          });
+
+          loadPageNavAdmin(users, navAdmin);
+        } else {
+          console.error('New tbody not found in fetched data');
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    }
+
+    function loadPageNavAdmin(users, navAdmin) {
+      navAdmin.innerHTML = "";
+      const totalItems = users.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      for (let i = 0; i < totalPages; i++) {
+        const span = document.createElement('span');
+        span.innerHTML = i + 1;
+        span.addEventListener('click', (e) => {
+          pageIndex = parseInt(e.target.innerHTML, 10) - 1;
+          fetchAdmins(filterState);
+          updateAdminActivePage(navAdmin, pageIndex);
+        });
+        if (i === pageIndex) {
+          span.classList.add('active');
+        }
+          navAdmin.append(span);
+      }
+    }
+
+    function updateAdminActivePage(navAdmin, pageIndex) {
+      const spans = navAdmin.querySelectorAll('span');
+      spans.forEach((span, index) => {
+        if (index === pageIndex) {
+          span.classList.add('active');
+        } else {
+          span.classList.remove('active');
+        }
+      });
+    }
+
+    // USER
+    function toggleStatusFilter(status) {
+      console.log('Toggling status filter:', status);
+      filterState.status = status;
+      fetchUsers(filterState);
+    }
+  
+    function filterByCampus(campusName) {
+      console.log('Filtering by campus:', campusName);
+      filterState.campusName = campusName;
+      fetchUsers(filterState);
+    }      
+
+    async function fetchUsers(filters = {}) {
+      const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
+      );
+
+      const queryParams = new URLSearchParams(validFilters).toString();
+
+      try {
+        const response = await fetch(`/user?${queryParams}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.text();
+        tbodyCustomer.innerHTML = '';
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+
+        const newTbody = doc.getElementById('customerTableBody');
+        if (newTbody) {
+          const customers = Array.from(newTbody.childNodes);
+
+          customers.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(customer => {
+            tbodyCustomer.appendChild(customer);
+          });
+
+          loadPageNavCustomer(customers, navCustomer);
+        } else {
+          console.error('New tbody not found in fetched data');
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    }
+
+    function loadPageNavCustomer(customers, navCustomer) {
         navCustomer.innerHTML = "";
         const totalItems = customers.length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -492,164 +563,160 @@
           span.addEventListener('click', (e) => {
             pageIndex = parseInt(e.target.innerHTML, 10) - 1;
             fetchUsers(filterState);
+            updateCustomerActivePage(navCustomer, pageIndex);
           });
           if (i === pageIndex) {
-            span.style.fontSize = "2rem";
+            span.classList.add('active');
           }
-          navCustomer.append(span);
+            navCustomer.append(span);
         }
       }
 
-      // OTHERS
-      function updateDropdownSelection(dropdownId, value) {
-        const dropdownButton = document.getElementById(dropdownId);
-        const dropdownItems = dropdownButton.nextElementSibling.querySelectorAll('.dropdown-item');
+    function updateCustomerActivePage(navCustomer, pageIndex) {
+      const spans = navCustomer.querySelectorAll('span');
+      spans.forEach((span, index) => {
+        if (index === pageIndex) {
+          span.classList.add('active');
+        } else {
+          span.classList.remove('active');
+        }
+      });
+    }
 
-        dropdownItems.forEach(item => {
-          item.classList.remove('active');
-          const itemValueMatch = item.getAttribute('onclick').match(/\(([^)]+)\)/);
-          if (itemValueMatch) {
-            const itemValue = itemValueMatch[1].replace(/['"]+/g, '');
-            if (itemValue === String(value) || (itemValue === 'null' && value === null)) {
-              item.classList.add('active');
-            }
+    // OTHERS
+    function updateDropdownSelection(dropdownId, value) {
+      const dropdownButton = document.getElementById(dropdownId);
+      const dropdownItems = dropdownButton.nextElementSibling.querySelectorAll('.dropdown-item');
+
+      dropdownItems.forEach(item => {
+        item.classList.remove('active');
+        const itemValueMatch = item.getAttribute('onclick').match(/\(([^)]+)\)/);
+        if (itemValueMatch) {
+          const itemValue = itemValueMatch[1].replace(/['"]+/g, '');
+          if (itemValue === String(value) || (itemValue === 'null' && value === null)) {
+            item.classList.add('active');
           }
-        });
-      }
-      
-      document.addEventListener("DOMContentLoaded", function() {
-        fetchAdmins();
-        fetchUsers();
-        // Add user
-        document.getElementById('addUserForm').addEventListener('submit', async function(event) {        
-          event.preventDefault();
-
-          const userData = {
-            userName: document.getElementById('userName-add').value,
-            password: document.getElementById('userPassword-add').value,
-            confirmPassword: document.getElementById('userConfirmPassword-add').value,
-            email: document.getElementById('userEmail-add').value,
-            name: document.getElementById('name-add').value,
-            campusId: document.getElementById('userCampus-add').value,
-            phone: document.getElementById('userPhone-add').value,
-            role: parseInt(document.getElementById('userRole-add').value)
-          };
-
-          try {
-            const response = await fetch('/addUser', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(userData)
-            });
-
-            if (response.ok) {
-              const addResult = await response.json();
-                if (addResult.isSuccess && addResult.data && addResult.data.isSuccess) {
-                  alert('User added successfully!');
-                  location.reload();
-                } else {
-                  alert('Failed to add user: ' + (addResult.data ? addResult.data.message : addResult.error));
-                }
-            } else {
-              alert('Failed to connect to the server. Please try again later.');
-            }
-          } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred: ' + error.message);
-          }
-        });
-
-        // Update user
-        document.getElementById('updateUserBtn').addEventListener('click', async function(event) {
-          event.preventDefault();
-
-          const userId = document.getElementById('userId').value;
-          const userName = document.getElementById('userName').value;
-          const userEmail = document.getElementById('userEmail').value;
-          const userPhone = document.getElementById('userPhone').value;
-          const userRole = document.getElementById('userRole').value;
-          const userBalance = document.getElementById('userBalance').value;
-          const userCampus = document.getElementById('userCampus').value;
-
-          const userData = {
-            name: userName,
-            email: userEmail,
-            phone: userPhone,
-            role: userRole ? parseInt(userRole, 10) : null,
-            balance: userBalance ? parseInt(userBalance, 10) : null,
-            campusId: userCampus
-          };
-
-          try {
-            const response = await fetch(`/updateUser?userId=${userId}`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(userData)
-            });
-
-            if (response.ok) {
-              const updateResult = await response.json();
-              if (updateResult.isSuccess && updateResult.data && updateResult.data.isSuccess) {
-                alert('User updated successfully!');
-                location.reload();
-              } else {
-                alert('Failed to update user: ' + (updateResult.data ? updateResult.data.message : updateResult.error));
-              }
-            } else {
-              alert('Failed to connect to the server. Please try again later.');
-            }
-          } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred: ' + error.message);
-          }
-        });
+        }
+      });
+    }
     
-        // Delete user
-        document.getElementById("deleteUserBtn").addEventListener("click", async function() {
-          const userId = document.getElementById("userId").value;
-    
-          const response = await fetch('/deleteUser', {
-            method: 'DELETE',
+    document.addEventListener("DOMContentLoaded", function() {
+      fetchAdmins();
+      fetchUsers();
+      // Add user
+      document.getElementById('addUserForm').addEventListener('submit', async function(event) {        
+        event.preventDefault();
+
+        const userData = {
+          userName: document.getElementById('userName-add').value,
+          password: document.getElementById('userPassword-add').value,
+          confirmPassword: document.getElementById('userConfirmPassword-add').value,
+          email: document.getElementById('userEmail-add').value,
+          name: document.getElementById('name-add').value,
+          campusId: document.getElementById('userCampus-add').value,
+          phone: document.getElementById('userPhone-add').value,
+          role: parseInt(document.getElementById('userRole-add').value)
+        };
+
+        try {
+          const response = await fetch('/user/addUser', {
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-              userId: userId
-            })
+            body: JSON.stringify(userData)
           });
-    
-          const deleteResult = await response.json();
-          if (!deleteResult.error) {
-            alert("User deleted successfully!");
-            location.reload();
-          } else {
-            alert("Failed to delete user: " + deleteResult.error);
-          }
-        });
-      });
-    </script>
 
-    <!--   Core JS Files   -->
-    <script src="./js/core/popper.min.js"></script>
-    <script src="./js/core/bootstrap.min.js"></script>
-    <script src="./js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="./js/plugins/smooth-scrollbar.min.js"></script>
-    <script>
-        var win = navigator.platform.indexOf('Win') > -1;
-        if (win && document.querySelector('#sidenav-scrollbar')) {
-          var options = {
-            damping: '0.5'
+          if (response.ok) {
+            const addResult = await response.json();
+              if (addResult.isSuccess && addResult.data && addResult.data.isSuccess) {
+                alert('User added successfully!');
+                location.reload();
+              } else {
+                alert('Failed to add user: ' + (addResult.data ? addResult.data.message : addResult.error));
+              }
+          } else {
+            alert('Failed to connect to the server. Please try again later.');
           }
-          Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
         }
-    </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="./js/argon-dashboard.min.js?v=2.0.4"></script>
-  </body>
+      });
+
+      // Update user
+      document.getElementById('updateUserBtn').addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        const userId = document.getElementById('userId').value;
+        const userName = document.getElementById('userName').value;
+        const userEmail = document.getElementById('userEmail').value;
+        const userPhone = document.getElementById('userPhone').value;
+        const userRole = document.getElementById('userRole').value;
+        const userBalance = document.getElementById('userBalance').value;
+        const userCampus = document.getElementById('userCampus').value;
+
+        const userData = {
+          name: userName,
+          email: userEmail,
+          phone: userPhone,
+          role: userRole ? parseInt(userRole, 10) : null,
+          balance: userBalance ? parseInt(userBalance, 10) : null,
+          campusId: userCampus
+        };
+
+        try {
+          const response = await fetch(`/user/updateUser?userId=${userId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+          });
+
+          if (response.ok) {
+            const updateResult = await response.json();
+            if (updateResult.isSuccess && updateResult.data && updateResult.data.isSuccess) {
+              alert('User updated successfully!');
+              location.reload();
+            } else {
+              alert('Failed to update user: ' + (updateResult.data ? updateResult.data.message : updateResult.error));
+            }
+          } else {
+            alert('Failed to connect to the server. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
+        }
+      });
+  
+      // Delete user
+      document.getElementById("deleteUserBtn").addEventListener("click", async function() {
+        const userId = document.getElementById("userId").value;
+  
+        const response = await fetch('/user/deleteUser', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: userId
+          })
+        });
+  
+        const deleteResult = await response.json();
+        if (!deleteResult.error) {
+          alert("User deleted successfully!");
+          location.reload();
+        } else {
+          alert("Failed to delete user: " + deleteResult.error);
+        }
+      });
+    });
+  </script>
+
+  <!--   Core JS Files   -->
+  <%- include('../layouts/script') %>
+</body>
 </html>

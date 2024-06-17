@@ -3,6 +3,27 @@
 <head>
 
   <%- include('../layouts/head', { title: 'Store | Nom Nom' }) %>
+  <style>
+    #nav span {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin: 0 5px;
+      text-align: center;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #nav span.active {
+      background-color: #6a0dad;
+      color: #fff;
+      font-size: 2rem;
+    }
+  </style>
 
 </head>
 <body class="g-sidenav-show bg-gray-100">
@@ -33,14 +54,37 @@
                           <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
                           <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">OpenTime</th>
                           <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CloseTime</th>
-                          <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Status</th>
-                          <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Area</th>
+                          <th id="statusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                            <div class="dropdown">
+                              <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Status
+                              </button>
+                              <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+                                <li><a class="dropdown-item active" href="#" onclick="toggleStoreStatus(null); return false;">All</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="toggleStoreStatus(1); return false;">Active</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="toggleStoreStatus(2); return false;">Inactive</a></li>
+                              </ul>
+                            </div>
+                          </th>
+                          <th id="campusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                            <div class="dropdown">
+                              <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Area
+                              </button>
+                              <ul class="dropdown-menu" aria-labelledby="campusDropdown">
+                                <li><a class="dropdown-item active" href="#" onclick="filterByStoreArea(null); return false;">All</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="filterByStoreArea('Area 1'); return false;">Area 1</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="filterByStoreArea('Area 2'); return false;">Area 2</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="filterByStoreArea('Area 3'); return false;">Area 3</a></li>
+                              </ul>
+                            </div>
+                          </th>
                           <th class="col-1 text-secondary opacity-7"></th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <% stores.slice(0, 10).forEach(store => { %>
-                          <tr>
+                      <tbody id="storeTableBody">
+                        <% stores.forEach(store => { %>
+                          <tr style="cursor: pointer;">                            
                             <td>
                               <div class="d-flex px-2 py-1">
                                 <div>
@@ -63,7 +107,7 @@
                             </td>
                             <td class="align-middle text-center text-sm">
                               <span class="badge badge-sm bg-gradient-<%= store.status === 1 ? 'success' : 'danger' %>">
-                                  <%= store.status === 1 ? 'Active' : 'Inactive' %>
+                                <%= store.status === 1 ? 'Active' : 'Inactive' %>
                               </span>
                             </td>
                             <td class="align-middle text-center">
@@ -71,13 +115,14 @@
                             </td>
                             <td class="align-middle">
                               <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editStoreModal" onclick="storeModal('<%= store.storeId %>', '<%= store.name %>', '<%= store.address %>', '<%= store.phone %>', '<%= store.openTime %>', '<%= store.closeTime %>', '<%= store.status %>')">
-                                  Edit
+                                Edit
                               </a>
                             </td>
                           </tr>
-                        <% }) %>                        
+                        <% }) %>
                       </tbody>                      
                     </table>
+                    <div id="nav" class="d-flex justify-content-center mt-3"></div>
                   </div>
                 </div>
               </div>
@@ -88,67 +133,54 @@
 
         </div>
       </main>
-      
-      <div class="fixed-plugin">
-        <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-          <i class="fa fa-cog py-2"> </i>
-        </a>
-        <div class="card shadow-lg">
-          <div class="card-header pb-0 pt-3 ">
-            <div class="float-start">
-              <h5 class="mt-3 mb-0">Argon Configurator</h5>
-              <p>See our dashboard options.</p>
-            </div>
-            <div class="float-end mt-4">
-              <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-                <i class="fa fa-close"></i>
-              </button>
-            </div>
-            <!-- End Toggle Button -->
+
+    <!-- Add Store Modal -->
+    <div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-bottom">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addFormModalLabel">Add New User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <hr class="horizontal dark my-1">
-          <div class="card-body pt-sm-3 pt-0 overflow-auto">
-            <!-- Sidebar Backgrounds -->
-            <div>
-              <h6 class="mb-0">Sidebar Colors</h6>
-            </div>
-            <a href="javascript:void(0)" class="switch-trigger background-color">
-              <div class="badge-colors my-2 text-start">
-                <span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
-                <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
-                <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
-                <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
-                <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
-                <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
+          <div class="modal-body">
+            <form id="addStoreForm">
+              <div class="mb-3">
+                <label for="area-add" class="form-label">Area</label>
+                <select class="form-select" id="area-add">
+                  <% areas.forEach((area, index) => { %>
+                    <option value="<%= area.areaId %>"  <%= index === 0 ? 'selected' : '' %>><%= area.name %></option>
+                  <% }); %>
+                </select>
               </div>
-            </a>
-            <!-- Sidenav Type -->
-            <div class="mt-3">
-              <h6 class="mb-0">Sidenav Type</h6>
-              <p class="text-sm">Choose between 2 different sidenav types.</p>
-            </div>
-            <div class="d-flex">
-              <button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
-              <button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default" onclick="sidebarType(this)">Dark</button>
-            </div>
-            <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
-            <!-- Navbar Fixed -->
-            <div class="d-flex my-3">
-              <h6 class="mb-0">Navbar Fixed</h6>
-              <div class="form-check form-switch ps-0 ms-auto my-auto">
-                <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+              <div class="mb-3">
+                <label for="name-add" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name-add" required>
               </div>
-            </div>
-            <hr class="horizontal dark my-sm-4">
-            <div class="mt-2 mb-5 d-flex">
-              <h6 class="mb-0">Light / Dark</h6>
-              <div class="form-check form-switch ps-0 ms-auto my-auto">
-                <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
+              <div class="mb-3">
+                <label for="address-add" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address-add" required>
               </div>
-            </div>
+              <div class="mb-3">
+                <label for="phone-add" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="phone-add" required>
+              </div>  
+              <div class="mb-3">
+                <label for="openTime-add" class="form-label">OpenTime</label>
+                <input type="time" class="form-control" id="openTime-add" required>
+              </div>
+              <div class="mb-3">
+                <label for="closeTime-add" class="form-label">CloseTime</label>
+                <input type="time" class="form-control" id="closeTime-add">
+              </div>         
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" id="saveUserBtn" class="btn btn-primary" form="addStoreForm">Add Store</button>
           </div>
         </div>
       </div>
+    </div>
 
     <!-- Edit Store Modal -->
     <div class="modal fade" id="editStoreModal" tabindex="-1" aria-labelledby="editStoreModalLabel" aria-hidden="true">
@@ -212,54 +244,6 @@
       </div>
     </div>
 
-    <!-- Add Store Modal -->
-    <div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-bottom">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addFormModalLabel">Add New User</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="addStoreForm">
-              <div class="mb-3">
-                <label for="area-add" class="form-label">Area</label>
-                <select class="form-select" id="area-add">
-                  <% areas.forEach((area, index) => { %>
-                    <option value="<%= area.areaId %>"  <%= index === 0 ? 'selected' : '' %>><%= area.name %></option>
-                  <% }); %>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="name-add" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name-add" required>
-              </div>
-              <div class="mb-3">
-                <label for="address-add" class="form-label">Address</label>
-                <input type="text" class="form-control" id="address-add" required>
-              </div>
-              <div class="mb-3">
-                <label for="phone-add" class="form-label">Phone</label>
-                <input type="text" class="form-control" id="phone-add" required>
-              </div>  
-              <div class="mb-3">
-                <label for="openTime-add" class="form-label">OpenTime</label>
-                <input type="time" class="form-control" id="openTime-add" required>
-              </div>
-              <div class="mb-3">
-                <label for="closeTime-add" class="form-label">CloseTime</label>
-                <input type="time" class="form-control" id="closeTime-add">
-              </div>         
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" id="saveUserBtn" class="btn btn-primary" form="addStoreForm">Add Store</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- JS Handle FUNCTION -->
     <script>
       // Get selected store
@@ -271,10 +255,99 @@
           document.getElementById('storeOpenTime').value = openTime;
           document.getElementById('storeCloseTime').value = closeTime;
           document.getElementById('storeStatus').value = status;
-          // document.getElementById('storeArea').value = areaId;
+      }
+
+      const filterState = {
+        status: null,
+        areaName: null
+      };
+
+      const nav = document.getElementById('nav');
+      const tbodyStore = document.getElementById('storeTableBody');
+      let pageIndex = 0;
+      let itemsPerPage = 16;
+
+      function toggleStoreStatus(status) {
+        console.log('Toggling status filter:', status);
+        filterState.status = status;
+        fetchStores(filterState);
+      }
+
+      function filterByStoreArea(areaName) {
+        console.log('Filtering by campus:', areaName);
+        filterState.areaName = areaName;
+        fetchStores(filterState);
+      }            
+
+      async function fetchStores(filters = {}) {
+        const validFilters = Object.fromEntries(
+          Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
+        );
+
+        const queryParams = new URLSearchParams(validFilters).toString();
+
+        try {
+          const response = await fetch(`/store?${queryParams}`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          const data = await response.text();
+          tbodyStore.innerHTML = '';
+
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(data, 'text/html');
+
+          const newTbody = doc.getElementById('storeTableBody');
+          if (newTbody) {
+            const stores = Array.from(newTbody.childNodes);
+
+            stores.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(store => {
+              tbodyStore.appendChild(store);
+            });
+
+            loadPageStore(stores, nav);
+          } else {
+            console.error('New tbody not found in fetched data');
+          }
+        } catch (error) {
+          console.error('Error fetching stores:', error);
+        }
+      }
+
+      function loadPageStore(stores, nav) {
+        nav.innerHTML = "";
+        const totalItems = stores.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        for (let i = 0; i < totalPages; i++) {
+          const span = document.createElement('span');
+          span.innerHTML = i + 1;
+          span.addEventListener('click', (e) => {
+            pageIndex = parseInt(e.target.innerHTML, 10) - 1;
+            fetchStores(filterState);
+            updateActivePage(nav, pageIndex);
+          });
+          if (i === pageIndex) {
+            span.classList.add('active');
+          }
+          nav.append(span);
+        }
+      }
+
+      function updateActivePage(nav, pageIndex) {
+        const spans = nav.querySelectorAll('span');
+        spans.forEach((span, index) => {
+          if (index === pageIndex) {
+            span.classList.add('active');
+          } else {
+            span.classList.remove('active');
+          }
+        });
       }
 
       document.addEventListener("DOMContentLoaded", function() {
+        fetchStores();
         // Add store
         document.getElementById('addStoreForm').addEventListener('submit', async function(event) {        
           event.preventDefault();
@@ -289,7 +362,7 @@
           };
 
           try {
-            const response = await fetch('/addStore', {
+            const response = await fetch('/store/addStore', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -343,7 +416,7 @@
           };
 
         try {
-            const response = await fetch(`/updateStore?storeId=${storeId}`, {
+            const response = await fetch(`/store/updateStore?storeId=${storeId}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
@@ -371,7 +444,7 @@
         document.getElementById("deleteStoreBtn").addEventListener("click", async function() {
           const storeId = document.getElementById("storeId").value;
     
-          const response = await fetch('/deleteStore', {
+          const response = await fetch('/store/deleteStore', {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json'
@@ -390,25 +463,9 @@
           }
         });
       });
-    </script>    
+    </script>
 
     <!--   Core JS Files   -->
-    <script src="./js/core/popper.min.js"></script>
-    <script src="./js/core/bootstrap.min.js"></script>
-    <script src="./js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="./js/plugins/smooth-scrollbar.min.js"></script>
-    <script>
-        var win = navigator.platform.indexOf('Win') > -1;
-        if (win && document.querySelector('#sidenav-scrollbar')) {
-          var options = {
-            damping: '0.5'
-          }
-          Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-        }
-    </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="./js/argon-dashboard.min.js?v=2.0.4"></script>
-  </body>
+    <%- include('../layouts/script') %>
+</body>
 </html>

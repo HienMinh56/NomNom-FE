@@ -8,12 +8,12 @@
 
 const axios = require('axios');
 const https = require('https');
-
+const agent = new https.Agent({ rejectUnauthorized: false });
+const apiConfig = require('../config/api.config');
 
 async function getAreas() {
     try {
-        const agent = new https.Agent({ rejectUnauthorized: false });
-        const response = await axios.get('https://localhost:7253/api/v1/area', { httpsAgent: agent });
+        const response = await axios.get(`${apiConfig.BASE_URL}/area`, { httpsAgent: agent });
         const areas = response.data.data;
         if (response.data.isSuccess) {
             return { areas };
@@ -27,6 +27,4 @@ async function getAreas() {
 }
 
 
-module.exports = {
-    getAreas
-}
+module.exports = { getAreas }
