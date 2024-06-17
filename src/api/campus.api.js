@@ -8,12 +8,12 @@
 
 const axios = require('axios');
 const https = require('https');
-
+const agent = new https.Agent({ rejectUnauthorized: false });
+const apiConfig = require('../config/api.config');
 
 async function getCampus() {
     try {
-        const agent = new https.Agent({ rejectUnauthorized: false });
-        const response = await axios.get('https://localhost:7253/api/v1/campus', { httpsAgent: agent });
+        const response = await axios.get(`${apiConfig.BASE_URL}/campus`, { httpsAgent: agent });
         const campuses = response.data.data;
         if (response.data.isSuccess) {
             return { campuses };
@@ -27,6 +27,4 @@ async function getCampus() {
 }
 
 
-module.exports = {
-    getCampus
-}
+module.exports = { getCampus }

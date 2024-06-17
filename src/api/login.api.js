@@ -8,25 +8,21 @@
 
 const axios = require('axios');
 const https = require('https');
-const jwt = require('jsonwebtoken'); // Import jsonwebtoken
-
-
-require('dotenv').config();
-const secret_key = process.env.SECRET_KEY;
+const jwt = require('jsonwebtoken');
+const agent = new https.Agent({ rejectUnauthorized: false });
+const apiConfig = require('../config/api.config');
 
 async function login(username, password) {
   try {
-    const agent = new https.Agent({ rejectUnauthorized: false });
     const response = await axios.post(
-      `https://localhost:7253/api/Authorize/Login?userName=${username}&password=${password}`,
+      `${apiConfig.BASE_URL}/authorize/login?userName=${username}&password=${password}`,
       {}, 
       { httpsAgent: agent }
     );
 
     if (response.data.accessTokenToken && response.data.refreshToken) {
       // Decode the token using the secret key
-      const decodedToken = jwt.verify(response.data.accessTokenToken, secret_key);
-
+      const decodedToken = jwt.verify(response.data.accessTokenToken, apiConfig.SECRET_KEY);
 
       // Save token into localStorage
       if (typeof localStorage !== 'undefined') {
