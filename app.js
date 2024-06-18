@@ -24,6 +24,7 @@ const { config } = require('./src/config/api.config');
 const dashboardRoutes = require('./src/routes/dashboard.route');
 const userRoutes = require('./src/routes/user.route');
 const storeRoutes = require('./src/routes/store.route');
+const orderRoutes = require('./src/routes/order.route');
 
 
 // Initial express app
@@ -111,7 +112,7 @@ app.get('/login', (req, res) => {
 /*-----------------------------------*\
   #Dashboard Route
 \*-----------------------------------*/
-app.use('/dashboard', dashboardRoutes);
+app.use('/', dashboardRoutes);
 
 
 /*-----------------------------------*\
@@ -124,6 +125,12 @@ app.use('/user', userRoutes);
   #Store Route
 \*-----------------------------------*/
 app.use('/store', storeRoutes);
+
+
+/*-----------------------------------*\
+  #Store Route
+\*-----------------------------------*/
+app.use('/order', orderRoutes);
 
 
 // Add Authorization

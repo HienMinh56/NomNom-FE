@@ -18,13 +18,13 @@ async function getProducts(req, res) {
   try {
     const productData = await foodApi.getProducts(storeId, filters);
     if (productData.error) {
-      res.render('./pages/store_detail', { products: [] });
+      res.render('./pages/store_detail', { text: 'Store', products: [] });
     } else {
-      res.render('./pages/store_detail', { ...productData });
+      res.render('./pages/store_detail', { text: 'Store', products: productData.foods });
     }
   } catch (error) {
     console.error('Error fetching products:', error);
-    res.render('./pages/store_detail', { products: [] });
+    res.render('./pages/store_detail', { text: 'Store', products: [] });
   }
 }
 
