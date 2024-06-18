@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     
-    <%- include('../layouts/head', { title: 'Store | Nom Nom' }) %>
+    <%- include('../layouts/head', { title: 'Order | Nom Nom' }) %>
 
 </head>
 <body class="g-sidenav-show bg-gray-100">
@@ -19,88 +19,87 @@
               <div class="col-12">
                 <div class="card mb-4">
                   <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                    <h6>Store's table</h6>
-                    <a href="javascript:;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFormModal">
-                      Add <i class="ni ni-fat-add fs-7"></i>
-                    </a>
+                    <h6>Order's table</h6>
                   </div>
                   <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-0">
+                      <div class="row mb-3 d-flex ps-4 align-items-center">
+                        <div class="col-3">
+                            <label for="nameInput" class="form-label">Name</label>
+                            <input type="text" id="nameInput" class="form-control" placeholder="Enter name">
+                        </div>
+                        <div class="col-3">
+                          <label for="storeNameInput" class="form-label">Store Name</label>
+                          <input type="text" id="storeNameInput" class="form-control" placeholder="Enter store name">
+                        </div>
+                        <div class="col-3">
+                            <label for="createdDateInput" class="form-label">Created Date</label>
+                            <input type="date" id="createdDateInput" class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <label for="statusInput" class="form-label">Status</label>
+                            <select id="statusInput" class="form-select">
+                                <option value="">All</option>
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                            </select>
+                        </div>                        
+                        <div class="col-11 text-end mt-3">
+                          <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                        </div>
+                      </div>                    
                       <table class="table align-items-center mb-0">
                         <thead>
-                          <tr>
-                            <th class="col-4 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
-                            <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
-                            <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">OpenTime</th>
-                            <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CloseTime</th>
-                            <th id="statusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                              <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                  Status
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                                  <li><a class="dropdown-item active" href="#" onclick="toggleStoreStatus(null); return false;">All</a></li>
-                                  <li><a class="dropdown-item" href="#" onclick="toggleStoreStatus(1); return false;">Active</a></li>
-                                  <li><a class="dropdown-item" href="#" onclick="toggleStoreStatus(2); return false;">Inactive</a></li>
-                                </ul>
-                              </div>
-                            </th>
-                            <th id="campusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                              <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                  Area
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="campusDropdown">
-                                  <li><a class="dropdown-item active" href="#" onclick="filterByStoreArea(null); return false;">All</a></li>
-                                  <li><a class="dropdown-item" href="#" onclick="filterByStoreArea('Area 1'); return false;">Area 1</a></li>
-                                  <li><a class="dropdown-item" href="#" onclick="filterByStoreArea('Area 2'); return false;">Area 2</a></li>
-                                  <li><a class="dropdown-item" href="#" onclick="filterByStoreArea('Area 3'); return false;">Area 3</a></li>
-                                </ul>
-                              </div>
-                            </th>
-                            <th class="col-1 text-secondary opacity-7"></th>
-                          </tr>
-                        </thead>
-                        <tbody id="storeTableBody">
-                          <% orders.forEach(store => { %>
                             <tr>
-                              <td>
-                                <div class="d-flex px-2 py-1">
-                                  <div>
-                                    <img src="./images/store.png" class="avatar me-3" alt="stores">
-                                  </div>
-                                  <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm"><%= store.name %></h6>
-                                    <p class="text-xs text-secondary mb-0"><%= store.address %></p>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <p class="text-xs font-weight-bold mb-0"><%= store.phone %></p>
-                              </td>
-                              <td>
-                                <p class="text-sm font-weight-bold mb-0"><%= store.openTime %></p>
-                              </td>
-                              <td>
-                                <p class="text-sm font-weight-bold mb-0"><%= store.closeTime %></p>
-                              </td>
-                              <td class="align-middle text-center text-sm">
-                                <span class="badge badge-sm bg-gradient-<%= store.status === 1 ? 'success' : 'danger' %>">
-                                    <%= store.status === 1 ? 'Active' : 'Inactive' %>
-                                </span>
-                              </td>
-                              <td class="align-middle text-center">
-                                <span class="text-secondary text-xs font-weight-bold"><%= store.areaName %></span>
-                              </td>
-                              <td class="align-middle">
-                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editStoreModal" onclick="storeModal('<%= store.storeId %>', '<%= store.name %>', '<%= store.address %>', '<%= store.phone %>', '<%= store.openTime %>', '<%= store.closeTime %>', '<%= store.status %>')">
-                                    Edit
-                                </a>
-                              </td>
+                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-4">OrderId</th>
+                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Total</th>
+                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Quantity</th>
+                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">StoreName</th>
+                                <th class="col-2 text-center text-secondary text-xxs font-weight-bolder opacity-10 ps-4">Status</th>
+                                <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CreatedDate</th>
+                                <th class="col-1 text-secondary opacity-7"></th>
                             </tr>
-                          <% }) %>                        
-                        </tbody>                      
-                      </table>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <% orders.forEach(order => { %>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex px-2 py-1">
+                                            <div>
+                                                <img src="./images/store.png" class="avatar me-3" alt="stores">
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="mb-0 text-sm"><%= order.orderId %></h6>
+                                                <p class="text-xs text-secondary mb-0">by <%= order.name %></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0"><%= order.price %></p>
+                                    </td>
+                                    <td>
+                                        <p class="text-sm font-weight-bold mb-0"><%= order.quantity %></p>
+                                    </td>
+                                    <td>
+                                        <p class="text-sm font-weight-bold mb-0"><%= order.storeName %></p>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="badge badge-sm bg-gradient-<%= order.status === 1 ? 'success' : 'danger' %>">
+                                            <%= order.status === 1 ? 'Active' : 'Inactive' %>
+                                        </span>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <span class="text-secondary text-xs font-weight-bold"><%= order.createdDate %></span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editOrderModal" onclick="storeModal('<%= order.orderId %>', '<%= order.name %>', '<%= order.price %>', '<%= order.quantity %>', '<%= order.storeName %>', '<%= order.status %>', '<%= order.createdDate %>')">
+                                            Edit
+                                        </a>
+                                    </td>
+                                </tr>
+                            <% }) %>                        
+                        </tbody>
+                      </table>                    
                       <div id="nav" class="d-flex justify-content-center mt-3"></div>
                     </div>
                   </div>
@@ -117,7 +116,100 @@
       
   
       <!-- JS Handle FUNCTION -->
-         
+      <script>
+        const nav = document.getElementById('nav');
+const tbodyStore = document.getElementById('orderTableBody');
+let pageIndex = 0;
+let itemsPerPage = 16;
+
+const filterState = {
+  name: null,
+  status: null,
+  storeName: null,
+  createdDate: null
+};
+
+function applyFilters() {
+  const name = document.getElementById('nameInput').value;
+  const createdDate = document.getElementById('createdDateInput').value;
+  const status = document.getElementById('statusInput').value;
+  const storeName = document.getElementById('storeNameInput').value;
+
+  filterState.name = name;
+  filterState.status = status;
+  filterState.storeName = storeName;
+  filterState.createdDate = createdDate;
+  console.log('Filters applied:', filterState);
+  fetchOrders(filterState);
+}
+
+async function fetchOrders(filters = {}) {
+  const validFilters = Object.fromEntries(
+    Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null && value !== '')
+  );
+
+  const queryParams = new URLSearchParams(validFilters).toString();
+
+  try {
+    const response = await fetch(`/order?${queryParams}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.text();
+    tbodyStore.innerHTML = '';
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data, 'text/html');
+
+    const newTbody = doc.getElementById('orderTableBody');
+    if (newTbody) {
+      const orders = Array.from(newTbody.childNodes);
+
+      orders.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(order => {
+        tbodyStore.appendChild(order);
+      });
+
+      loadPageStore(orders, nav);
+    } else {
+      console.error('New tbody not found in fetched data');
+    }
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+  }
+}
+
+function loadPageStore(orders, nav) {
+  nav.innerHTML = "";
+  const totalItems = orders.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  for (let i = 0; i < totalPages; i++) {
+    const span = document.createElement('span');
+    span.innerHTML = i + 1;
+    span.addEventListener('click', (e) => {
+      pageIndex = parseInt(e.target.innerHTML, 10) - 1;
+      fetchOrders(filterState);
+      updateActivePage(nav, pageIndex);
+    });
+    if (i === pageIndex) {
+      span.classList.add('active');
+    }
+    nav.append(span);
+  }
+}
+
+function updateActivePage(nav, pageIndex) {
+  const spans = nav.querySelectorAll('span');
+  spans.forEach((span, index) => {
+    if (index === pageIndex) {
+      span.classList.add('active');
+    } else {
+      span.classList.remove('active');
+    }
+  });
+}
+      </script>
   
       <!--   Core JS Files   -->
       <%- include('../layouts/script') %>
