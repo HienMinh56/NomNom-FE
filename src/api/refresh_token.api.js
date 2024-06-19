@@ -11,18 +11,18 @@ const https = require('https');
 const agent = new https.Agent({ rejectUnauthorized: false });
 const apiConfig = require('../config/api.config');
 
-async function refresh(refreshToken, accessToken) {
+async function refresh(refreshToken) {
   try {
-    const response = await axios.post(`${apiConfig.BASE_URL}/Authorize/RefreshAccessToken`, {
-      accessTokenToken: accessToken,
+    const response = await axios.post(`${apiConfig.BASE_URL}/authorize/refresh-access-token`, {
       refreshToken: refreshToken
     }, { httpsAgent: agent });
 
     if (response.data.isSuccess) {
       return {
         success: true,
-        accessToken: response.data.accessTokenToken,
-        expiredAt: response.data.expiredAt
+        accessToken: response.data.data.accessTokenToken,
+        refreshToken: response.data.data.refreshToken,
+        expiredAt: response.data.data.expiredAt
       };
     } else {
       return {
