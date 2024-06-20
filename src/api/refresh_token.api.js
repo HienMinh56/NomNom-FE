@@ -6,23 +6,23 @@
 'use strict';
 
 
-const axios = require('axios');
-const https = require('https');
-const agent = new https.Agent({ rejectUnauthorized: false });
-const apiConfig = require('../config/api.config');
-
-async function refresh(refreshToken, accessToken) {
+async function refresh(refreshToken, expiredAt) {
   try {
-    const response = await axios.post(`${apiConfig.BASE_URL}/Authorize/RefreshAccessToken`, {
-      accessTokenToken: accessToken,
-      refreshToken: refreshToken
+    // console.log('Sending request:', { refreshToken, expiredAt});
+
+    const response = await axios.post(`${apiConfig.BASE_URL}/authorize/refresh-access-token`, {
+      refreshToken: refreshToken,
+      expiredAt: expiredAt,
     }, { httpsAgent: agent });
+
+    // console.log('Response data:', response.data);
 
     if (response.data.isSuccess) {
       return {
         success: true,
-        accessToken: response.data.accessTokenToken,
-        expiredAt: response.data.expiredAt
+        accessToken: response.data.data.accessTokenToken,
+        refreshToken: response.data.data.refreshToken,
+        expiredAt: response.data.data.expiredAt
       };
     } else {
       return {
@@ -31,7 +31,7 @@ async function refresh(refreshToken, accessToken) {
       };
     }
   } catch (error) {
-    console.error('Error in API refresh call:', error);
+    console.error('Error in API refresh call:', error.response ? error.response.data : error.message);
     return {
       success: false,
       message: error.message

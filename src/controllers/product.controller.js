@@ -7,24 +7,28 @@
 
 
 const foodApi = require('../api/product.api');
+const storeApi = require('../api/store.api');
 
 async function getProducts(req, res) {
-  const storeId = req.params.storeId; // Extract storeId from URL parameters
-  const { cate } = req.query; // Extract cate from query parameters
+  const { storeId } = req.params;
+  const { cate } = req.query;
 
   const filters = {};
   if (cate !== undefined) filters.cate = cate;
 
   try {
+    const storeData = await storeApi.getStores(filters);
     const productData = await foodApi.getProducts(storeId, filters);
+
     if (productData.error) {
-      res.render('./pages/store_detail', { text: 'Store', products: [] });
+      res.render('./pages/store_detail', { text: 'Store', products: [], store: null });
     } else {
-      res.render('./pages/store_detail', { text: 'Store', products: productData.foods });
+      const store = storeData.stores.find(store => store.storeId === storeId);
+      res.render('./pages/store_detail', { text: 'Store', products: productData.foods, store });
     }
   } catch (error) {
     console.error('Error fetching products:', error);
-    res.render('./pages/store_detail', { text: 'Store', products: [] });
+    res.render('./pages/store_detail', { text: 'Store', products: [], store: null });
   }
 }
 

@@ -50,7 +50,7 @@
                     <table class="table align-items-center mb-0">
                       <thead>
                         <tr>
-                          <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
+                          <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">Name</th>
                           <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
                           <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">OpenTime</th>
                           <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CloseTime</th>
@@ -84,7 +84,7 @@
                       </thead>
                       <tbody id="storeTableBody">
                         <% stores.forEach(store => { %>
-                          <tr style="cursor: pointer;">                            
+                          <tr style="cursor: pointer;" onClick="window.location.href='/store/<%= store.storeId %>'">                            
                             <td>
                               <div class="d-flex px-2 py-1">
                                 <div>
@@ -389,7 +389,7 @@
 
         // Update store
         document.getElementById('updateStoreBtn').addEventListener('click', async function(event) {
-          event.preventDefault(); // Prevent form submission
+          event.preventDefault();
 
           const storeId = document.getElementById('storeId').value;
           const storeName = document.getElementById('storeName').value;

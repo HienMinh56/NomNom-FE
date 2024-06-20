@@ -12,19 +12,20 @@
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
 
 
 /**
  * Custom modules
  */
-const { login } = require('./src/api/login.api');
-const { tokenMiddleware } = require('./src/middlewares/auth.middleware');
-const { config } = require('./src/config/api.config');
+const loginRoute  = require('./src/routes/login.route');
+const authenticatedUser = require('./src/middlewares/auth.middleware');
+const authRoute = require('./src/routes/auth.route');
+const logoutRoutes = require('./src/routes/logout.route');
 const dashboardRoutes = require('./src/routes/dashboard.route');
 const userRoutes = require('./src/routes/user.route');
 const storeRoutes = require('./src/routes/store.route');
 const orderRoutes = require('./src/routes/order.route');
+const authManager = require('./src/config/auth.config');
 
 
 // Initial express app
@@ -63,83 +64,69 @@ app.use((req, res, next) => {
   next();
 });
 
+// Get current User profile
+app.use((req, res, next) => {
+  const userInfo = authManager.getUserInfo();
+  if (userInfo) {
+    res.locals.userInfo = userInfo;
+  }
+  next();
+});
 
-// Middleware
-//app.use(tokenMiddleware);
 require('dotenv').config();
 
 
 /*-----------------------------------*\
   #Login Route
 \*-----------------------------------*/
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const result = await login(username, password);
-
-    console.log('Login API response:', result); // Debug log
-
-    if (result.success) {
-      // Check if the user role is equal to 1
-      if (result.userInfo.Role == "1") {
-        const oneWeek = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
-
-        // Save the tokens into cookies
-        // Generate access token with no specific expiration time (valid until the session ends)
-        const accessToken = jwt.sign({ user: result.userInfo }, process.env.SECRET_KEY);
-        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, maxAge: result.userInfo.exp });
-        res.cookie('refreshToken', result.refreshToken, { httpOnly: true, secure: true, maxAge: oneWeek });
-        res.cookie('userInfo', result.userInfo, { httpOnly: true, secure: true, maxAge: result.userInfo.exp });
-        res.redirect('/dashboard');
-      } else {
-        res.render('pages/login', { error: 'You do not have permission to access the dashboard' });
-      }
-    } else {
-      res.render('pages/login', { error: result.message });
-    }
-  } catch (error) {
-    console.error('Error during login:', error);
-    res.render('pages/login', { error: 'An error occurred during login' });
-  }
-});
-
-
-app.get('/login', (req, res) => {
-  res.render('./pages/login');
-});
+app.use('/login', loginRoute);
 
 
 /*-----------------------------------*\
-  #Dashboard Route
+  #Auth Route
+\*-----------------------------------*/
+app.use('/auth', authRoute);
+
+
+/**
+ * Check user is authenticated
+ */
+app.use(authenticatedUser);
+
+
+/*-----------------------------------*\
+  #Logout Pages
+\*-----------------------------------*/
+app.use('/logout', logoutRoutes);
+
+
+/*-----------------------------------*\
+  #Dashboard Pages
 \*-----------------------------------*/
 app.use('/', dashboardRoutes);
 
 
 /*-----------------------------------*\
-  #User Route
+  #User Pages
 \*-----------------------------------*/
 app.use('/user', userRoutes);
 
 
 /*-----------------------------------*\
-  #Store Route
+  #Store Pages
 \*-----------------------------------*/
 app.use('/store', storeRoutes);
 
 
 /*-----------------------------------*\
-  #Store Route
+  #Store Pages
 \*-----------------------------------*/
 app.use('/order', orderRoutes);
 
 
-// Add Authorization
-// app.use(config);
-
-
-/**
- * 404 page
- */
+/*-----------------------------------*\
+  #404 Pages
+\*-----------------------------------*/
 app.use((req, res) => {
     res.render('./pages/404');
 });
