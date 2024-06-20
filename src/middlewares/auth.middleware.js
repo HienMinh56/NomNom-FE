@@ -9,22 +9,30 @@
 const axios = require('axios');
 const https = require('https');
 const agent = new https.Agent({ rejectUnauthorized: false });
+const jwt = require('jsonwebtoken');
 const apiConfig = require('../config/api.config');
+const authManager = require('../config/auth.config');
 
 const authenticatedUser = async (req, res, next) => {
-  const { accessToken, refreshToken } = req.cookies;
+  const { accessToken, refreshToken, expiredAt } = req.cookies;
 
-  if (!refreshToken) {
+  // console.log('Cookies:', { accessToken, refreshToken, expiredAt });
+
+  if (!accessToken && !refreshToken) {
     return res.redirect('/login');
   }
 
-  if (!accessToken && refreshToken) {
+  if ( (!accessToken || accessToken === undefined) && refreshToken) {
     try {
+      console.log('Attempting to refresh token with:', { refreshToken, expiredAt });
+
       const response = await axios.post(
         `${apiConfig.BASE_URL}/authorize/refresh-access-token`,
-        { refreshToken },
+        { refreshToken, expiredAt },
         { httpsAgent: agent }
       );
+
+      console.log('Refresh API response:', response.data);
 
       if (response.data.isSuccess) {
         const newAccessToken = response.data.data.accessTokenToken;
@@ -47,11 +55,16 @@ const authenticatedUser = async (req, res, next) => {
         });
 
         req.cookies.accessToken = newAccessToken; // Update req.cookies to continue processing other middleware
+        const decodedToken = jwt.verify(newAccessToken, apiConfig.SECRET_KEY);
+        // Lưu trữ token vào authManager
+        authManager.setTokens(newAccessToken, decodedToken);
+
       } else {
+        console.error('Failed to refresh token:', response.data.message);
         return res.redirect('/login');
       }
     } catch (error) {
-      console.error('Error refreshing token:', error);
+      console.error('Error refreshing token:', error.response ? error.response.data : error.message);
       return res.redirect('/login');
     }
   }

@@ -9,6 +9,9 @@ const axios = require('axios');
 const https = require('https');
 const agent = new https.Agent({ rejectUnauthorized: false });
 const apiConfig = require('../config/api.config');
+const authManager = require('../config/auth.config');
+
+const accessToken = authManager.getAccessToken();
 
 async function getProducts(storeId, filters = {}) {
   try {
@@ -31,7 +34,7 @@ async function getProducts(storeId, filters = {}) {
 }
 
 async function addProduct(storeId, foodData) {
-  try {
+  try {    
     const response = await axios.post(
       `$${apiConfig.BASE_URL}/food/${storeId}`,
       foodData,
@@ -39,6 +42,7 @@ async function addProduct(storeId, foodData) {
         httpsAgent: agent,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
         },
       }
     );
@@ -58,6 +62,7 @@ async function updateProduct(foodId, foodData) {
         httpsAgent: agent,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
         },
       }
     );
@@ -75,6 +80,7 @@ async function deleteProduct(foodId) {
       httpsAgent: agent,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
       },
       data: { foodId },
     });

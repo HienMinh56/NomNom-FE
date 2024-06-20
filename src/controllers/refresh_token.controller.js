@@ -9,10 +9,14 @@
 const refreshApi = require('../api/refresh_token.api');
 
 async function refreshToken(req, res) {
-  const { refreshToken } = req.body;
+  const { refreshToken, expiredAt } = req.body;
+
+  // console.log('Request body:', { refreshToken, expiredAt, accessTokenToken });
 
   try {
-    const result = await refreshApi.refresh(refreshToken);
+    const result = await refreshApi.refresh(refreshToken, expiredAt);
+
+    // console.log('Refresh API response:', result);
 
     if (result.success) {
       const accessToken = result.accessToken;
@@ -41,6 +45,7 @@ async function refreshToken(req, res) {
         expiredAt: expiredAt
       });
     } else {
+      console.error('Failed to refresh token:', result.message);
       res.status(400).json({
         success: false,
         message: result.message

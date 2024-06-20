@@ -21,13 +21,14 @@ async function getProducts(req, res) {
     const productData = await foodApi.getProducts(storeId, filters);
 
     if (productData.error) {
-      res.render('./pages/store_detail', { text: 'Store', products: [], stores: [] });
+      res.render('./pages/store_detail', { text: 'Store', products: [], store: null });
     } else {
-      res.render('./pages/store_detail', { text: 'Store', products: productData.foods, stores: storeData.stores });
+      const store = storeData.stores.find(store => store.storeId === storeId);
+      res.render('./pages/store_detail', { text: 'Store', products: productData.foods, store });
     }
   } catch (error) {
     console.error('Error fetching products:', error);
-    res.render('./pages/store_detail', { text: 'Store', products: [], stores: [] });
+    res.render('./pages/store_detail', { text: 'Store', products: [], store: null });
   }
 }
 

@@ -10,6 +10,9 @@ const axios = require('axios');
 const https = require('https');
 const agent = new https.Agent({ rejectUnauthorized: false });
 const apiConfig = require('../config/api.config');
+const authManager = require('../config/auth.config');
+
+const accessToken = authManager.getAccessToken();
 
 async function getStores(filters = {}) {
   try {
@@ -35,7 +38,10 @@ async function addStore(storeData) {
           storeData,
           {
               httpsAgent: agent,
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+              },
           }
       );
       return response.data;
@@ -52,7 +58,10 @@ async function updateStore(storeId, storeData) {
       storeData,
       {
         httpsAgent: agent,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
       }
     );
     return response.data;
@@ -66,7 +75,10 @@ async function deleteStore(storeId) {
   try {
     const response = await axios.delete(`${apiConfig.BASE_URL}/store`, {
       httpsAgent: agent,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
       data: { storeId },
     });
 

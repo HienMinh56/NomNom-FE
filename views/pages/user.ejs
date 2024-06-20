@@ -100,7 +100,7 @@
                   </thead>
                   <tbody id="userTableBody">
                     <% adminsAndShippers.forEach(user => { %>
-                      <tr>
+                      <tr style="cursor: pointer;" onClick="window.location.href='/user/<%= user.userId %>'">
                         <td>
                           <div class="d-flex px-2 py-1">
                             <div>
@@ -130,7 +130,14 @@
                           <span class="text-secondary text-xs font-weight-bold"><%= user.campus %></span>
                         </td>
                         <td>
-                          <p class="text-xs font-weight-bold mb-0"><%= user.createdDate %></p>
+                          <p class="text-xs font-weight-bold mb-0">
+                            <%
+                              var date = user.createdDate.split('T')[0];
+                              var parts = date.split('-');
+                              var formattedDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+                            %>
+                            <%= formattedDate %>
+                          </p>
                         </td>
                         <td class="align-middle justify-content-center">
                           <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">
@@ -197,7 +204,7 @@
                   </thead>
                   <tbody id="customerTableBody">
                     <% customers.forEach(user => { %>
-                      <tr>
+                      <tr style="cursor: pointer;" onClick="window.location.href='/user/<%= user.userId %>'">
                         <td>
                           <div class="d-flex px-2">
                             <div>
@@ -227,7 +234,14 @@
                           <span class="text-secondary text-xs font-weight-bold"><%= user.campus %></span>
                         </td>
                         <td>
-                          <p class="text-sm font-weight-bold mb-0"><%= user.createdDate %></p>
+                          <p class="text-sm font-weight-bold mb-0">
+                            <%
+                              var date = user.createdDate.split('T')[0];
+                              var parts = date.split('-');
+                              var formattedDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+                            %>
+                            <%= formattedDate %>
+                          </p>
                         </td>
                         <td class="align-middle justify-content-center">
                           <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">

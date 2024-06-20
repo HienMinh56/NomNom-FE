@@ -25,6 +25,7 @@ const dashboardRoutes = require('./src/routes/dashboard.route');
 const userRoutes = require('./src/routes/user.route');
 const storeRoutes = require('./src/routes/store.route');
 const orderRoutes = require('./src/routes/order.route');
+const authManager = require('./src/config/auth.config');
 
 
 // Initial express app
@@ -63,9 +64,15 @@ app.use((req, res, next) => {
   next();
 });
 
+// Get current User profile
+app.use((req, res, next) => {
+  const userInfo = authManager.getUserInfo();
+  if (userInfo) {
+    res.locals.userInfo = userInfo;
+  }
+  next();
+});
 
-// Middleware
-//app.use(tokenMiddleware);
 require('dotenv').config();
 
 
