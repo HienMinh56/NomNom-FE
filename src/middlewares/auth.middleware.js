@@ -40,19 +40,26 @@ const authenticatedUser = async (req, res, next) => {
         const expiredAt = new Date(response.data.data.expiredAt);
 
         res.cookie('accessToken', newAccessToken, {
-          maxAge: 15 * 60 * 1000, // 15 minutes
+          maxAge: 30 * 60 * 1000, // 30 minutes
           httpOnly: true,
           secure: true,
           sameSite: 'Strict'
         });
 
-        const refreshTokenMaxAge = expiredAt - new Date();
+        const refreshTokenMaxAge = expiredAt;
         res.cookie('refreshToken', newRefreshToken, {
           maxAge: refreshTokenMaxAge,
           httpOnly: true,
           secure: true,
           sameSite: 'Strict'
         });
+
+        res.cookie('expiredAt', expiredAt), {
+          maxAge: 30 * 60 * 1000,
+          httpOnly: true,
+          secure: true,
+          sameSite: 'Strict'
+        }
 
         req.cookies.accessToken = newAccessToken; // Update req.cookies to continue processing other middleware
         const decodedToken = jwt.verify(newAccessToken, apiConfig.SECRET_KEY);
