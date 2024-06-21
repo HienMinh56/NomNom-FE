@@ -140,7 +140,8 @@
                           </p>
                         </td>
                         <td class="align-middle justify-content-center">
-                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">
+                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editUserModal" 
+                            onclick="event.stopPropagation(); userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">
                             Edit
                           </a>
                         </td>
@@ -244,7 +245,8 @@
                           </p>
                         </td>
                         <td class="align-middle justify-content-center">
-                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">
+                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editUserModal" 
+                            onclick="event.stopPropagation(); userModal('<%= user.userId %>', '<%= user.name %>', '<%= user.email %>', '<%= user.phone %>', '<%= user.role %>', '<%= user.balance %>', '<%= user.status %>')">
                             Edit
                           </a>
                         </td>

@@ -87,6 +87,27 @@ async function updateUser(userId, userData) {
     }
 }
 
+async function updateUserDetail(userId, userData) {
+    try {
+        const accessToken = authManager.getAccessToken();
+        const response = await axios.put(
+            `${apiConfig.BASE_URL}/user?userId=${userId}`,
+            userData,
+            {
+                httpsAgent: agent,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        return { error: 'An error occurred while updating the user' };
+    }
+}
+
 async function deleteUser(userId) {
     try {
         const accessToken = authManager.getAccessToken();
@@ -110,4 +131,4 @@ async function deleteUser(userId) {
     }
 }
 
-module.exports = { getUsers, addUser, updateUser, deleteUser };
+module.exports = { getUsers, addUser, updateUser, updateUserDetail, deleteUser };

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     
-    <%- include('../layouts/head', { title: 'UserDetail | Nom Nom' }) %>
+    <%- include('../layouts/head', { title: `${user.name} | Nom Nom` }) %>
 
 </head>
 <body class="g-sidenav-show bg-gray-100">
@@ -74,7 +74,7 @@
               <div class="card-header pb-0">
                 <div class="d-flex align-items-center">
                   <p class="mb-0">Edit Profile</p>
-                  <button class="btn btn-primary btn-sm ms-auto">Edit</button>
+                  <button type="submit" id="updateUserBtn" class="btn btn-primary btn-sm ms-auto">Save changes</button>
                 </div>
               </div>
               <div class="card-body">
@@ -82,26 +82,38 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Username</label>
-                      <input class="form-control" type="text" value="<%= user.name %>">
+                      <label for="userId" class="form-control-label">UserId</label>
+                      <input class="form-control" type="text" id="userId" value="<%= user.userId %>" readonly>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Email address</label>
-                      <input class="form-control" type="email" value="<%= user.email %>">
+                      <label for="name" class="form-control-label">Username</label>
+                      <input class="form-control" type="text" id="name" value="<%= user.name %>" required>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Phone</label>
-                      <input class="form-control" type="number" value="<%= user.phone %>">
+                      <label for="email" class="form-control-label">Email address</label>
+                      <input class="form-control" type="email" id="email" value="<%= user.email %>" required>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Password</label>
-                      <input class="form-control" type="text" value="<%= user.password %>">
+                      <label for="phone" class="form-control-label">Phone</label>
+                      <input class="form-control" type="number" id="phone" value="<%= user.phone %>" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="oldPassword" class="form-control-label">OldPassword</label>
+                      <input class="form-control" type="text" id="oldPassword" value="" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="password" class="form-control-label">Password</label>
+                      <input class="form-control" type="text" id="password" value="<%= user.password %>" required>
                     </div>
                   </div>
                 </div>
@@ -116,8 +128,8 @@
                   </div> -->
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Campus</label>
-                      <select class="form-select" id="userCampus-add" aria-valuenow="<%= user.campus %>">
+                      <label for="campus" class="form-control-label">Campus</label>
+                      <select class="form-select" id="campus" aria-valuenow="<%= user.campus %>" required>
                         <% campuses.forEach((campus, index) => { %>
                           <option value="<%= campus.campusId %>"  <%= index === 0 ? 'selected' : '' %>><%= campus.name %></option>
                         <% }); %>
@@ -126,17 +138,14 @@
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Balance</label>
-                      <input class="form-control" type="number" value="<%= user.balance %>">
+                      <label for="balance" class="form-control-label">Balance</label>
+                      <input class="form-control" type="number" id="balance" value="<%= user.balance %>" readonly>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label for="userRole" class="form-control-label">Role</label>
-                      <select class="form-select" id="userRole">
-                        <option value="1">Active</option>
-                        <option value="2">Inactive</option>
-                      </select>
+                      <label for="status" class="form-control-label">Status</label>
+                      <input class="form-control" type="number" id="status" value="<%= user.status %>" readonly>
                     </div>
                   </div>
                 </div>
@@ -221,8 +230,62 @@
         <%- include('../layouts/footer') %>
 
       </div>
-        </div>
+    </div>
     <% } %>
+
+    <!-- JS Handle FUNCTION -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('updateUserBtn').addEventListener('click', async function(event) {
+          event.preventDefault();
+
+          const userId = document.getElementById('userId').value;
+          const name = document.getElementById('name').value;
+          const email = document.getElementById('email').value;
+          const phone = document.getElementById('phone').value;
+          const oldPassword = document.getElementById('oldPassword').value;
+          const password = document.getElementById('password').value;
+          const confirmPassword = password;
+          const campus = document.getElementById('campus').value;
+
+          const userData = {
+            name: name,
+            email: email,
+            phone: phone,
+            oldPassword: oldPassword,
+            newPassword: password,
+            confirmPassword: confirmPassword,
+            campusId: campus,
+          };
+
+          try {
+            const response = await fetch(`/user/updateUserDetail?userId=${userId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(userData)
+            })
+
+            if (response.ok) {
+              const updateResult = await response.json();
+              if (updateResult.isSuccess) {
+                alert('User updated successfully!');
+                location.reload();
+              } else {
+                alert('Failed to update user: ' + (updateResult.data ? updateResult.data.message : updateResult.error));
+              }
+            } else {
+              alert('Failed to connect to the server. Please try again later.');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred: ' + error.message);
+          }
+        });
+      });
+    </script>
+     
 
     <!--   Core JS Files   -->
   <%- include('../layouts/script') %>

@@ -9,7 +9,7 @@
 const logout = (req, res) => {
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
-    res.clearCookie('userInfo');
+    res.clearCookie('expiredAt');
     res.redirect('/login');
 }
 
