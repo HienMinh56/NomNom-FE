@@ -48,13 +48,13 @@ async function getUserDetail(req, res) {
         // console.log('Campus Data:', campusData); // Debug: In ra dữ liệu campus để kiểm tra
   
         if (userData.error || campusData.error) {
-            res.render('./pages/user_detail', { text: 'User', user: {}, campus: [] });
+            res.render('./pages/user_detail', { text: 'Profile', user: {}, campus: [] });
         } else {
-            res.render('./pages/user_detail', { text: 'User', user: userData.users[0], campuses: campusData.campuses });
+            res.render('./pages/user_detail', { text: 'Profile', user: userData.users[0], campuses: campusData.campuses });
         }
     } catch (error) {
         console.error('Error fetching users:', error);
-        res.render('./pages/user_detail', { text: 'User', user: {}, campus: [] });
+        res.render('./pages/user_detail', { text: 'Profile', user: {}, campus: [] });
     }
 }
 
@@ -83,6 +83,19 @@ async function updateUser(req, res) {
     }
 }
 
+async function updateUserDetail(req, res) {
+    const userId = req.query.userId;
+    const userData = req.body;
+
+    try {
+        const result = await userApi.updateUserDetail(userId, userData);
+        res.json(result);
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ error: 'An error occurred while updating the user' });
+    }
+}
+
 async function deleteUser(req, res) {
     const { userId } = req.body;
 
@@ -95,4 +108,4 @@ async function deleteUser(req, res) {
     }
 }
 
-module.exports = { getUsers, getUserDetail, addUser, updateUser, deleteUser };
+module.exports = { getUsers, getUserDetail, addUser, updateUser, updateUserDetail, deleteUser };
