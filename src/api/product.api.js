@@ -10,15 +10,19 @@ const https = require('https');
 const agent = new https.Agent({ rejectUnauthorized: false });
 const apiConfig = require('../config/api.config');
 const authManager = require('../config/auth.config');
-
-const accessToken = authManager.getAccessToken();
+const FormData = require('form-data');
 
 async function getProducts(storeId, filters = {}) {
   try {
+    const accessToken = authManager.getAccessToken();
     const queryParams = new URLSearchParams(filters).toString();
     const response = await axios.get(
-      `${apiConfig.BASE_URL}/food?storeId=${storeId}&${queryParams}`,
-      { httpsAgent: agent }
+      `${apiConfig.BASE_URL}/food?storeId=${storeId}&${queryParams}`, {
+        httpsAgent: agent,
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      }
     );
 
     if (response.data.isSuccess) {
@@ -33,49 +37,72 @@ async function getProducts(storeId, filters = {}) {
   }
 }
 
-async function addProduct(storeId, foodData) {
-  try {    
+async function addProduct(storeId, foodData, imageFile) {
+  try {
+    const accessToken = authManager.getAccessToken();
+    const formData = new FormData();
+    for (const key in foodData) {
+      formData.append(key, foodData[key]);
+    }
+    formData.append('Image', imageFile.buffer, imageFile.originalname);
+
     const response = await axios.post(
-      `$${apiConfig.BASE_URL}/food/${storeId}`,
-      foodData,
+      `${apiConfig.BASE_URL}/food/${storeId}`,
+      formData,
       {
-        httpsAgent: agent,
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
+          ...formData.getHeaders()
         },
+        httpsAgent: agent,
       }
     );
     return response.data;
   } catch (error) {
-    console.error('Error adding product:', error);
+    if (error.response) {
+      console.error('Error response data:', error.response.data);
+    } else {
+      console.error('Error:', error.message);
+    }
     return { error: 'An error occurred while adding the product' };
   }
 }
 
-async function updateProduct(foodId, foodData) {
+async function updateProduct(foodId, foodData, imageFile) {
   try {
+    const accessToken = authManager.getAccessToken();
+    const formData = new FormData();
+    for (const key in foodData) {
+      formData.append(key, foodData[key]);
+    }
+    formData.append('Image', imageFile.buffer, imageFile.originalname); // Append image file
+
     const response = await axios.put(
       `${apiConfig.BASE_URL}/food/${foodId}`,
-      foodData,
+      formData,
       {
-        httpsAgent: agent,
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
+          ...formData.getHeaders()
         },
+        httpsAgent: agent,
       }
     );
 
     return response.data;
   } catch (error) {
-    console.error('Error updating product:', error);
+    if (error.response) {
+      console.error('Error response data:', error.response.data);
+    } else {
+      console.error('Error:', error.message);
+    }
     return { error: 'An error occurred while updating the product' };
   }
 }
 
 async function deleteProduct(foodId) {
   try {
+    const accessToken = authManager.getAccessToken();
     const response = await axios.delete(`${apiConfig.BASE_URL}/food`, {
       httpsAgent: agent,
       headers: {

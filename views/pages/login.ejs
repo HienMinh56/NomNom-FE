@@ -13,7 +13,7 @@
             <form class="sign-in-form" method="post" action="/auth">
                 <h2 class="title">Sign in</h2>
                 <% if (typeof error !== 'undefined') { %>
-                    <div class="alert alert-danger"><%= error %></div>
+                    <div class="alert alert-danger" id="login-noti"><%= error %></div>
                   <% } %>
                 <div class="input-field">
                     <i class="fas fa-user"></i>
@@ -25,30 +25,18 @@
                 </div>
                 <button type="submit" class="btn">Sign in</button>        
             </form>
-            <form action="" class="sign-up-form">
-                <h2 class="title">Forgot your password ?</h2>
+            <form class="sign-up-form" id="reset-password-form">
+                <h2 class="title">Reset password</h2>
                 <div class="input-field">
                     <i class="fas fa-envelope"></i>
-                    <input type="text" placeholder="Email">
+                    <input id="email" name="email" type="email" placeholder="Email" required>
                 </div>
-                <input type="submit" value="send" class="btn">
-                <p class="social-text">Or Sign in with social platform</p>
-                <div class="social-media">
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-                    <a href="" class="social-icon">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="" class="social-icon">
-                        <i class="fab fa-google"></i>
-                    </a>
-                    <a href="" class="social-icon">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                </div>
-                <p class="account-text">Already have an account ?<a href="#" id="sign-in-btn2">Sign in</a></p>
+                <input type="submit" value="Reset" class="btn">
+                <p class="account-text">Already have an account? <a href="#" id="sign-in-btn2">Sign in</a></p>
             </form>
+            <div id="notification" style="display:none; position:fixed; top:20px; right:20px; background-color:#f0f0f0; border:1px solid #ccc; padding:10px; z-index:1000;">
+                <p id="notification-message"></p>
+            </div>                       
         </div>
         <div class="panels-container">
             <div class="panel left-panel">
@@ -57,17 +45,69 @@
                     <p>Welcome back, wish you a very refreshing and joyful day at work</p>
                     <button class="btn" id="sign-in-btn">Sign in</button>
                 </div>
-                <img src="./images/signin.svg" alt="" class="image">
+                <img src="/images/signin.svg" alt="" class="image">
             </div>
             <div class="panel right-panel">
                 <div class="content">
                     <h3>Forgot your password ?</h3>
                     <p>Don't worry, we will help you retrieve your password, please click the button below to retrieve your password !!!</p>
-                    <button class="btn" id="sign-up-btn">Forgot my password</button>
+                    <button class="btn" id="sign-up-btn">Reset password</button>
                 </div>
-                <img src="./images/password.svg" alt="" class="image">
+                <img src="/images/password.svg" alt="" class="image">
             </div>
         </div>
     </div>
+    <script src="/js/login.js"></script>
+
+    <script>
+        const loginNoti = document.getElementById('login-noti');
+        setTimeout(() => {
+                    loginNoti.style.display = 'none';
+        }, 10000);
+
+        document.getElementById('reset-password-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Ngăn chặn hành vi submit mặc định của form
+        
+            const email = document.getElementById('email').value;
+        
+            try {
+                const response = await fetch('/auth/reset_mail', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email })
+                });
+                const result = await response.json();
+        
+                // Hiển thị thông báo
+                const notification = document.getElementById('notification');
+                const message = document.getElementById('notification-message');
+        
+                if (result.isSuccess) {
+                    message.textContent = 'Email send successfully. Check your mail to get new password!';
+                    notification.style.width = "200px";
+                    notification.style.backgroundColor = '#d4edda';
+                    notification.style.borderColor = '#c3e6cb';
+                    notification.style.borderRadius = '20px';
+                } else {
+                    message.textContent = 'Có lỗi xảy ra: ' + result.message;
+                    notification.style.width = "200px";
+                    notification.style.backgroundColor = '#f8d7da';
+                    notification.style.borderColor = '#f5c6cb';
+                    notification.style.borderRadius = '20px';
+                }
+        
+                notification.style.display = 'block';
+        
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 10000);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi gửi email. Vui lòng thử lại.');
+            }
+        });
+    </script>        
 </body>
 </html>

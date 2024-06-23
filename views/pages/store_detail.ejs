@@ -2,7 +2,28 @@
 <html lang="en">
 <head>
 
-  <%- include('../layouts/head', { title: `${store.name} | Nom Nom` }) %>
+  <%- include('../layouts/head', { title: `StoreDetail | Nom Nom` }) %>
+  <style>
+    #nav span {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin: 0 5px;
+      text-align: center;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #nav span.active {
+      background-color: #6a0dad;
+      color: #fff;
+      font-size: 2rem;
+    }
+  </style>
 
 </head>
 <body class="g-sidenav-show bg-gray-100">
@@ -32,31 +53,7 @@
                       <%= store.address %>
                     </p>
                   </div>
-                </div>
-                <!-- <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
-                  <div class="nav-wrapper position-relative end-0">
-                    <ul class="nav nav-pills nav-fill p-1" role="tablist">
-                      <li class="nav-item">
-                        <a class="nav-link mb-0 px-0 py-1 active d-flex align-items-center justify-content-center" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="true">
-                          <i class="ni ni-app"></i>
-                          <span class="ms-2">App</span>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
-                          <i class="ni ni-email-83"></i>
-                          <span class="ms-2">Messages</span>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
-                          <i class="ni ni-settings-gear-65"></i>
-                          <span class="ms-2">Settings</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div> -->
+                </div>                
               </div>
             </div>
       </div>   
@@ -87,14 +84,15 @@
                             Category
                           </button>
                           <ul class="dropdown-menu" aria-labelledby="campusDropdown">
-                            <li><a class="dropdown-item active" href="#" onclick="filterByStoreArea(null); return false;">All</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByStoreArea(1); return false;">Cate 1</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByStoreArea(2); return false;">Cate 2</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByStoreArea(3); return false;">Cate 3</a></li>
+                            <li><a class="dropdown-item active" href="#" onclick="toggleFoodCate(null); return false;">All</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleFoodCate(1); return false;">Cate 1</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleFoodCate(2); return false;">Cate 2</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleFoodCate(3); return false;">Cate 3</a></li>
                           </ul>
                         </div>
                       </th>
-                      <th id="statusHeader" class="col-1 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                      <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10" style="padding: 12px;">Status</th>
+                      <!-- <th id="statusHeader" class="col-1 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
                         <div class="dropdown">
                           <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             Status
@@ -105,12 +103,12 @@
                             <li><a class="dropdown-item" href="#" onclick="toggleStoreStatus(2); return false;">Inactive</a></li>
                           </ul>
                         </div>
-                      </th>
+                      </th> -->
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CreatedDate</th>
                       <th class="col-1 text-secondary opacity-7"></th>
                     </tr>
                   </thead>
-                  <tbody id="storeTableBody">
+                  <tbody id="foodTableBody">
                     <% products.forEach(product => { %>
                       <tr>                            
                         <td>
@@ -133,7 +131,7 @@
                         <td>
                           <p class="text-sm text-center font-weight-bold mb-0"><%= product.cate %></p>
                         </td>
-                        <td class="align-middle text-center text-sm">
+                        <td class="align-middle text-center text-sm ">
                           <span class="badge badge-sm bg-gradient-<%= product.status === 1 ? 'success' : 'danger' %>">
                             <%= product.status === 1 ? 'Active' : 'Inactive' %>
                           </span>
@@ -149,7 +147,7 @@
                           </span>
                         </td>
                         <td class="align-middle">
-                          <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editStoreModal" onclick="storeModal('<%= product.storeId %>', '<%= product.name %>', '<%= product.address %>', '<%= product.phone %>', '<%= product.openTime %>', '<%= product.closeTime %>', '<%= product.status %>')">
+                          <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editFoodModal" onclick="foodModal('<%= product.foodId %>', '<%= product.title %>', '<%= product.description %>', '<%= product.price %>', '<%= product.cate %>')">
                             Edit
                           </a>
                         </td>
@@ -175,14 +173,6 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
-              <div class="d-flex justify-content-between">
-                <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-none d-lg-block">Connect</a>
-                <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-block d-lg-none"><i class="ni ni-collection"></i></a>
-                <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-none d-lg-block">Message</a>
-                <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-block d-lg-none"><i class="ni ni-email-83"></i></a>
-              </div>
-            </div> -->
             <div class="card-body pt-0">
               <div class="row">
                 <div class="col">
@@ -202,20 +192,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div class="text-center mt-4">
-                <h5>
-                  Mark Davis<span class="font-weight-light">, 35</span>
-                </h5>
-                <div class="h6 font-weight-300">
-                  <i class="ni location_pin mr-2"></i>Bucharest, Romania
-                </div>
-                <div class="h6 mt-4">
-                  <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
-                </div>
-                <div>
-                  <i class="ni education_hat mr-2"></i>University of Computer Science
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
@@ -225,6 +201,327 @@
 
     </div>
   </div>
+
+  <!-- Add Store Modal -->
+  <div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-bottom">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addFormModalLabel">Add New Food</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addFoodForm" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="foodName-add" class="form-label">Food Name</label>
+              <input type="text" class="form-control" id="foodName-add" required>
+            </div>
+            <div class="mb-3">
+              <label for="foodTitle-add" class="form-label">Title</label>
+              <input type="text" class="form-control" id="foodTitle-add" required>
+            </div>
+            <div class="mb-3">
+              <label for="foodDescription-add" class="form-label">Description</label>
+              <input type="text" class="form-control" id="foodDescription-add" required>
+            </div>
+            <div class="mb-3">
+              <label for="foodPrice-add" class="form-label">Price</label>
+              <input type="text" class="form-control" id="foodPrice-add" required>
+            </div>
+            <div class="mb-3">
+              <label for="foodCate-add" class="form-label">Category</label>
+              <select class="form-select" id="foodCate-add">
+                <option value="1">Cate 1</option>
+                <option value="2">Cate 2</option>
+                <option value="3">Cate 3</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="foodImage-add" class="form-label">Image</label>
+              <input type="file" class="form-control" id="foodImage-add" accept="image/*" onchange="previewImage(event, 'imagePreview-add')">
+              <img id="imagePreview-add" src="#" alt="Image Preview" style="display:none; max-width: 100%; height: 80%; padding-top: 10px;">
+            </div>
+          </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" id="saveFoodBtn" class="btn btn-primary" form="addFoodForm">Add Store</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Food Modal -->
+  <div class="modal fade" id="editFoodModal" tabindex="-1" aria-labelledby="editFoodModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-bottom">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editFoodModalLabel">Edit Food</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editFoodForm" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="foodId" class="form-label">Food ID</label>
+              <input type="text" class="form-control" id="foodId" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="foodTitle" class="form-label">Title</label>
+              <input type="text" class="form-control" id="foodTitle" required>
+            </div>
+            <div class="mb-3">
+              <label for="foodDescription" class="form-label">Description</label>
+              <input type="text" class="form-control" id="foodDescription" required>
+            </div>
+            <div class="mb-3">
+              <label for="foodPrice" class="form-label">Price</label>
+              <input type="text" class="form-control" id="foodPrice" required>
+            </div>
+            <div class="mb-3">
+              <label for="foodCate" class="form-label">Category</label>
+              <select class="form-select" id="foodCate">
+                <option value="1">Cate 1</option>
+                <option value="2">Cate 2</option>
+                <option value="3">Cate 3</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="foodImage" class="form-label">Image</label>
+              <input type="file" class="form-control" id="foodImage" accept="image/*" onchange="previewImage(event, 'imagePreview')">
+              <img id="imagePreview" src="#" alt="Image Preview" style="display:none; max-width: 100%; height: 80%; padding-top: 10px;">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="deleteFoodBtn">Delete</button>
+          <div class="ms-auto">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" id="updateFoodBtn" class="btn btn-primary" form="editFoodForm">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Handle FUNCTION -->
+  <script>
+    // Preview image in modal
+    function previewImage(event, previewId) {
+      var input = event.target;
+      var reader = new FileReader();
+      reader.onload = function() {
+        var dataURL = reader.result;
+        var imagePreview = document.getElementById(previewId);
+        imagePreview.src = dataURL;
+        imagePreview.style.display = 'block';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+    // Show data of food in update modal
+    function foodModal(id, title, description,price, cate) {
+      document.getElementById('foodId').value = id;
+      document.getElementById('foodTitle').value = title;
+      document.getElementById('foodDescription').value = description;
+      document.getElementById('foodPrice').value = price;
+      document.getElementById('foodCate').value = cate;
+    }
+
+    function getStoreIdFromUrl() {
+      const pathSegments = window.location.pathname.split('/');
+      return pathSegments[pathSegments.length - 1];
+    }
+
+    const filterState = {
+      cate: null
+    };
+
+    const nav = document.getElementById('nav');
+    const tbodyFood = document.getElementById('foodTableBody');
+    let pageIndex = 0;
+    let itemsPerPage = 16;
+
+    function toggleFoodCate(cate) {
+      console.log('Toggling status filter:', cate);
+      filterState.cate = cate;
+      fetchFoods(filterState);
+    }
+
+    async function fetchFoods(filters = {}) {
+      const storeId = getStoreIdFromUrl();
+
+      const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
+      );
+
+      const queryParams = new URLSearchParams(validFilters).toString();
+
+      try {
+        const response = await fetch(`/food?storeId=${storeId}&${queryParams}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        tbodyFood.innerHTML = '';
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+
+        const newTbody = doc.getElementById('foodTableBody');
+        if (newTbody) {
+          const foods = Array.from(newTbody.childNodes);
+
+          foods.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(food => {
+            tbodyFood.appendChild(food);
+          });
+
+          loadPageFood(foods, nav);
+        } else {
+          console.error('New tbody not found in fetched data');
+        }
+      } catch (error) {
+        console.error('Error fetching foods:', error);
+      }
+    }
+
+    function loadPageFood(foods, nav) {
+      nav.innerHTML = "";
+      const totalItems = foods.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      for (let i = 0; i < totalPages; i++) {
+        const span = document.createElement('span');
+        span.innerHTML = i + 1;
+        span.addEventListener('click', (e) => {
+          pageIndex = parseInt(e.target.innerHTML, 10) - 1;
+          fetchFoods(filterState);
+          updateActivePage(nav, pageIndex);
+        });
+        if (i === pageIndex) {
+          span.classList.add('active');
+        }
+        nav.append(span);
+      }
+    }
+
+    function updateActivePage(nav, pageIndex) {
+      const spans = nav.querySelectorAll('span');
+      spans.forEach((span, index) => {
+        if (index === pageIndex) {
+          span.classList.add('active');
+        } else {
+          span.classList.remove('active');
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      fetchFoods();
+
+      // Add foods
+      document.getElementById('addFoodForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const storeId = getStoreIdFromUrl();
+    const foodName = document.getElementById('foodName-add').value;
+    const foodTitle = document.getElementById('foodTitle-add').value;
+    const foodDescription = document.getElementById('foodDescription-add').value;
+    const foodPrice = document.getElementById('foodPrice-add').value;
+    const foodCate = document.getElementById('foodCate-add').value;
+    const foodImage = document.getElementById('foodImage-add').files[0];
+
+    if (!foodName || !foodTitle || !foodDescription || !foodPrice || !foodCate || !foodImage) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('Name', foodName);
+    formData.append('Title', foodTitle);
+    formData.append('Description', foodDescription);
+    formData.append('Price', foodPrice);
+    formData.append('Cate', parseInt(foodCate, 10));
+    formData.append('Image', foodImage);
+
+    try {
+        console.log("Form Data:", formData);
+        const response = await fetch(`/food/addFood?storeId=${storeId}`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (response.ok) {
+            const addResult = await response.json();
+            if (addResult.isSuccess) {
+                alert('Food added successfully!');
+                location.reload();
+            } else {
+                alert('Failed to added food: ' + (addResult.data ? addResult.data.message : addResult.error));
+            }
+        } else {
+            const errorData = await response.json();
+            console.error('Error data:', errorData);
+            alert('Failed to connect to the server. Please try again later.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred: ' + error.message);
+    }
+});
+
+      // Update foods
+      document.getElementById('updateFoodBtn').addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        const foodId = document.getElementById('foodId').value;
+        const foodTitle = document.getElementById('foodTitle').value;
+        const foodDescription = document.getElementById('foodDescription').value;
+        const foodPrice = document.getElementById('foodPrice').value;
+        const foodCate = document.getElementById('foodCate').value;
+        const foodImage = document.getElementById('foodImage').files[0];
+
+        if (!foodTitle || !foodDescription || !foodPrice || !foodCate || !foodImage) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('Title', foodTitle);
+        formData.append('Description', foodDescription);
+        formData.append('Price', foodPrice);
+        formData.append('Cate', parseInt(foodCate, 10));
+        formData.append('Image', foodImage);
+
+        try {
+          const response = await fetch(`/food/updateFood?foodId=${foodId}`, {
+            method: 'PUT',
+            body: formData,
+          });
+
+          if (response.ok) {
+            const updateResult = await response.json();
+            if (updateResult.isSuccess) {
+              alert('Food updated successfully!');
+              location.reload();
+            } else {
+              alert('Failed to update food: ' + (updateResult.data ? updateResult.data.message : updateResult.error));
+            }
+          } else {
+            const errorData = await response.json();
+            console.error('Error data:', errorData);
+            alert('Failed to connect to the server. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
+        }
+      });
+
+      // Delete foods
+    });
+
+  </script>
 
   <!--   Core JS Files   -->
   <%- include('../layouts/script') %>
