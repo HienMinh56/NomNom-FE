@@ -421,9 +421,9 @@
 
       // Add foods
       document.getElementById('addFoodForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    const storeId = getStoreIdFromUrl();
+        const storeId = getStoreIdFromUrl();
     const foodName = document.getElementById('foodName-add').value;
     const foodTitle = document.getElementById('foodTitle-add').value;
     const foodDescription = document.getElementById('foodDescription-add').value;
@@ -519,6 +519,27 @@
       });
 
       // Delete foods
+      document.getElementById('deleteFoodBtn').addEventListener('click', async function () {
+        const foodId = document.getElementById('foodId').value;
+
+        const response = await fetch('/food/deleteFood', {
+          method: 'DELETE',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            foodId: foodId
+          })
+        });
+
+        const deleteResult = await response.json();
+        if (!deleteResult.error) {
+          alert("Food deleted successfully!");
+          location.reload();
+        } else {
+          alert("Failed to delete food: " + deleteResult.error);
+        }
+      });
     });
 
   </script>
