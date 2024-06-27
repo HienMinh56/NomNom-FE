@@ -62,38 +62,37 @@
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
+                  <div class="row ps-4 align-items-center w-100">
+                    <div class="col-3">
+                        <label for="statusInputAdmin" class="form-label">Status</label>
+                        <select id="statusInputAdmin" class="form-select">
+                            <option value="">All</option>
+                            <option value="1">Active</option>
+                            <option value="2">Inactive</option>
+                        </select>
+                    </div>     
+                    <div class="col-3">
+                      <label for="campusInputAdmin" class="form-label">Campus</label>
+                      <select id="campusInputAdmin" class="form-select">
+                          <option value="">All</option>
+                          <option value="Campus A">Campus A</option>
+                          <option value="Campus B">Campus B</option>
+                          <option value="Campus C">Campus C</option>
+                          <option value="Campus D">Campus D</option>
+                      </select>
+                  </div>                   
+                    <div class="col-2" style="margin: 45px 0 0 0 ; padding: 0;">
+                      <button class="btn btn-primary w-100 " style="height: 40px;" onclick="applyFiltersAdmins()">Apply Filters</button>
+                    </div>
+                  </div>
                   <thead>
                     <tr>
                       <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">Name</th>
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
                       <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Role</th>
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 d-none">Balance</th>
-                      <th id="statusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                        <div class="dropdown">
-                          <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Status
-                          </button>
-                          <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                            <li><a class="dropdown-item active" href="#" onclick="toggleStatusFilterManager(null); return false;">All</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="toggleStatusFilterManager(1); return false;">Active</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="toggleStatusFilterManager(2); return false;">Inactive</a></li>
-                          </ul>
-                        </div>
-                      </th>
-                      <th id="campusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                        <div class="dropdown">
-                          <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Campus
-                          </button>
-                          <ul class="dropdown-menu" aria-labelledby="campusDropdown">
-                            <li><a class="dropdown-item active" href="#" onclick="filterByCampusManager(null); return false;">All</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus A'); return false;">Campus A</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus B'); return false;">Campus B</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus C'); return false;">Campus C</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByCampusManager('Campus D'); return false;">Campus D</a></li>
-                          </ul>
-                        </div>
-                      </th>
+                      <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Status</th>
+                      <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Campus</th>
                       <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Created Date</th>
                       <th class="col-1 text-secondary opacity-7"></th>
                     </tr>
@@ -104,7 +103,7 @@
                         <td>
                           <div class="d-flex px-2 py-1">
                             <div>
-                              <img src="<%= user.role === 1 ? './images/admin.png' : './images/shipper.png' %>" class="avatar me-3" alt="managers">
+                              <img src="<%= user.role === 1 ? '/images/admin.png' : '/images/shipper.png' %>" class="avatar me-3" alt="managers">
                             </div>
                             <div class="d-flex flex-column justify-content-center">
                               <h6 class="mb-0 text-sm"><%= user.name %></h6>
@@ -167,38 +166,37 @@
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">
                 <table class="table align-items-center justify-content-center mb-0">
+                  <div class="row ps-4 align-items-center w-100">
+                    <div class="col-3">
+                        <label for="statusInputCustomer" class="form-label">Status</label>
+                        <select id="statusInputCustomer" class="form-select">
+                            <option value="">All</option>
+                            <option value="1">Active</option>
+                            <option value="2">Inactive</option>
+                        </select>
+                    </div>     
+                    <div class="col-3">
+                      <label for="campusInputCustomer" class="form-label">Campus</label>
+                      <select id="campusInputCustomer" class="form-select">
+                          <option value="">All</option>
+                          <option value="Campus A">Campus A</option>
+                          <option value="Campus B">Campus B</option>
+                          <option value="Campus C">Campus C</option>
+                          <option value="Campus D">Campus D</option>
+                      </select>
+                  </div>                   
+                    <div class="col-2" style="margin: 45px 0 0 0 ; padding: 0;">
+                      <button class="btn btn-primary w-100 " style="height: 40px;" onclick="applyFiltersCustomers()">Apply Filters</button>
+                    </div>
+                  </div>
                   <thead>
                     <tr>
                       <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 d-none">Role</th>
                       <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Balance</th>
-                      <th id="statusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                        <div class="dropdown">
-                          <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Status
-                          </button>
-                          <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                            <li><a class="dropdown-item active" href="#" onclick="toggleStatusFilter(null); return false;">All</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="toggleStatusFilter(1); return false;">Active</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="toggleStatusFilter(2); return false;">Inactive</a></li>
-                          </ul>
-                        </div>
-                      </th>
-                      <th id="campusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                        <div class="dropdown">
-                          <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Campus
-                          </button>
-                          <ul class="dropdown-menu" aria-labelledby="campusDropdown">
-                            <li><a class="dropdown-item active" href="#" onclick="filterByCampus(null); return false;">All</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus A'); return false;">Campus A</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus B'); return false;">Campus B</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus C'); return false;">Campus C</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByCampus('Campus D'); return false;">Campus D</a></li>
-                          </ul>
-                        </div>
-                      </th>
+                      <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Status</th>
+                      <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Campus</th>
                       <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Created Date</th>
                       <th class="col-1 text-secondary opacity-7"></th>
                     </tr>
@@ -209,7 +207,7 @@
                         <td>
                           <div class="d-flex px-2">
                             <div>
-                              <img src="./images/user.png" class="avatar rounded-circle me-2" alt="customers">
+                              <img src="/images/user.png" class="avatar rounded-circle me-2" alt="customers">
                             </div>
                             <div class="my-auto">
                               <h6 class="mb-0 text-sm"><%= user.name %></h6>
@@ -440,18 +438,16 @@
     let pageIndex = 0;
     let itemsPerPage = 10;
 
-    // ADMIN
-    function toggleStatusFilterManager(status) {
-      console.log('Toggling status filter:', status);
+    // ADMIN      
+    function applyFiltersAdmins() {
+      const status = document.getElementById('statusInputAdmin').value;
+      const campusName = document.getElementById('campusInputAdmin').value;
+
       filterState.status = status;
+      filterState.campusName = campusName;
+      console.log('Filters applied:', filterState);
       fetchAdmins(filterState);
     }
-
-    function filterByCampusManager(campusName) {
-      console.log('Filtering by campus:', campusName);
-      filterState.campusName = campusName;
-      fetchAdmins(filterState);
-    }            
 
     async function fetchAdmins(filters = {}) {
       const validFilters = Object.fromEntries(
@@ -521,17 +517,15 @@
     }
 
     // USER
-    function toggleStatusFilter(status) {
-      console.log('Toggling status filter:', status);
+    function applyFiltersCustomers() {
+      const status = document.getElementById('statusInputCustomer').value;
+      const campusName = document.getElementById('campusInputCustomer').value;
+
       filterState.status = status;
-      fetchUsers(filterState);
-    }
-  
-    function filterByCampus(campusName) {
-      console.log('Filtering by campus:', campusName);
       filterState.campusName = campusName;
+      console.log('Filters applied:', filterState);
       fetchUsers(filterState);
-    }      
+    }    
 
     async function fetchUsers(filters = {}) {
       const validFilters = Object.fromEntries(
