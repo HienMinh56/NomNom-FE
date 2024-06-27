@@ -48,37 +48,36 @@
                 <div class="card-body px-0 pt-0 pb-2">
                   <div class="table-responsive p-0">
                     <table class="table align-items-center mb-0">
+                      <div class="row ps-4 align-items-center w-100">
+                        <div class="col-3">
+                          <label for="statusInput" class="form-label">Status</label>
+                          <select id="statusInput" class="form-select">
+                            <option value="">All</option>
+                              <option value="1">Active</option>
+                              <option value="2">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                          <label for="areaInput" class="form-label">Area</label>
+                          <select id="areaInput" class="form-select">
+                              <option value="">All</option>
+                              <option value="Area 1">Area 1</option>
+                              <option value="Area 2">Area 2</option>
+                              <option value="Area 3">Area 3</option>
+                          </select>
+                      </div>                    
+                        <div class="col-2" style="margin: 45px 0 0 0 ; padding: 0;">
+                          <button class="btn btn-primary w-100 " style="height: 40px;" onclick="applyFilters()">Apply Filters</button>
+                        </div>
+                      </div>  
                       <thead>
                         <tr>
                           <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">Name</th>
                           <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
                           <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">OpenTime</th>
                           <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CloseTime</th>
-                          <th id="statusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                Status
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                                <li><a class="dropdown-item active" href="#" onclick="toggleStoreStatus(null); return false;">All</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="toggleStoreStatus(1); return false;">Active</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="toggleStoreStatus(2); return false;">Inactive</a></li>
-                              </ul>
-                            </div>
-                          </th>
-                          <th id="campusHeader" class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                Area
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="campusDropdown">
-                                <li><a class="dropdown-item active" href="#" onclick="filterByStoreArea(null); return false;">All</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByStoreArea('Area 1'); return false;">Area 1</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByStoreArea('Area 2'); return false;">Area 2</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="filterByStoreArea('Area 3'); return false;">Area 3</a></li>
-                              </ul>
-                            </div>
-                          </th>
+                          <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Status</th>
+                          <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Area</th>
                           <th class="col-1 text-secondary opacity-7"></th>
                         </tr>
                       </thead>
@@ -268,17 +267,15 @@
       let pageIndex = 0;
       let itemsPerPage = 16;
 
-      function toggleStoreStatus(status) {
-        console.log('Toggling status filter:', status);
-        filterState.status = status;
-        fetchStores(filterState);
-      }
+      function applyFilters() {
+        const areaName = document.getElementById('areaInput').value;
+        const status = document.getElementById('statusInput').value;
 
-      function filterByStoreArea(areaName) {
-        console.log('Filtering by campus:', areaName);
-        filterState.areaName = areaName;
-        fetchStores(filterState);
-      }            
+          filterState.status = status;
+          filterState.areaName = areaName;
+          console.log('Filters applied:', filterState);
+          fetchStores(filterState);
+        }
 
       async function fetchStores(filters = {}) {
         const validFilters = Object.fromEntries(
@@ -437,6 +434,7 @@
             }
         });
       
+        // Delete store
         document.getElementById("deleteStoreBtn").addEventListener("click", async function() {
           const storeId = document.getElementById("storeId").value;
     

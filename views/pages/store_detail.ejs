@@ -72,38 +72,28 @@
             </div>
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">
+                <div class="row ps-4 align-items-center w-100">
+                  <div class="col-3">
+                      <label for="cateInput" class="form-label">Category</label>
+                      <select id="cateInput" class="form-select">
+                          <option value="">All</option>
+                          <option value="1">Cate 1</option>
+                          <option value="2">Cate 2</option>
+                          <option value="3">Cate 3</option>
+                      </select>
+                  </div>                        
+                  <div class="col-2" style="margin: 45px 0 0 0 ; padding: 0;">
+                    <button class="btn btn-primary w-100 " style="height: 40px;" onclick="applyFilters()">Apply Filters</button>
+                  </div>
+                </div>
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
                       <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">Name</th>
                       <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Description</th>
                       <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Price</th>
-                      <th id="campusHeader" class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                        <div class="dropdown">
-                          <button class="btn btn-secondary dropdown-toggle" type="button" id="campusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Category
-                          </button>
-                          <ul class="dropdown-menu" aria-labelledby="campusDropdown">
-                            <li><a class="dropdown-item active" href="#" onclick="toggleFoodCate(null); return false;">All</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="toggleFoodCate(1); return false;">Cate 1</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="toggleFoodCate(2); return false;">Cate 2</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="toggleFoodCate(3); return false;">Cate 3</a></li>
-                          </ul>
-                        </div>
-                      </th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Category</th>
                       <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10" style="padding: 12px;">Status</th>
-                      <!-- <th id="statusHeader" class="col-1 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
-                        <div class="dropdown">
-                          <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Status
-                          </button>
-                          <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                            <li><a class="dropdown-item active" href="#" onclick="toggleStoreStatus(null); return false;">All</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="toggleStoreStatus(1); return false;">Active</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="toggleStoreStatus(2); return false;">Inactive</a></li>
-                          </ul>
-                        </div>
-                      </th> -->
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CreatedDate</th>
                       <th class="col-1 text-secondary opacity-7"></th>
                     </tr>
@@ -341,9 +331,11 @@
     let pageIndex = 0;
     let itemsPerPage = 16;
 
-    function toggleFoodCate(cate) {
-      console.log('Toggling status filter:', cate);
+    function applyFilters() {
+      const cate = document.getElementById('cateInput').value;
+
       filterState.cate = cate;
+      console.log('Filters applied:', filterState);
       fetchFoods(filterState);
     }
 
@@ -424,51 +416,51 @@
         event.preventDefault();
 
         const storeId = getStoreIdFromUrl();
-    const foodName = document.getElementById('foodName-add').value;
-    const foodTitle = document.getElementById('foodTitle-add').value;
-    const foodDescription = document.getElementById('foodDescription-add').value;
-    const foodPrice = document.getElementById('foodPrice-add').value;
-    const foodCate = document.getElementById('foodCate-add').value;
-    const foodImage = document.getElementById('foodImage-add').files[0];
+        const foodName = document.getElementById('foodName-add').value;
+        const foodTitle = document.getElementById('foodTitle-add').value;
+        const foodDescription = document.getElementById('foodDescription-add').value;
+        const foodPrice = document.getElementById('foodPrice-add').value;
+        const foodCate = document.getElementById('foodCate-add').value;
+        const foodImage = document.getElementById('foodImage-add').files[0];
 
-    if (!foodName || !foodTitle || !foodDescription || !foodPrice || !foodCate || !foodImage) {
-        alert('Please fill in all required fields.');
-        return;
-    }
+        if (!foodName || !foodTitle || !foodDescription || !foodPrice || !foodCate || !foodImage) {
+          alert('Please fill in all required fields.');
+          return;
+        }
 
-    const formData = new FormData();
-    formData.append('Name', foodName);
-    formData.append('Title', foodTitle);
-    formData.append('Description', foodDescription);
-    formData.append('Price', foodPrice);
-    formData.append('Cate', parseInt(foodCate, 10));
-    formData.append('Image', foodImage);
+        const formData = new FormData();
+        formData.append('Name', foodName);
+        formData.append('Title', foodTitle);
+        formData.append('Description', foodDescription);
+        formData.append('Price', foodPrice);
+        formData.append('Cate', parseInt(foodCate, 10));
+        formData.append('Image', foodImage);
 
-    try {
-        console.log("Form Data:", formData);
-        const response = await fetch(`/food/addFood?storeId=${storeId}`, {
+        try {
+          console.log("Form Data:", formData);
+          const response = await fetch(`/food/addFood?storeId=${storeId}`, {
             method: 'POST',
             body: formData,
-        });
+          });
 
-        if (response.ok) {
+          if (response.ok) {
             const addResult = await response.json();
             if (addResult.isSuccess) {
-                alert('Food added successfully!');
-                location.reload();
+              alert('Food added successfully!');
+              location.reload();
             } else {
-                alert('Failed to added food: ' + (addResult.data ? addResult.data.message : addResult.error));
+              alert('Failed to added food: ' + (addResult.data ? addResult.data.message : addResult.error));
             }
-        } else {
+          } else {
             const errorData = await response.json();
             console.error('Error data:', errorData);
             alert('Failed to connect to the server. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred: ' + error.message);
-    }
-});
+      });
 
       // Update foods
       document.getElementById('updateFoodBtn').addEventListener('click', async function(event) {
