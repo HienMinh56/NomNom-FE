@@ -24,13 +24,13 @@ async function refreshToken(req, res) {
       const expiredAt = new Date(result.expiredAt);
 
       res.cookie('accessToken', accessToken, {
-        maxAge: 15 * 60 * 1000, // 15 minutes
+        maxAge: 30 * 60 * 1000, // 30 minutes
         httpOnly: true,
         secure: true,
         sameSite: 'Strict'
       });
 
-      const refreshTokenMaxAge = expiredAt - new Date();
+      const refreshTokenMaxAge = expiredAt;
       res.cookie('refreshToken', newRefreshToken, {
         maxAge: refreshTokenMaxAge,
         httpOnly: true,

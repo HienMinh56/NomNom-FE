@@ -9,7 +9,10 @@
 const express = require('express');
 const router = express.Router();
 const dashboardController = require('../controllers/dashboard.controller');
+const orderController = require('../controllers/order.controller');
+
 
 router.get('/', dashboardController.getItems);
+router.get('/data-chart', orderController.dataChart);
 
 module.exports = router;

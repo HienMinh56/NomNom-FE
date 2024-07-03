@@ -33,6 +33,23 @@ async function getOrders(req, res) {
     }
 }
 
+async function getOrderDetail(req, res) {
+    const { orderId } = req.params;
+
+    try {
+        const orderDetail = await orderApi.getOrderDetail(orderId);
+
+        if (orderDetail.error) {
+            res.render('./pages/order_detail', { text: 'Order', orderDetails: [] });
+        } else {
+            res.render('./pages/order_detail', { text: 'Order', orderDetails: orderDetail.orders });
+        }
+    } catch (error) {
+        console.error('Error fetching orderDetail:', error);
+        res.render('./pages/order_detail', { text: 'Order', orderDetails: [] });
+    }
+}
+
 async function dataChart(req, res) {
     const { type, month, year } = req.query;
 
@@ -40,9 +57,10 @@ async function dataChart(req, res) {
         const chartData = await orderApi.dataChart(type, month, year);
         res.json(chartData);
     } catch (error) {
-        console.error('Error updating product:', error);
-        res.status(500).json({ error: 'An error occurred while updating the product' });
+        console.error('Error getting dataChart:', error);
+        res.status(500).json({ error: 'An error occurred while getting dataChart' });
     }
 }
 
-module.exports = { getOrders, dataChart }
+
+module.exports = { getOrders, getOrderDetail, dataChart }

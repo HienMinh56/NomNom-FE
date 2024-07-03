@@ -43,9 +43,6 @@ async function getUserDetail(req, res) {
     try {
         const userData = await userApi.getUsers(userId, filters);
         const campusData = await campusApi.getCampus();
-
-        //console.log('User Data:', userData); // Debug: In ra dữ liệu người dùng để kiểm tra
-        // console.log('Campus Data:', campusData); // Debug: In ra dữ liệu campus để kiểm tra
   
         if (userData.error || campusData.error) {
             res.render('./pages/user_detail', { text: 'Profile', user: {}, campus: [] });
