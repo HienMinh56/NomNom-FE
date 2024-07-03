@@ -30,6 +30,24 @@ async function getOrders(filters = {}) {
 }
 
 
+async function getOrderDetail(orderId) {
+    try {
+        const response = await axios.get(`${apiConfig.BASE_URL}/order-details?orderId=${orderId}`, { httpsAgent: agent });
+
+        if (response.data.isSuccess) {
+            const orders = response.data.data; 
+
+            return { orders };
+        } else {
+            return { error: 'Failed to fetch orders' };
+        }
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        return { error: 'An error occurred while fetching orders' };
+    }
+}
+
+
 async function dataChart(type, month, year) {
     try {
         const response = await axios.get(`${apiConfig.BASE_URL}/order/data-chart?type=${type}&year=${year}&month=${month}`, { httpsAgent: agent });
@@ -54,4 +72,4 @@ async function dataChart(type, month, year) {
 }
 
 
-module.exports = { getOrders, dataChart }
+module.exports = { getOrders, getOrderDetail, dataChart }

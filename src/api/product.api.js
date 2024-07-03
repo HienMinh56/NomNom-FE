@@ -26,8 +26,8 @@ async function getProducts(storeId, filters = {}) {
     );
 
     if (response.data.isSuccess) {
-      const foods = response.data.data;
-      return { foods };
+      const datas = response.data.data;
+      return { datas };
     } else {
       return { error: 'Failed to fetch products' };
     }

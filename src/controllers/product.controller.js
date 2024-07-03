@@ -13,25 +13,34 @@ const storage = multer.memoryStorage(); // Use memory storage instead of disk st
 const upload = multer({ storage: storage });
 
 async function getProducts(req, res) {
-  // const { storeId } = req.params;
   const { storeId, cate } = req.query;
 
   const filters = {};
   if (cate !== undefined) filters.cate = cate;
 
   try {
-    const storeData = await storeApi.getStores(filters);
     const productData = await foodApi.getProducts(storeId, filters);
 
     if (productData.error) {
-      res.render('./pages/store_detail', { text: 'Store', products: [], store: null });
+      res.render('./pages/store_detail', { text: 'Store', products: [], store: {} });
     } else {
-      const store = storeData.stores.find(store => store.storeId === productData.foods.storeId);
-      res.render('./pages/store_detail', { text: 'Store', products: productData.foods, store });
+      res.render('./pages/store_detail', { text: 'Store', store: productData.datas });
     }
   } catch (error) {
     console.error('Error fetching products:', error);
-    res.render('./pages/store_detail', { text: 'Store', products: [], store: null });
+    res.render('./pages/store_detail', { text: 'Store', products: [], store: {} });
+  }
+}
+
+async function getStoreData(req, res) {
+  const { storeId } = req.query;
+  
+  try {
+    const storeData = await foodApi.getProducts(storeId);
+    res.json(storeData);
+  } catch (error) {
+    console.error('Error getting dataStore:', error);
+    res.status(500).json({ error: 'An error occurred while getting dataStore' });
   }
 }
 
@@ -121,4 +130,4 @@ async function deleteProduct(req, res) {
   }
 }
 
-module.exports = { getProducts, addProduct, updateProduct, deleteProduct };
+module.exports = { getProducts, addProduct, updateProduct, deleteProduct, getStoreData };

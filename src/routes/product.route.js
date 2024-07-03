@@ -13,6 +13,7 @@ const productController = require('../controllers/product.controller');
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.get('/', productController.getProducts);
+router.get('/storeData', productController.getStoreData);
 router.put('/updateFood', upload.single('Image'), productController.updateProduct);
 router.post('/addFood', upload.single('Image'), productController.addProduct);
 router.delete('/deleteFood', productController.deleteProduct);

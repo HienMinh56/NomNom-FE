@@ -14,29 +14,31 @@
       font-size: 0.75rem; /* Adjust the font size as needed */
       margin-bottom: 0;
     }
-    #userTableBody,
-    #customerTableBody{
-      min-height: 500px;
+    #nav_admin,
+    #nav_customer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    #nav_admin span,
-    #nav_customer span {
-      display: inline-block;
+    #nav_admin .arrow,
+    #nav_customer .arrow {
       width: 40px;
       height: 40px;
       line-height: 40px;
-      margin: 0 5px;
-      text-align: center;
-      border-radius: 50%;
-      background-color: #e0e0e0;
-      cursor: pointer;
-      font-size: 1.5rem;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    #nav_admin span.active,
-    #nav_customer span.active {
       background-color: #6a0dad;
       color: #fff;
-      font-size: 2rem;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #pageSelect_admin,
+    #pageSelect_customer {
+      padding: 5px;
+      font-size: 1rem;
+      text-align: center;
     }
   </style>
 
@@ -87,7 +89,7 @@
                   </div>
                   <thead>
                     <tr>
-                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">Name</th>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">User</th>
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
                       <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Role</th>
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 d-none">Balance</th>
@@ -106,8 +108,8 @@
                               <img src="<%= user.role === 1 ? '/images/admin.png' : '/images/shipper.png' %>" class="avatar me-3" alt="managers">
                             </div>
                             <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm"><%= user.name %></h6>
-                              <p class="text-xs text-secondary mb-0"><%= user.email %></p>
+                              <h6 class="mb-0 text-sm"><%= user.userId %></h6>
+                              <p class="text-xs text-secondary mb-0"><%= user.name %> - <%= user.email %></p>
                             </div>
                           </div>
                         </td>
@@ -148,7 +150,11 @@
                     <% }) %>
                   </tbody>
                 </table>
-                <div id="nav_admin" class="d-flex justify-content-center mt-3"></div>
+                <div id="nav_admin" class="d-flex justify-content-center align-items-center mt-3">
+                  <div class="arrow" id="prevPage_admin">&lt;</div>
+                  <select id="pageSelect_admin" class="form-select mx-2" style="width: 100px;"></select>
+                  <div class="arrow" id="nextPage_admin">&gt;</div>
+                </div>
               </div>
             </div>
           </div>
@@ -191,7 +197,7 @@
                   </div>
                   <thead>
                     <tr>
-                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">User</th>
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Phone</th>
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 d-none">Role</th>
                       <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Balance</th>
@@ -210,8 +216,8 @@
                               <img src="/images/user.png" class="avatar rounded-circle me-2" alt="customers">
                             </div>
                             <div class="my-auto">
-                              <h6 class="mb-0 text-sm"><%= user.name %></h6>
-                              <p class="text-xs text-secondary mb-0"><%= user.email %></p>
+                              <h6 class="mb-0 text-sm"><%= user.userId %></h6>
+                              <p class="text-xs text-secondary mb-0"><%= user.name %> - <%= user.email %></p>
                             </div>
                           </div>
                         </td>
@@ -252,7 +258,11 @@
                     <% }) %>
                   </tbody>
                 </table>
-                <div id="nav_customer" class="d-flex justify-content-center mt-3"></div>
+                <div id="nav_customer" class="d-flex justify-content-center align-items-center mt-3">
+                  <div class="arrow" id="prevPage_customer">&lt;</div>
+                  <select id="pageSelect_customer" class="form-select mx-2" style="width: 100px;"></select>
+                  <div class="arrow" id="nextPage_customer">&gt;</div>
+                </div>
               </div>
             </div>
           </div>
@@ -446,6 +456,7 @@
       filterState.status = status;
       filterState.campusName = campusName;
       console.log('Filters applied:', filterState);
+      pageIndex = 0;
       fetchAdmins(filterState);
     }
 
@@ -471,8 +482,9 @@
         const newTbody = doc.getElementById('userTableBody');
         if (newTbody) {
           const users = Array.from(newTbody.childNodes);
-
-          users.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(user => {
+          const paginatedUsers = users.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
+      
+          paginatedUsers.forEach(user => {
             tbodyAdmin.appendChild(user);
           });
 
@@ -486,23 +498,43 @@
     }
 
     function loadPageNavAdmin(users, navAdmin) {
-      navAdmin.innerHTML = "";
+      const prevPage = document.getElementById('prevPage_admin');
+      const nextPage = document.getElementById('nextPage_admin');
+      const pageSelect = document.getElementById('pageSelect_admin');
+
+      pageSelect.innerHTML = "";
       const totalItems = users.length;
       const totalPages = Math.ceil(totalItems / itemsPerPage);
 
       for (let i = 0; i < totalPages; i++) {
-        const span = document.createElement('span');
-        span.innerHTML = i + 1;
-        span.addEventListener('click', (e) => {
-          pageIndex = parseInt(e.target.innerHTML, 10) - 1;
-          fetchAdmins(filterState);
-          updateAdminActivePage(navAdmin, pageIndex);
-        });
-        if (i === pageIndex) {
-          span.classList.add('active');
-        }
-          navAdmin.append(span);
+        const option = document.createElement('option');
+        option.value = i;
+        option.innerHTML = `Page ${i + 1} `;
+        pageSelect.appendChild(option);
       }
+
+      pageSelect.value = pageIndex;
+
+      pageSelect.addEventListener('change', (e) => {
+        pageIndex = parseInt(e.target.value, 10);
+        fetchAdmins(filterState);
+      });
+
+      prevPage.addEventListener('click', () => {
+        if (pageIndex > 0) {
+          pageIndex--;
+          fetchAdmins(filterState);
+          pageSelect.value = pageIndex;
+        }
+      });
+
+      nextPage.addEventListener('click', () => {
+        if (pageIndex < totalPages - 1) {
+          pageIndex++;
+          fetchAdmins(filterState);
+          pageSelect.value = pageIndex;
+        }
+      });
     }
 
     function updateAdminActivePage(navAdmin, pageIndex) {
@@ -524,6 +556,7 @@
       filterState.status = status;
       filterState.campusName = campusName;
       console.log('Filters applied:', filterState);
+      pageIndex = 0;
       fetchUsers(filterState);
     }    
 
@@ -548,8 +581,9 @@
         const newTbody = doc.getElementById('customerTableBody');
         if (newTbody) {
           const customers = Array.from(newTbody.childNodes);
-
-          customers.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(customer => {
+          const paginatedCustomers = customers.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
+          
+          paginatedCustomers.forEach(customer => {
             tbodyCustomer.appendChild(customer);
           });
 
@@ -563,24 +597,44 @@
     }
 
     function loadPageNavCustomer(customers, navCustomer) {
-        navCustomer.innerHTML = "";
-        const totalItems = customers.length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
+      const prevPage = document.getElementById('prevPage_customer');
+      const nextPage = document.getElementById('nextPage_customer');
+      const pageSelect = document.getElementById('pageSelect_customer');
+      
+      pageSelect.innerHTML = "";
+      const totalItems = customers.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-        for (let i = 0; i < totalPages; i++) {
-          const span = document.createElement('span');
-          span.innerHTML = i + 1;
-          span.addEventListener('click', (e) => {
-            pageIndex = parseInt(e.target.innerHTML, 10) - 1;
-            fetchUsers(filterState);
-            updateCustomerActivePage(navCustomer, pageIndex);
-          });
-          if (i === pageIndex) {
-            span.classList.add('active');
-          }
-            navCustomer.append(span);
-        }
+      for (let i = 0; i < totalPages; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.innerHTML = `Page ${i + 1} `;
+        pageSelect.appendChild(option);
       }
+
+      pageSelect.value = pageIndex;
+
+      pageSelect.addEventListener('change', (e) => {
+        pageIndex = parseInt(e.target.value, 10);
+        fetchUsers(filterState);
+      });
+
+      prevPage.addEventListener('click', () => {
+        if (pageIndex > 0) {
+          pageIndex--;
+          fetchUsers(filterState);
+          pageSelect.value = pageIndex;
+        }
+      });
+
+      nextPage.addEventListener('click', () => {
+        if (pageIndex < totalPages - 1) {
+          pageIndex++;
+          fetchUsers(filterState);
+          pageSelect.value = pageIndex;
+        }
+      });
+    }
 
     function updateCustomerActivePage(navCustomer, pageIndex) {
       const spans = navCustomer.querySelectorAll('span');

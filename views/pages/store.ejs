@@ -4,24 +4,28 @@
 
   <%- include('../layouts/head', { title: 'Store | Nom Nom' }) %>
   <style>
-    #nav span {
-      display: inline-block;
+    #nav_store {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #nav_store .arrow {
       width: 40px;
       height: 40px;
       line-height: 40px;
-      margin: 0 5px;
-      text-align: center;
-      border-radius: 50%;
-      background-color: #e0e0e0;
-      cursor: pointer;
-      font-size: 1.5rem;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    #nav span.active {
       background-color: #6a0dad;
       color: #fff;
-      font-size: 2rem;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #pageSelect_store {
+      padding: 5px;
+      font-size: 1rem;
+      text-align: center;
     }
   </style>
 
@@ -90,8 +94,8 @@
                                   <img src="./images/store.png" class="avatar me-3" alt="stores">
                                 </div>
                                 <div class="d-flex flex-column justify-content-center">
-                                  <h6 class="mb-0 text-sm"><%= store.name %></h6>
-                                  <p class="text-xs text-secondary mb-0"><%= store.address %></p>
+                                  <h6 class="mb-0 text-sm"><%= store.storeId %></h6>
+                                  <p class="text-xs text-secondary mb-0"><%= store.name %> - <%= store.address %></p>
                                 </div>
                               </div>
                             </td>
@@ -122,7 +126,11 @@
                         <% }) %>
                       </tbody>                      
                     </table>
-                    <div id="nav" class="d-flex justify-content-center mt-3"></div>
+                    <div id="nav_store" class="d-flex justify-content-center align-items-center mt-3">
+                      <div class="arrow" id="prevPage_store">&lt;</div>
+                      <select id="pageSelect_store" class="form-select mx-2" style="width: 100px;"></select>
+                      <div class="arrow" id="nextPage_store">&gt;</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -262,7 +270,7 @@
         areaName: null
       };
 
-      const nav = document.getElementById('nav');
+      const navStore = document.getElementById('nav_store');
       const tbodyStore = document.getElementById('storeTableBody');
       let pageIndex = 0;
       let itemsPerPage = 16;
@@ -271,11 +279,12 @@
         const areaName = document.getElementById('areaInput').value;
         const status = document.getElementById('statusInput').value;
 
-          filterState.status = status;
-          filterState.areaName = areaName;
-          console.log('Filters applied:', filterState);
-          fetchStores(filterState);
-        }
+        filterState.status = status;
+        filterState.areaName = areaName;
+        console.log('Filters applied:', filterState);
+        pageIndex = 0;
+        fetchStores(filterState);
+      }
 
       async function fetchStores(filters = {}) {
         const validFilters = Object.fromEntries(
@@ -299,12 +308,13 @@
           const newTbody = doc.getElementById('storeTableBody');
           if (newTbody) {
             const stores = Array.from(newTbody.childNodes);
-
-            stores.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage).forEach(store => {
+            const paginatedStores = stores.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
+            
+            paginatedStores.forEach(store => {
               tbodyStore.appendChild(store);
             });
 
-            loadPageStore(stores, nav);
+            loadPageStore(stores, navStore);
           } else {
             console.error('New tbody not found in fetched data');
           }
@@ -313,27 +323,46 @@
         }
       }
 
-      function loadPageStore(stores, nav) {
-        nav.innerHTML = "";
+      function loadPageStore(stores, navStore) {
+        const prevPage = document.getElementById('prevPage_store');
+        const nextPage = document.getElementById('nextPage_store');
+        const pageSelect = document.getElementById('pageSelect_store');
+        pageSelect.innerHTML = "";
         const totalItems = stores.length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
 
         for (let i = 0; i < totalPages; i++) {
-          const span = document.createElement('span');
-          span.innerHTML = i + 1;
-          span.addEventListener('click', (e) => {
-            pageIndex = parseInt(e.target.innerHTML, 10) - 1;
-            fetchStores(filterState);
-            updateActivePage(nav, pageIndex);
-          });
-          if (i === pageIndex) {
-            span.classList.add('active');
-          }
-          nav.append(span);
+          const option = document.createElement('option');
+          option.value = i;
+          option.innerHTML = `Page ${i + 1} `;
+          pageSelect.appendChild(option);
         }
+
+        pageSelect.value = pageIndex;
+
+        pageSelect.addEventListener('change', (e) => {
+          pageIndex = parseInt(e.target.value, 10);
+          fetchStores(filterState);
+        });
+
+        prevPage.addEventListener('click', () => {
+          if (pageIndex > 0) {
+            pageIndex--;
+            fetchStores(filterState);
+            pageSelect.value = pageIndex;
+          }
+        });
+
+        nextPage.addEventListener('click', () => {
+          if (pageIndex < totalPages - 1) {
+            pageIndex++;
+            fetchStores(filterState);
+            pageSelect.value = pageIndex;
+          }
+        });
       }
 
-      function updateActivePage(nav, pageIndex) {
+      function updateActivePage(navStore, pageIndex) {
         const spans = nav.querySelectorAll('span');
         spans.forEach((span, index) => {
           if (index === pageIndex) {

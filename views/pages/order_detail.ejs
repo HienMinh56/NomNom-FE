@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <%- include('../layouts/head', { title: `OrderDetail | Nom Nom` }) %>
+  <style>
+    #nav span {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin: 0 5px;
+      text-align: center;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #nav span.active {
+      background-color: #6a0dad;
+      color: #fff;
+      font-size: 2rem;
+    }
+  </style>
+
+</head>
+<body class="g-sidenav-show bg-gray-100">
+  <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
+    <span class="mask bg-primary opacity-6"></span>
+  </div>
+  
+  <%- include('../partials/sidebar') %>
+  
+  <div class="main-content position-relative max-height-vh-100 h-100">
+    <%- include('../partials/navbar') %>    
+        
+    <div class="container-fluid py-4">
+      <div class="row">
+
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                  <h6>OrderDetail's table</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">Food</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Price</th>
+                      <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10" style="padding: 12px;">Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody id="foodTableBody">
+                    <% orderDetails.forEach(order => { %>
+                      <tr>                            
+                        <td>
+                          <div class="d-flex px-2 py-1">
+                            <div>
+                              <img src="<%= order.image %>" class="avatar me-3" alt="stores">
+                            </div>
+                            <div class="d-flex flex-column justify-content-center">
+                              <h6 class="mb-0 text-sm"><%= order.foodId %></h6>
+                              <p class="text-xs text-secondary mb-0"><%= order.foodTitle %></p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0"><%= order.price %></p>
+                        </td>
+                        <td>
+                          <p class="text-sm text-center font-weight-bold mb-0"><%= order.quantity %></p>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>                      
+                </table>
+                <div id="nav" class="d-flex justify-content-center mt-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card card-profile">
+            <img src="/images/order_bg.png" alt="Image placeholder" class="card-img-top">
+            <div class="row justify-content-center">
+              <div class="col-4 col-lg-4 order-lg-2">
+                <div class="mt-n4 mt-lg-n6 mb-4 mb-lg-0">
+                  <a href="javascript:;">
+                    <img src="/images/order.png" class="rounded-circle img-fluid border border-2 border-white">
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body pt-0">
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex justify-content-center">
+                    <div class="d-grid text-center">
+                      <span class="text-lg font-weight-bolder"></span>
+                      <span class="text-sm opacity-8"></span>
+                    </div>
+                    <div class="d-grid text-center mx-4">
+                      <span class="text-lg font-weight-bolder"></span>
+                      <span class="text-sm opacity-8"></span>
+                    </div>
+                    <div class="d-grid text-center">
+                      <span class="text-lg font-weight-bolder"></span>
+                      <span class="text-sm opacity-8"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <%- include('../layouts/footer') %>
+
+    </div>
+  </div>
+  <!--   Core JS Files   -->
+  <%- include('../layouts/script') %>
+</body>
+</html>

@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     
-    <%- include('../layouts/head', { title: 'Order | Nom Nom' }) %>
+    <%- include('../layouts/head', { title: 'Transaction | Nom Nom' }) %>
     <style>
-      #nav_order {
+      #nav_transaction {
         display: flex;
         justify-content: center;
         align-items: center;
       }
-      #nav_order .arrow {
+      #nav_transaction .arrow {
         width: 40px;
         height: 40px;
         line-height: 40px;
@@ -22,7 +22,7 @@
         border-radius: 5px;
         cursor: pointer;
       }
-      #pageSelect_order {
+      #pageSelect_transaction {
         padding: 5px;
         font-size: 1rem;
         text-align: center;
@@ -44,31 +44,19 @@
               <div class="col-12">
                 <div class="card mb-4">
                   <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                    <h6>Order's table</h6>
+                    <h6>Transaction's table</h6>
                   </div>
                   <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-0">
                       <div class="row ps-4 align-items-center w-100">
                         <div class="col-2">
-                          <label for="userNameInput" class="form-label">User Name</label>
-                          <input type="text" id="userNameInput" class="form-control" placeholder="Enter name">
-                        </div>
-                        <div class="col-2">
-                          <label for="storeNameInput" class="form-label">Store Name</label>
-                          <input type="text" id="storeNameInput" class="form-control" placeholder="Enter store name">
+                          <label for="usernameInput" class="form-label">User Name</label>
+                          <input type="text" id="usernameInput" class="form-control" placeholder="Enter name">
                         </div>
                         <div class="col-3">
                             <label for="createdDateInput" class="form-label">Created Date</label>
                             <input type="date" id="createdDateInput" class="form-control">
-                        </div>
-                        <div class="col-3">
-                            <label for="statusInput" class="form-label">Status</label>
-                            <select id="statusInput" class="form-select">
-                                <option value="">All</option>
-                                <option value="1">Active</option>
-                                <option value="2">Inactive</option>
-                            </select>
-                        </div>                        
+                        </div>                       
                         <div class="col-2" style="margin: 45px 0 0 0 ; padding: 0;">
                           <button class="btn btn-primary w-100 " style="height: 40px;" onclick="applyFilters()">Apply Filters</button>
                         </div>
@@ -76,48 +64,44 @@
                       <table class="table align-items-center mb-0">
                         <thead>
                             <tr>
-                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-4">OrderId</th>
-                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Total</th>
-                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Quantity</th>
-                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">StoreName</th>
+                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-4">Transaction</th>
+                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Amount</th>
+                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Type</th>
                                 <th class="col-2 text-center text-secondary text-xxs font-weight-bolder opacity-10 ps-4">Status</th>
                                 <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CreatedDate</th>
                                 <th class="col-1 text-secondary opacity-7"></th>
                             </tr>
                         </thead>
-                        <tbody id="orderTableBody">
-                            <% orders.forEach(order => { %>
-                                <tr style="cursor: pointer;" onClick="window.location.href='/order/<%= order.orderId %>'">
+                        <tbody id="transactionTableBody">
+                            <% transactions.forEach(transaction => { %>
+                                <tr>
                                     <td>
                                         <div class="d-flex px-2 py-1">
                                             <div>
-                                                <img src="./images/order.png" class="avatar me-3" alt="stores">
+                                                <img src="./images/transaction.png" class="avatar me-3" alt="stores">
                                             </div>
                                             <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm"><%= order.orderId %></h6>
-                                                <p class="text-xs text-secondary mb-0">by <%= order.name %></p>
+                                                <h6 class="mb-0 text-sm"><%= transaction.transationId %></h6>
+                                                <p class="text-xs text-secondary mb-0">by <%= transaction.user.userName %></p>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0"><%= order.price %></p>
+                                        <p class="text-xs font-weight-bold mb-0"><%= transaction.amount %></p>
                                     </td>
                                     <td>
-                                        <p class="text-sm font-weight-bold mb-0"><%= order.quantity %></p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0"><%= order.storeName %></p>
+                                        <p class="text-sm font-weight-bold mb-0"><%= transaction.type %></p>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="badge badge-sm bg-gradient-<%= order.status === 1 ? 'success' : 'danger' %>">
-                                            <%= order.status === 1 ? 'Active' : 'Inactive' %>
+                                        <span class="badge badge-sm bg-gradient-<%= transaction.status === 1 ? 'success' : 'danger' %>">
+                                            <%= transaction.status === 1 ? 'Active' : 'Inactive' %>
                                         </span>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold"><%= order.createdDate %></span>
+                                        <span class="text-secondary text-xs font-weight-bold"><%= transaction.createdDate %></span>
                                     </td>
                                     <!-- <td class="align-middle">
-                                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editOrderModal" onclick="storeModal('<%= order.orderId %>', '<%= order.name %>', '<%= order.price %>', '<%= order.quantity %>', '<%= order.storeName %>', '<%= order.status %>', '<%= order.createdDate %>')">
+                                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editOrderModal" onclick="storeModal('<%= transaction.transactionId %>', '<%= transaction.user.userName %>', '<%= transaction.amonut %>', '<%= transaction.type %>', '<%= transaction.status %>', '<%= transaction.createdDate %>')">
                                             Edit
                                         </a>
                                     </td> -->
@@ -125,10 +109,10 @@
                             <% }) %>                        
                         </tbody>
                       </table>                    
-                      <div id="nav_order" class="d-flex justify-content-center align-items-center mt-3">
-                        <div class="arrow" id="prevPage_order">&lt;</div>
-                        <select id="pageSelect_order" class="form-select mx-2" style="width: 100px;"></select>
-                        <div class="arrow" id="nextPage_order">&gt;</div>
+                      <div id="nav_transaction" class="d-flex justify-content-center align-items-center mt-3">
+                        <div class="arrow" id="prevPage_transaction">&lt;</div>
+                        <select id="pageSelect_transaction" class="form-select mx-2" style="width: 100px;"></select>
+                        <div class="arrow" id="nextPage_transaction">&gt;</div>
                       </div>
                     </div>
                   </div>
@@ -146,34 +130,28 @@
   
       <!-- JS Handle FUNCTION -->
       <script>
-        const navOrder = document.getElementById('nav_order');
-        const tbodyOrder = document.getElementById('orderTableBody');
+        const navTransaction = document.getElementById('nav_transaction');
+        const tbodyTransaction = document.getElementById('transactionTableBody');
         let pageIndex = 0;
         let itemsPerPage = 16;
 
         const filterState = {
-          userName: null,
-          status: null,
-          storeName: null,
+          username: null,
           createdDate: null
         };
 
         function applyFilters() {
-          const userName = document.getElementById('userNameInput').value;
+          const username = document.getElementById('usernameInput').value;
           const createdDate = document.getElementById('createdDateInput').value;
-          const status = document.getElementById('statusInput').value;
-          const storeName = document.getElementById('storeNameInput').value;
 
-          filterState.userName = userName;
-          filterState.status = status;
-          filterState.storeName = storeName;
+          filterState.username = username;
           filterState.createdDate = createdDate;
           console.log('Filters applied:', filterState);
           pageIndex = 0;
-          fetchOrders(filterState);
+          fetchTransactions(filterState);
         }
 
-        async function fetchOrders(filters = {}) {
+        async function fetchTransactions(filters = {}) {
           const validFilters = Object.fromEntries(
             Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null && value !== '')
           );
@@ -181,40 +159,40 @@
           const queryParams = new URLSearchParams(validFilters).toString();
 
           try {
-            const response = await fetch(`/order?${queryParams}`);
+            const response = await fetch(`/transaction?${queryParams}`);
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
 
             const data = await response.text();
-            tbodyOrder.innerHTML = '';
+            tbodyTransaction.innerHTML = '';
 
             const parser = new DOMParser();
             const doc = parser.parseFromString(data, 'text/html');
 
-            const newTbody = doc.getElementById('orderTableBody');
+            const newTbody = doc.getElementById('transactionTableBody');
             if (newTbody) {
-              const orders = Array.from(newTbody.childNodes);
-              const paginatedOrders = orders.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
-              paginatedOrders.forEach(order => {
-                tbodyOrder.appendChild(order);
+              const transactions = Array.from(newTbody.childNodes);
+              const paginatedTransactions = transactions.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
+              paginatedTransactions.forEach(order => {
+                tbodyTransaction.appendChild(order);
               });
 
-              loadPageNavOrder(orders, navOrder);
+              loadPageNavOrder(transactions, navTransaction);
             } else {
               console.error('New tbody not found in fetched data');
             }
           } catch (error) {
-            console.error('Error fetching orders:', error);
+            console.error('Error fetching transactions:', error);
           }
         }
 
-        function loadPageNavOrder(orders, navOrder) {
-          const prevPage = document.getElementById('prevPage_order');
-          const nextPage = document.getElementById('nextPage_order');
-          const pageSelect = document.getElementById('pageSelect_order');
+        function loadPageNavOrder(transactions, navTransaction) {
+          const prevPage = document.getElementById('prevPage_transaction');
+          const nextPage = document.getElementById('nextPage_transaction');
+          const pageSelect = document.getElementById('pageSelect_transaction');
           pageSelect.innerHTML = "";
-          const totalItems = orders.length;
+          const totalItems = transactions.length;
           const totalPages = Math.ceil(totalItems / itemsPerPage);
 
           for (let i = 0; i < totalPages; i++) {
@@ -228,13 +206,13 @@
 
           pageSelect.addEventListener('change', (e) => {
             pageIndex = parseInt(e.target.value, 10);
-            fetchOrders(filterState);
+            fetchTransactions(filterState);
           });
 
           prevPage.addEventListener('click', () => {
             if (pageIndex > 0) {
               pageIndex--;
-              fetchOrders(filterState);
+              fetchTransactions(filterState);
               pageSelect.value = pageIndex;
             }
           });
@@ -242,13 +220,13 @@
           nextPage.addEventListener('click', () => {
             if (pageIndex < totalPages - 1) {
               pageIndex++;
-              fetchOrders(filterState);
+              fetchTransactions(filterState);
               pageSelect.value = pageIndex;
             }
           });
         }
 
-        function updateOrderActivePage(navOrder, pageIndex) {
+        function updateOrderActivePage(nav, pageIndex) {
           const spans = nav.querySelectorAll('span');
           spans.forEach((span, index) => {
             if (index === pageIndex) {
@@ -260,7 +238,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
-          fetchOrders();
+          fetchTransactions();
         });
       </script>
   
