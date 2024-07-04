@@ -114,7 +114,16 @@
                                         </span>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold"><%= order.createdDate %></span>
+                                        <span class="text-secondary text-xs font-weight-bold" style="margin-left: -20px">
+                                          <%
+                                            var date = new Date(order.createdDate);
+                                            var day = ("0" + date.getDate()).slice(-2);
+                                            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                                            var year = date.getFullYear();
+                                            var formattedDate = day + '-' + month + '-' + year;
+                                          %>
+                                          <%= formattedDate %>
+                                        </span>
                                     </td>
                                     <!-- <td class="align-middle">
                                         <a href="javascript:;" class="text-secondary font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editOrderModal" onclick="storeModal('<%= order.orderId %>', '<%= order.name %>', '<%= order.price %>', '<%= order.quantity %>', '<%= order.storeName %>', '<%= order.status %>', '<%= order.createdDate %>')">
@@ -150,6 +159,7 @@
         const tbodyOrder = document.getElementById('orderTableBody');
         let pageIndex = 0;
         let itemsPerPage = 16;
+        let isLoading = false;
 
         const filterState = {
           userName: null,
@@ -174,6 +184,9 @@
         }
 
         async function fetchOrders(filters = {}) {
+          if (isLoading) return;
+          isLoading = true;
+          
           const validFilters = Object.fromEntries(
             Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null && value !== '')
           );
@@ -206,6 +219,8 @@
             }
           } catch (error) {
             console.error('Error fetching orders:', error);
+          } finally {
+            isLoading = false; // Mở khóa sau khi tải dữ liệu xong
           }
         }
 
@@ -227,12 +242,15 @@
           pageSelect.value = pageIndex;
 
           pageSelect.addEventListener('change', (e) => {
-            pageIndex = parseInt(e.target.value, 10);
-            fetchOrders(filterState);
+            const selectedPageIndex = parseInt(e.target.value, 10);
+            if (selectedPageIndex !== pageIndex) {
+              pageIndex = selectedPageIndex;
+              fetchOrders(filterState);
+            }
           });
 
           prevPage.addEventListener('click', () => {
-            if (pageIndex > 0) {
+            if (pageIndex > 0 && !isLoading) {
               pageIndex--;
               fetchOrders(filterState);
               pageSelect.value = pageIndex;
@@ -240,7 +258,7 @@
           });
 
           nextPage.addEventListener('click', () => {
-            if (pageIndex < totalPages - 1) {
+            if (pageIndex < totalPages - 1 && !isLoading) {
               pageIndex++;
               fetchOrders(filterState);
               pageSelect.value = pageIndex;
