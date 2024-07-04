@@ -154,7 +154,7 @@
                   <div class="arrow" id="prevPage_admin">&lt;</div>
                   <select id="pageSelect_admin" class="form-select mx-2" style="width: 100px;"></select>
                   <div class="arrow" id="nextPage_admin">&gt;</div>
-                </div>
+                </div>                
               </div>
             </div>
           </div>
@@ -447,6 +447,8 @@
     const tbodyCustomer = document.getElementById('customerTableBody');
     let pageIndex = 0;
     let itemsPerPage = 10;
+    let isLoading_admin = false;
+    let isLoading_customer = false;
 
     // ADMIN      
     function applyFiltersAdmins() {
@@ -455,12 +457,15 @@
 
       filterState.status = status;
       filterState.campusName = campusName;
-      console.log('Filters applied:', filterState);
+      // console.log('Filters applied:', filterState);
       pageIndex = 0;
       fetchAdmins(filterState);
     }
 
     async function fetchAdmins(filters = {}) {
+      if (isLoading_admin) return;
+      isLoading_admin = true;
+
       const validFilters = Object.fromEntries(
         Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
       );
@@ -483,7 +488,7 @@
         if (newTbody) {
           const users = Array.from(newTbody.childNodes);
           const paginatedUsers = users.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
-      
+
           paginatedUsers.forEach(user => {
             tbodyAdmin.appendChild(user);
           });
@@ -494,6 +499,8 @@
         }
       } catch (error) {
         console.error('Error fetching users:', error);
+      } finally {
+        isLoading_admin = false;
       }
     }
 
@@ -509,19 +516,22 @@
       for (let i = 0; i < totalPages; i++) {
         const option = document.createElement('option');
         option.value = i;
-        option.innerHTML = `Page ${i + 1} `;
+        option.innerHTML = `Page ${i + 1}`;
         pageSelect.appendChild(option);
       }
 
       pageSelect.value = pageIndex;
 
       pageSelect.addEventListener('change', (e) => {
-        pageIndex = parseInt(e.target.value, 10);
-        fetchAdmins(filterState);
+        const selectedPageIndex = parseInt(e.target.value, 10);
+        if (selectedPageIndex !== pageIndex) {
+          pageIndex = selectedPageIndex;
+          fetchAdmins(filterState);
+        }
       });
 
       prevPage.addEventListener('click', () => {
-        if (pageIndex > 0) {
+        if (pageIndex > 0 && !isLoading_admin) {
           pageIndex--;
           fetchAdmins(filterState);
           pageSelect.value = pageIndex;
@@ -529,21 +539,10 @@
       });
 
       nextPage.addEventListener('click', () => {
-        if (pageIndex < totalPages - 1) {
+        if (pageIndex < totalPages - 1 && !isLoading_admin) {
           pageIndex++;
           fetchAdmins(filterState);
           pageSelect.value = pageIndex;
-        }
-      });
-    }
-
-    function updateAdminActivePage(navAdmin, pageIndex) {
-      const spans = navAdmin.querySelectorAll('span');
-      spans.forEach((span, index) => {
-        if (index === pageIndex) {
-          span.classList.add('active');
-        } else {
-          span.classList.remove('active');
         }
       });
     }
@@ -555,12 +554,15 @@
 
       filterState.status = status;
       filterState.campusName = campusName;
-      console.log('Filters applied:', filterState);
+      // console.log('Filters applied:', filterState);
       pageIndex = 0;
       fetchUsers(filterState);
     }    
 
     async function fetchUsers(filters = {}) {
+      if (isLoading_customer) return;
+      isLoading_customer = true;
+
       const validFilters = Object.fromEntries(
         Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
       );
@@ -593,6 +595,8 @@
         }
       } catch (error) {
         console.error('Error fetching users:', error);
+      } finally {
+        isLoading_customer = false;
       }
     }
 
@@ -600,7 +604,7 @@
       const prevPage = document.getElementById('prevPage_customer');
       const nextPage = document.getElementById('nextPage_customer');
       const pageSelect = document.getElementById('pageSelect_customer');
-      
+  
       pageSelect.innerHTML = "";
       const totalItems = customers.length;
       const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -608,19 +612,22 @@
       for (let i = 0; i < totalPages; i++) {
         const option = document.createElement('option');
         option.value = i;
-        option.innerHTML = `Page ${i + 1} `;
+        option.innerHTML = `Page ${i + 1}`;
         pageSelect.appendChild(option);
       }
 
       pageSelect.value = pageIndex;
 
       pageSelect.addEventListener('change', (e) => {
-        pageIndex = parseInt(e.target.value, 10);
-        fetchUsers(filterState);
+        const selectedPageIndex = parseInt(e.target.value, 10);
+        if (selectedPageIndex !== pageIndex) {
+          pageIndex = selectedPageIndex;
+          fetchUsers(filterState);
+        }
       });
 
       prevPage.addEventListener('click', () => {
-        if (pageIndex > 0) {
+        if (pageIndex > 0 && !isLoading_customer) {
           pageIndex--;
           fetchUsers(filterState);
           pageSelect.value = pageIndex;
@@ -628,21 +635,10 @@
       });
 
       nextPage.addEventListener('click', () => {
-        if (pageIndex < totalPages - 1) {
+        if (pageIndex < totalPages - 1 && !isLoading_customer) {
           pageIndex++;
           fetchUsers(filterState);
           pageSelect.value = pageIndex;
-        }
-      });
-    }
-
-    function updateCustomerActivePage(navCustomer, pageIndex) {
-      const spans = navCustomer.querySelectorAll('span');
-      spans.forEach((span, index) => {
-        if (index === pageIndex) {
-          span.classList.add('active');
-        } else {
-          span.classList.remove('active');
         }
       });
     }

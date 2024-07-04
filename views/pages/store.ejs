@@ -274,6 +274,7 @@
       const tbodyStore = document.getElementById('storeTableBody');
       let pageIndex = 0;
       let itemsPerPage = 16;
+      let isLoading = false;
 
       function applyFilters() {
         const areaName = document.getElementById('areaInput').value;
@@ -287,6 +288,9 @@
       }
 
       async function fetchStores(filters = {}) {
+        if (isLoading) return;
+        isLoading = true;
+
         const validFilters = Object.fromEntries(
           Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
         );
@@ -320,6 +324,8 @@
           }
         } catch (error) {
           console.error('Error fetching stores:', error);
+        } finally {
+          isLoading = false; // Mở khóa sau khi tải dữ liệu xong
         }
       }
 
@@ -341,12 +347,15 @@
         pageSelect.value = pageIndex;
 
         pageSelect.addEventListener('change', (e) => {
-          pageIndex = parseInt(e.target.value, 10);
-          fetchStores(filterState);
+          const selectedPageIndex = parseInt(e.target.value, 10);
+          if (selectedPageIndex !== pageIndex) {
+            pageIndex = selectedPageIndex;
+            fetchStores(filterState);
+          }
         });
 
         prevPage.addEventListener('click', () => {
-          if (pageIndex > 0) {
+          if (pageIndex > 0 && !isLoading) {
             pageIndex--;
             fetchStores(filterState);
             pageSelect.value = pageIndex;
@@ -354,7 +363,7 @@
         });
 
         nextPage.addEventListener('click', () => {
-          if (pageIndex < totalPages - 1) {
+          if (pageIndex < totalPages - 1 && !isLoading) {
             pageIndex++;
             fetchStores(filterState);
             pageSelect.value = pageIndex;

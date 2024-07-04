@@ -85,7 +85,7 @@
                         <td>
                           <div class="d-flex px-2 py-1">
                             <div>
-                              <img src="<%= product.image %>" class="avatar me-3" alt="stores">
+                              <img src="<%= product.image %>" class="avatar me-3" alt="stores" data-image-load-anim>
                             </div>
                             <div class="d-flex flex-column justify-content-center">
                               <h6 class="mb-0 text-sm"><%= product.foodId %></h6>
@@ -321,6 +321,7 @@
     const tbodyFood = document.getElementById('foodTableBody');
     let pageIndex = 0;
     let itemsPerPage = 16;
+    let isLoading = false;
 
     function applyFilters() {
       const cate = document.getElementById('cateInput').value;
@@ -357,6 +358,8 @@
 
     async function fetchFoods(filters = {}) {
       const storeId = getStoreIdFromUrl();
+      if (isLoading) return;
+      isLoading = true;
 
       const validFilters = Object.fromEntries(
         Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
@@ -390,6 +393,8 @@
         }
       } catch (error) {
         console.error('Error fetching foods:', error);
+      } finally {
+        isLoading = false;
       }
     }
 
@@ -411,12 +416,15 @@
       pageSelect.value = pageIndex;
 
       pageSelect.addEventListener('change', (e) => {
-        pageIndex = parseInt(e.target.value, 10);
-        fetchFoods(filterState);
+        const selectedPageIndex = parseInt(e.target.value, 10);
+        if (selectedPageIndex !== pageIndex) {
+          pageIndex = selectedPageIndex;
+          fetchFoods(filterState);
+        }
       });
 
       prevPage.addEventListener('click', () => {
-        if (pageIndex > 0) {
+        if (pageIndex > 0 && !isLoading) {
           pageIndex--;
           fetchFoods(filterState);
           pageSelect.value = pageIndex;
@@ -424,7 +432,7 @@
       });
 
       nextPage.addEventListener('click', () => {
-        if (pageIndex < totalPages - 1) {
+        if (pageIndex < totalPages - 1 && !isLoading) {
           pageIndex++;
           fetchFoods(filterState);
           pageSelect.value = pageIndex;

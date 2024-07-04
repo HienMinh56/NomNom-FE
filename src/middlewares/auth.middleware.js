@@ -22,7 +22,7 @@ const authenticatedUser = async (req, res, next) => {
     return res.redirect('/login');
   }
 
-  if ( (!accessToken || accessToken === undefined) && refreshToken) {
+  if (!accessToken && refreshToken) {
     try {
       console.log('Attempting to refresh token with:', { refreshToken, expiredAt });
 
