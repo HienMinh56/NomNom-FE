@@ -16,37 +16,32 @@ const authManager = require('../config/auth.config');
 const authenticatedUser = async (req, res, next) => {
   const { accessToken, refreshToken, expiredAt } = req.cookies;
 
-  // console.log('Cookies:', { accessToken, refreshToken, expiredAt });
-
   if (!accessToken && !refreshToken) {
     return res.redirect('/login');
   }
 
   if (!accessToken && refreshToken) {
     try {
-      console.log('Attempting to refresh token with:', { refreshToken, expiredAt });
-
       const response = await axios.post(
         `${apiConfig.BASE_URL}/authorize/refresh-access-token`,
         { refreshToken, expiredAt },
         { httpsAgent: agent }
       );
 
-      console.log('Refresh API response:', response.data);
-
       if (response.data.isSuccess) {
         const newAccessToken = response.data.data.accessTokenToken;
         const newRefreshToken = response.data.data.refreshToken;
-        const expiredAt = new Date(response.data.data.expiredAt);
+        const newExpiredAt = new Date(response.data.data.expiredAt);
+        const accessTokenMaxAge = 15 * 60 * 1000; // 15 minutes
+        const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 1 week
 
         res.cookie('accessToken', newAccessToken, {
-          maxAge: 30 * 60 * 1000, // 30 minutes
+          maxAge: accessTokenMaxAge,
           httpOnly: true,
           secure: true,
           sameSite: 'Strict'
         });
 
-        const refreshTokenMaxAge = expiredAt;
         res.cookie('refreshToken', newRefreshToken, {
           maxAge: refreshTokenMaxAge,
           httpOnly: true,
@@ -54,18 +49,17 @@ const authenticatedUser = async (req, res, next) => {
           sameSite: 'Strict'
         });
 
-        res.cookie('expiredAt', expiredAt), {
-          maxAge: 30 * 60 * 1000,
+        res.cookie('expiredAt', newExpiredAt.toISOString(), {
+          maxAge: refreshTokenMaxAge,
           httpOnly: true,
           secure: true,
           sameSite: 'Strict'
-        }
+        });
 
-        req.cookies.accessToken = newAccessToken; // Update req.cookies to continue processing other middleware
+        req.cookies.accessToken = newAccessToken;
         const decodedToken = jwt.verify(newAccessToken, apiConfig.SECRET_KEY);
-        // Lưu trữ token vào authManager
-        authManager.setTokens(newAccessToken, decodedToken);
 
+        authManager.setTokens(newAccessToken, decodedToken);
       } else {
         console.error('Failed to refresh token:', response.data.message);
         return res.redirect('/login');

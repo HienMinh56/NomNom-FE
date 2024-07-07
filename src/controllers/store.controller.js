@@ -10,9 +10,11 @@ const storeApi = require('../api/store.api');
 const areaApi = require('../api/area.api');
 
 async function getStores(req, res) {
-  const { status, areaName, sessionId } = req.query;
+  const { Name, StoreId, status, areaName, sessionId } = req.query;
 
   const filters = {};
+  if (Name !== undefined) filters.Name = Name;
+  if (StoreId !== undefined) filters.StoreId = StoreId;
   if (status !== undefined) filters.status = status;
   if (areaName !== undefined) filters.areaName = areaName;
   if (sessionId !== undefined) filters.sessionId = sessionId;

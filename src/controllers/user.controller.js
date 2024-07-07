@@ -10,10 +10,14 @@ const userApi = require('../api/user.api');
 const campusApi = require('../api/campus.api');
 
 async function getUsers(req, res) {
-    const { userId } = req.params;
-    const { status, campusName } = req.query;
+    // const { userId } = req.params;
+    const { userId, Name, email, phone, status, campusName } = req.query;
     
     const filters = {};
+    if (userId !== undefined) filters.userId = userId;
+    if (Name !== undefined) filters.Name = Name;
+    if (email !== undefined) filters.email = email;
+    if (phone !== undefined) filters.phone = phone;
     if (status !== undefined) filters.status = status;
     if (campusName !== undefined) filters.campusName = campusName;
 
