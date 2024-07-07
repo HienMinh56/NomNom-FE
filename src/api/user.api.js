@@ -31,9 +31,11 @@ async function getUsers(userId, filters = {}) {
         });
 
         if (response.data.isSuccess) {
-            const users = response.data.data;
-            const adminsAndShippers = users.filter(user => user.role === 1 || user.role === 3);
-            const customers = users.filter(user => user.role === 2);
+            let users = response.data.data;
+            let adminsAndShippers = users.filter(user => user.role === 1 || user.role === 3);
+            let customers = users.filter(user => user.role === 2);
+            adminsAndShippers = adminsAndShippers.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+            customers = customers.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
 
             return { users, adminsAndShippers, customers };
         } else {

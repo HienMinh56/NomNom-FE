@@ -16,7 +16,7 @@ const authManager = require('../config/auth.config');
 async function auth(username, password) {
   try {
     const response = await axios.post(
-      `${apiConfig.BASE_URL}/authorize/login?userName=${username}&password=${password}`, 
+      `${apiConfig.BASE_URL}/authorize/login?userName=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`, 
       {},
       { httpsAgent: agent }
     );
@@ -24,7 +24,7 @@ async function auth(username, password) {
     if (response.data.accessTokenToken && response.data.refreshToken) {
       const decodedToken = jwt.verify(response.data.accessTokenToken, apiConfig.SECRET_KEY);
 
-      // Lưu trữ token vào authManager
+      // Store tokens in authManager
       authManager.setTokens(response.data.accessTokenToken, decodedToken);
 
       return {

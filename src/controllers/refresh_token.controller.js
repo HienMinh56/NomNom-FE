@@ -11,27 +11,31 @@ const refreshApi = require('../api/refresh_token.api');
 async function refreshToken(req, res) {
   const { refreshToken, expiredAt } = req.body;
 
-  // console.log('Request body:', { refreshToken, expiredAt, accessTokenToken });
-
   try {
     const result = await refreshApi.refresh(refreshToken, expiredAt);
-
-    // console.log('Refresh API response:', result);
 
     if (result.success) {
       const accessToken = result.accessToken;
       const newRefreshToken = result.refreshToken;
       const expiredAt = new Date(result.expiredAt);
+      const accessTokenMaxAge = 15 * 60 * 1000; // 15 minutes in milliseconds
+      const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
 
       res.cookie('accessToken', accessToken, {
-        maxAge: 30 * 60 * 1000, // 30 minutes
+        maxAge: accessTokenMaxAge,
         httpOnly: true,
         secure: true,
         sameSite: 'Strict'
       });
 
-      const refreshTokenMaxAge = expiredAt;
       res.cookie('refreshToken', newRefreshToken, {
+        maxAge: refreshTokenMaxAge,
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict'
+      });
+
+      res.cookie('expiredAt', expiredAt.toISOString(), {
         maxAge: refreshTokenMaxAge,
         httpOnly: true,
         secure: true,

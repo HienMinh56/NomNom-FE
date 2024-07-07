@@ -26,8 +26,9 @@ async function getProducts(storeId, filters = {}) {
     );
 
     if (response.data.isSuccess) {
-      const datas = response.data.data;
-      return { datas };
+      let foods = response.data.data.foods;
+      foods = foods.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      return { foods };
     } else {
       return { error: 'Failed to fetch products' };
     }

@@ -17,7 +17,8 @@ async function getOrders(filters = {}) {
         const response = await axios.get(`${apiConfig.BASE_URL}/order?${queryParams}`, { httpsAgent: agent });
 
         if (response.data.isSuccess) {
-            const orders = response.data.data;
+            let orders = response.data.data;
+            orders = orders.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
 
             return { orders };
         } else {
@@ -48,6 +49,22 @@ async function getOrderDetail(orderId) {
 }
 
 
+async function getTotalEarn(startDate, endDate) {
+    try {
+        const response = await axios.get(`${apiConfig.BASE_URL}/order/totalAmount?startDate=${startDate}&&endDate=${endDate}`, { httpsAgent: agent });
+
+        if (response.data.isSuccess) {
+            const data = response.data.data;
+
+            return data;
+        }
+    } catch (error) {
+        console.error('Error fetching earnings:', error);
+        return { error: 'An error occurred while fetching earnings' };
+    }
+}
+
+
 async function dataChart(type, month, year) {
     try {
         const response = await axios.get(`${apiConfig.BASE_URL}/order/data-chart?type=${type}&year=${year}&month=${month}`, { httpsAgent: agent });
@@ -71,5 +88,20 @@ async function dataChart(type, month, year) {
     }
 }
 
+async function getDataDashboard() {
+    try {
+        const response = await axios.get(`${apiConfig.BASE_URL}/order/dataDashboard`, { httpsAgent: agent });
 
-module.exports = { getOrders, getOrderDetail, dataChart }
+        if (response.data.isSuccess) {
+            const data = response.data.data;
+
+            return data;
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return { error: 'An error occurred while fetching data' };
+    }
+}
+
+
+module.exports = { getOrders, getTotalEarn, getOrderDetail, dataChart, getDataDashboard }

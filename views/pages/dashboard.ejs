@@ -27,6 +27,38 @@
       .carousel-item:hover {
         cursor: pointer;
       }
+
+      .form-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-container div {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container button {
+            padding: 5px 10px;
+            align-self: flex-end;
+        }
+        button[type="submit"] {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition-duration: 0.4s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: white; /* Màu nền khi hover */
+            color: black; /* Màu chữ khi hover */
+            border: 2px solid #4CAF50; /* Viền khi hover */
+        }
     </style>
 </head>
 <body class="g-sidenav-show   bg-gray-100">
@@ -43,13 +75,13 @@
                 <div class="card-body p-3">
                   <div class="row">
                     <div class="col-8">
-                      <div class="numbers">
-                        <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
-                        <h5 class="font-weight-bolder">
-                          $53,000
+                      <div class="numbers" style="height: 113px;">
+                        <p class="text-lg mb-0 text-uppercase font-weight-bold">Today's Money</p>
+                        <h5 class="font-weight-bolder" id="current-total-amount">
+                          $---
                         </h5>
-                        <p class="mb-0">
-                          <span class="text-success text-sm font-weight-bolder">+55%</span>
+                        <p class="mb-0" style="margin-top: 15px;">
+                          <span class="text-success text-sm font-weight-bolder text_data" id="current-percentage-difference">---%</span>
                           since yesterday
                         </p>
                       </div>
@@ -69,14 +101,10 @@
                   <div class="row">
                     <div class="col-8">
                       <div class="numbers">
-                        <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
-                        <h5 class="font-weight-bolder">
-                          +3,462
-                        </h5>
-                        <p class="mb-0">
-                          <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                          since last quarter
-                        </p>
+                        <p class="text-lg mb-0 text-uppercase font-weight-bold">Custom show</p>
+                        <h5 class="font-weight-bolder" id="user-selected-total-amount" style="margin-bottom: 0;">
+                          $---
+                        </h5>                        
                       </div>
                     </div>
                     <div class="col-4 text-end">
@@ -84,6 +112,19 @@
                         <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
                       </div>
                     </div>
+                    <form id="date-range-form" class="form-container">
+                      <div>
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" id="startDate" name="startDate" style="width: 125px; border-radius: 5px;">
+                      </div>
+                      <div>
+                        <label for="endDate">End Date:</label>
+                        <input type="date" id="endDate" name="endDate" style="width: 125px; border-radius: 5px;">
+                      </div>
+                      <div style="margin-bottom: -25px;">
+                        <button type="submit" style="padding: 5px 20px 5px 20px;">Get</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -93,15 +134,11 @@
                 <div class="card-body p-3">
                   <div class="row">
                     <div class="col-8">
-                      <div class="numbers">
-                        <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
-                        <h5 class="font-weight-bolder">
-                          2,300
+                      <div class="numbers" style="height: 113px;">
+                        <p class="text-lg mb-0 text-uppercase font-weight-bolder">Total Users</p>
+                        <h5 class="font-weight-bolder" id="total_users" style="margin-top: 10px; margin-left: 20px; font-size: 50px;">
+                          ---
                         </h5>
-                        <p class="mb-0">
-                          <span class="text-success text-sm font-weight-bolder">+3%</span>
-                          since last week
-                        </p>
                       </div>
                     </div>
                     <div class="col-4 text-end">
@@ -118,14 +155,11 @@
                 <div class="card-body p-3">
                   <div class="row">
                     <div class="col-8">
-                      <div class="numbers">
-                        <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales</p>
-                        <h5 class="font-weight-bolder">
-                          $103,430
+                      <div class="numbers" style="height: 113px;">
+                        <p class="text-lg mb-0 text-uppercase font-weight-bold">Total Order</p>
+                        <h5 class="font-weight-bolder" id="total_orders" style="margin-top: 10px; margin-left: 20px; font-size: 50px;">
+                          ---
                         </h5>
-                        <p class="mb-0">
-                          <span class="text-success text-sm font-weight-bolder">+5%</span> than last month
-                        </p>
                       </div>
                     </div>
                     <div class="col-4 text-end">
@@ -215,11 +249,11 @@
                     <h6 class="mb-2">Store's Status</h6>
                   </div>
                 </div>
-                <div class="table-responsive">
-                  <table class="table align-items-center ">
+                <div class="table-responsive" style="max-height: 300px; min-height: 200px; overflow-y: auto;">
+                  <table class="table align-items-center">
                     <tbody>
-                      <% stores.slice(0, 5).forEach(store => { %>
-                        <tr>
+                      <% stores.forEach(store => { %>
+                        <tr style="cursor: pointer;" onClick="window.location.href='/store/<%= store.storeId %>'">
                           <td class="w-30">
                             <div class="d-flex px-2 py-1 align-items-center">
                               <div class="">
@@ -256,74 +290,49 @@
             <div class="col-lg-5">
               <div class="card">
                 <div class="card-header pb-0 p-3">
-                  <h6 class="mb-0">Categories</h6>
+                  <h6 class="mb-0">Orders</h6>
                 </div>
-                <div class="card-body p-3">
-                  <ul class="list-group">
-                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                      <div class="d-flex align-items-center">
-                        <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                          <i class="ni ni-mobile-button text-white opacity-10"></i>
-                        </div>
-                        <div class="d-flex flex-column">
-                          <h6 class="mb-1 text-dark text-sm">Devices</h6>
-                          <span class="text-xs">250 in stock, <span class="font-weight-bold">346+ sold</span></span>
-                        </div>
-                      </div>
-                      <div class="d-flex">
-                        <button class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i class="ni ni-bold-right" aria-hidden="true"></i></button>
-                      </div>
-                    </li>
-                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                      <div class="d-flex align-items-center">
-                        <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                          <i class="ni ni-tag text-white opacity-10"></i>
-                        </div>
-                        <div class="d-flex flex-column">
-                          <h6 class="mb-1 text-dark text-sm">Tickets</h6>
-                          <span class="text-xs">123 closed, <span class="font-weight-bold">15 open</span></span>
-                        </div>
-                      </div>
-                      <div class="d-flex">
-                        <button class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i class="ni ni-bold-right" aria-hidden="true"></i></button>
-                      </div>
-                    </li>
-                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                      <div class="d-flex align-items-center">
-                        <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                          <i class="ni ni-box-2 text-white opacity-10"></i>
-                        </div>
-                        <div class="d-flex flex-column">
-                          <h6 class="mb-1 text-dark text-sm">Error logs</h6>
-                          <span class="text-xs">1 is active, <span class="font-weight-bold">40 closed</span></span>
-                        </div>
-                      </div>
-                      <div class="d-flex">
-                        <button class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i class="ni ni-bold-right" aria-hidden="true"></i></button>
-                      </div>
-                    </li>
-                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 border-radius-lg">
-                      <div class="d-flex align-items-center">
-                        <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                          <i class="ni ni-satisfied text-white opacity-10"></i>
-                        </div>
-                        <div class="d-flex flex-column">
-                          <h6 class="mb-1 text-dark text-sm">Happy users</h6>
-                          <span class="text-xs font-weight-bold">+ 430</span>
-                        </div>
-                      </div>
-                      <div class="d-flex">
-                        <button class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i class="ni ni-bold-right" aria-hidden="true"></i></button>
-                      </div>
-                    </li>
-                  </ul>
+                <div class="table-responsive" style="max-height: 300px; min-height: 200px; overflow-y: auto;">
+                  <table class="table align-items-center ">
+                    <tbody>
+                      <% orders.forEach(order => { %>
+                        <tr>
+                          <td class="w-30">
+                            <div class="d-flex px-2 py-1 align-items-center">
+                              <div class="">
+                                <p class="text-xs font-weight-bold mb-0 overflow-hidden">Store:</p>
+                                <h6 class="text-sm mb-0"><%= order.orderId %></h6>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="text-center">
+                              <p class="text-xs font-weight-bold mb-0">By User:</p>
+                              <h6 class="text-sm mb-0"><%= order.name %></h6>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="text-center">
+                              <p class="text-xs font-weight-bold mb-0">Status:</p>
+                              <h6 class="text-sm mb-0"><%= order.status === 1 ? "Success" : "Failed" %></h6>
+                            </div>
+                          </td>
+                          <td class="align-middle text-sm">
+                            <div class="col text-center">
+                              <button class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto" onClick="window.location.href='/order/<%= order.orderId %>'"><i class="ni ni-bold-right" aria-hidden="true"></i></button>
+                            </div>
+                          </td>
+                        </tr>
+                      <% }) %>                   
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
           <%- include('../layouts/footer') %>
         </div>
-    </main>
+    </main>    
     
     <!--   Core JS Files   -->
     <%- include('../layouts/script') %>
@@ -451,6 +460,41 @@
 
       // Gọi hàm updateChart với type mặc định là 'day' khi tải trang
       updateChart('day');
+
+      document.addEventListener('DOMContentLoaded', async function () {
+        try {
+          // Fetch current date earnings
+          const response = await fetch('/total-earn');
+          const data = await response.json();
+
+          // Update current date earnings
+          document.getElementById('current-total-amount').innerText = `$${data.currentDateEarnings.totalAmount}`;
+          document.getElementById('current-percentage-difference').innerText = data.currentDateEarnings.percentageDifference;
+
+          // Handle user selected date earnings
+          const form = document.getElementById('date-range-form');
+          form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (startDate && endDate) {
+              const userSelectedResponse = await fetch(`/total-earn?startDate=${startDate}&endDate=${endDate}`);
+              const userSelectedData = await userSelectedResponse.json();
+
+              document.getElementById('user-selected-total-amount').innerText = `$${userSelectedData.userSelectedDateEarnings.totalAmount}`;
+              document.getElementById('user-selected-percentage-difference').innerText = userSelectedData.userSelectedDateEarnings.percentageDifference || 'N/A';
+            }
+          });
+        } catch (error) {
+          console.error('Error fetching earnings:', error);
+        }
+
+        const response = await fetch('/data-dashboard');
+        const data = await response.json();
+        document.getElementById('total_users').innerHTML = data.totalUsers;
+        document.getElementById('total_orders').innerHTML = data.totalOrders;
+      });
     </script>
 </body>
 </html>

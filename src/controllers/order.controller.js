@@ -50,6 +50,28 @@ async function getOrderDetail(req, res) {
     }
 }
 
+async function getTotalEarn(req, res) {
+    try {
+        const currentDate = new Date().toISOString().split('T')[0];
+        const currentDateEarnings = await orderApi.getTotalEarn(currentDate, currentDate);
+
+        const { startDate, endDate } = req.query;
+        let userSelectedDateEarnings = {};
+
+        if (startDate && endDate) {
+            userSelectedDateEarnings = await orderApi.getTotalEarn(startDate, endDate);
+        }
+
+        res.json({
+            currentDateEarnings,
+            userSelectedDateEarnings
+        });
+    } catch (error) {
+        console.error('Error getting totalEarn:', error);
+        res.status(500).json({ error: 'An error occurred while getting totalEarn' });
+    }
+}
+
 async function dataChart(req, res) {
     const { type, month, year } = req.query;
 
@@ -62,5 +84,15 @@ async function dataChart(req, res) {
     }
 }
 
+async function getDataDashboard(req, res) {
+    try {
+        const data = await orderApi.getDataDashboard();
+        res.json(data);
+    } catch (error) {
+        console.error('Error getting getDataDashboard:', error);
+        res.status(500).json({ error: 'An error occurred while getting getDataDashboard' });
+    }
+}
 
-module.exports = { getOrders, getOrderDetail, dataChart }
+
+module.exports = { getOrders, getOrderDetail, getTotalEarn, dataChart, getDataDashboard }

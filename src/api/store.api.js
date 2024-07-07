@@ -20,7 +20,8 @@ async function getStores(filters = {}) {
       const response = await axios.get(`${apiConfig.BASE_URL}/store?${queryParams}`, { httpsAgent: agent });
 
       if (response.data.isSuccess) {
-          const stores = response.data.data;
+          let stores = response.data.data;
+          stores = stores.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
           return { stores };
       } else {
           return { error: 'Failed to fetch stores' };

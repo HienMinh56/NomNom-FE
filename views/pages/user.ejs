@@ -65,7 +65,15 @@
               <div class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
                   <div class="row ps-4 align-items-center w-100">
-                    <div class="col-3">
+                    <div class="col-2">
+                      <label for="userIdInputAdmin" class="form-label">UserId</label>
+                      <input type="text" id="userIdInputAdmin" class="form-control" placeholder="Enter userId">
+                    </div>
+                    <div class="col-2">
+                      <label for="nameInputAdmin" class="form-label">Name</label>
+                      <input type="text" id="nameInputAdmin" class="form-control" placeholder="Enter name">
+                    </div>
+                    <div class="col-2">
                         <label for="statusInputAdmin" class="form-label">Status</label>
                         <select id="statusInputAdmin" class="form-select">
                             <option value="">All</option>
@@ -73,7 +81,7 @@
                             <option value="2">Inactive</option>
                         </select>
                     </div>     
-                    <div class="col-3">
+                    <div class="col-2">
                       <label for="campusInputAdmin" class="form-label">Campus</label>
                       <select id="campusInputAdmin" class="form-select">
                           <option value="">All</option>
@@ -173,7 +181,15 @@
               <div class="table-responsive p-0">
                 <table class="table align-items-center justify-content-center mb-0">
                   <div class="row ps-4 align-items-center w-100">
-                    <div class="col-3">
+                    <div class="col-2">
+                      <label for="userIdInputCustomer" class="form-label">UserId</label>
+                      <input type="text" id="userIdInputCustomer" class="form-control" placeholder="Enter userId">
+                    </div>
+                    <div class="col-2">
+                      <label for="nameInputCustomer" class="form-label">Name</label>
+                      <input type="text" id="nameInputCustomer" class="form-control" placeholder="Enter name">
+                    </div>
+                    <div class="col-2">
                         <label for="statusInputCustomer" class="form-label">Status</label>
                         <select id="statusInputCustomer" class="form-select">
                             <option value="">All</option>
@@ -437,6 +453,8 @@
     }
 
     const filterState = {
+      userId: null,
+      Name: null,
       status: null,
       campusName: null
     };
@@ -452,12 +470,15 @@
 
     // ADMIN      
     function applyFiltersAdmins() {
+      const Name = document.getElementById('nameInputAdmin').value;
       const status = document.getElementById('statusInputAdmin').value;
       const campusName = document.getElementById('campusInputAdmin').value;
-
+      const userId = document.getElementById('userIdInputAdmin').value;
+      filterState.userId = userId;
+      filterState.Name = Name;
       filterState.status = status;
       filterState.campusName = campusName;
-      // console.log('Filters applied:', filterState);
+      console.log('Filters applied:', filterState);
       pageIndex = 0;
       fetchAdmins(filterState);
     }
@@ -551,7 +572,10 @@
     function applyFiltersCustomers() {
       const status = document.getElementById('statusInputCustomer').value;
       const campusName = document.getElementById('campusInputCustomer').value;
-
+      const Name = document.getElementById('nameInputCustomer').value;
+      const userId = document.getElementById('userIdInputCustomer').value;
+      filterState.userId = userId;
+      filterState.Name = Name;
       filterState.status = status;
       filterState.campusName = campusName;
       // console.log('Filters applied:', filterState);

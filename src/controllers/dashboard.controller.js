@@ -7,28 +7,37 @@
 
 
 const storeApi = require('../api/store.api');
-const areaApi = require('../api/area.api');
+const orderApi = require('../api/order.api');
 
 async function getItems(req, res) {
-    let { status, areaName, sessionId } = req.query;
+    let { status, areaName, sessionId, userName, createdDate, storeName } = req.query;
 
-    const filters = {};
+    const filtersStore = {};
     if (status !== undefined) filters.status = status;
     if (areaName !== undefined) filters.areaName = areaName;
     if (sessionId !== undefined) filters.sessionId = sessionId;
 
-    try {
-        const storeData = await storeApi.getStores(filters);
-        const areaData = await areaApi.getAreas();
+    const filtersOrder = {};
+    if (userName !== undefined) filters.userName = userName;
+    if (createdDate !== undefined) filters.createdDate = createdDate;
+    if (status !== undefined) filters.status = status;
+    if (storeName !== undefined) filters.storeName = storeName;
+    if (sessionId !== undefined) filters.sessionId = sessionId;
 
-        if (storeData.error || areaData.error) {
-            res.render('./pages/dashboard', { text: 'Dashboard', stores: [], areas: []});
+    try {
+        const storeData = await storeApi.getStores(filtersStore);
+        const orderData = await orderApi.getOrders(filtersOrder);
+
+        if (storeData.error || orderData.error) {
+            res.render('./pages/dashboard', { text: 'Dashboard', stores: [], orders: []});
         } else {
-            res.render('./pages/dashboard', { text: 'Dashboard', ...storeData, areas: areaData.areas });
+            const activeStores = storeData.stores.filter(store => store.status === 1);
+            const todayOrders = orderData.orders.filter(order => order.createdDate === Date.now());
+            res.render('./pages/dashboard', { text: 'Dashboard', stores: activeStores , orders: todayOrders });
         }
     } catch (error) {
         console.error('Error fetching stores:', error);
-        res.render('./pages/dashboard', { text: 'Dashboard', stores: [], areas: []});
+        res.render('./pages/dashboard', { text: 'Dashboard', stores: [], areas: [], orders: []});
     }
 }
 
