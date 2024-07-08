@@ -24,7 +24,7 @@ async function getProducts(req, res) {
     if (productData.error) {
       res.render('./pages/store_detail', { text: 'Store', foods: []});
     } else {
-      res.render('./pages/store_detail', { text: 'Store', foods: productData.foods });
+      res.render('./pages/store_detail', { text: 'Store', foods: productData.foods, store: productData.store });
     }
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -37,7 +37,7 @@ async function getStoreData(req, res) {
   
   try {
     const storeData = await foodApi.getProducts(storeId);
-    res.json(storeData);
+    res.json(storeData.store);
   } catch (error) {
     console.error('Error getting dataStore:', error);
     res.status(500).json({ error: 'An error occurred while getting dataStore' });
