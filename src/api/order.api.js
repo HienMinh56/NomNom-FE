@@ -51,7 +51,7 @@ async function getOrderDetail(orderId) {
 
 async function getTotalEarn(startDate, endDate) {
     try {
-        const response = await axios.get(`${apiConfig.BASE_URL}/order/totalAmount?startDate=${startDate}&&endDate=${endDate}`, { httpsAgent: agent });
+        const response = await axios.get(`${apiConfig.BASE_URL}/order/totalInCome?startDate=${startDate}&&endDate=${endDate}`, { httpsAgent: agent });
 
         if (response.data.isSuccess) {
             const data = response.data.data;
@@ -67,17 +67,32 @@ async function getTotalEarn(startDate, endDate) {
 
 async function dataChart(type, month, year) {
     try {
-        const response = await axios.get(`${apiConfig.BASE_URL}/order/data-chart?type=${type}&year=${year}&month=${month}`, { httpsAgent: agent });
+        const response = await axios.get(`${apiConfig.BASE_URL}/dashboard/time?type=${type}&year=${year}&month=${month}`, { httpsAgent: agent });
 
         if (response.data.isSuccess) {
             const data = response.data.data;
-            const chartData = {
-                labels: data.map(item => new Date(item.date).toLocaleDateString('vn-VN', { month: 'short', day: 'numeric' })),
+            let chartData = {
+                labels: [],
                 datasets: [{
                     label: "Total Amount",
-                    data: data.map(item => item.totalAmount)
+                    data: []
                 }]
             };
+
+            if (type === 'day') {
+                chartData.labels = data.map(item => {
+                    const dateParts = item.day.split('-');
+                    return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                });
+                chartData.datasets[0].data = data.map(item => item.totalAmount);
+            } else if (type === 'week') {
+                chartData.labels = data.map(item => item.weekNumber);
+                chartData.datasets[0].data = data.map(item => item.totalAmount);
+            } else if (type === 'month') {
+                chartData.labels = data.map(item => "month " + item.month);
+                chartData.datasets[0].data = data.map(item => item.totalAmount);
+            }
+
             return { data: chartData };
         } else {
             return { error: 'Failed to fetch data' };
@@ -88,9 +103,10 @@ async function dataChart(type, month, year) {
     }
 }
 
+
 async function getDataDashboard() {
     try {
-        const response = await axios.get(`${apiConfig.BASE_URL}/order/dataDashboard`, { httpsAgent: agent });
+        const response = await axios.get(`${apiConfig.BASE_URL}/dashboard/total`, { httpsAgent: agent });
 
         if (response.data.isSuccess) {
             const data = response.data.data;
