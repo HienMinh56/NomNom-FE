@@ -4,6 +4,11 @@
 
   <%- include('../layouts/head', { title: 'Store | Nom Nom' }) %>
   <style>
+    .align-middle .btn {
+      padding: 0.25rem 1rem;
+      font-size: 0.75rem;
+      margin-bottom: 0;
+    }
     #nav_store {
       display: flex;
       justify-content: center;
@@ -124,8 +129,8 @@
                             <td class="align-middle text-center">
                               <span class="text-secondary text-xs font-weight-bold"><%= store.areaName %></span>
                             </td>
-                            <td class="align-middle">
-                              <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editStoreModal" 
+                            <td class="align-middle justify-content-center">
+                              <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editStoreModal" 
                                 onclick="event.stopPropagation(); storeModal('<%= store.storeId %>', '<%= store.name %>', '<%= store.address %>', '<%= store.phone %>', '<%= store.openTime %>', '<%= store.closeTime %>', '<%= store.status %>')">
                                 Edit
                               </a>
