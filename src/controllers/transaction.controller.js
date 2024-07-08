@@ -10,10 +10,10 @@ const transactionApi = require('../api/transaction.api');
 
 
 async function getTransactions(req, res) {
-    const { username, createdDate } = req.query;
+    const { userId, createdDate } = req.query;
 
     const filters = {};
-    if (username !== undefined) filters.username = username;
+    if (userId !== undefined) filters.userId = userId;
     if (createdDate !== undefined) filters.createdDate = createdDate;
 
     try {
