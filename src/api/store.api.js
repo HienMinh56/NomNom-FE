@@ -94,4 +94,20 @@ async function deleteStore(storeId) {
   }
 }
 
-module.exports = { getStores, addStore, updateStore, deleteStore };
+async function changeSession() {
+  try {
+    const response = await axios.post(
+      `${apiConfig.BASE_URL}/store/status`, {}, { httpsAgent: agent }
+    );
+    if (response) {
+      return response.data;
+    } else {
+      return { error: 'Failed to change session' };
+    }
+  } catch (error) {
+    console.error('Error changing session:', error);
+    return { error: 'An error occurred while changing session' };
+  }
+}
+
+module.exports = { getStores, addStore, updateStore, deleteStore, changeSession };

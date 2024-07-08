@@ -16,5 +16,6 @@ router.get('/:storeId', productController.getProducts);
 router.post('/addStore', storeController.addStore);
 router.put('/updateStore', storeController.updateStore);
 router.delete('/deleteStore', storeController.deleteStore);
+router.post('/changeSession', storeController.changeSession);
 
 module.exports = router;
