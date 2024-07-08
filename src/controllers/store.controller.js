@@ -71,4 +71,14 @@ async function deleteStore(req, res) {
   }
 }
 
-module.exports = { getStores, addStore, updateStore, deleteStore };
+async function changeSession(req, res) {
+  try {
+    const result = await storeApi.changeSession();
+    res.json(result);
+  } catch (error) {
+    console.error('Error changing session:', error);
+    res.status(500).json({ error: 'An error occurred while changing session' });
+  }
+}
+
+module.exports = { getStores, addStore, updateStore, deleteStore, changeSession };
