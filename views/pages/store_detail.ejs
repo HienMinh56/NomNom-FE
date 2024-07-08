@@ -85,7 +85,7 @@
                         <td>
                           <div class="d-flex px-2 py-1">
                             <div>
-                              <img src="<%= product.image %>" class="avatar me-3" alt="stores" data-image-load-anim>
+                              <img src="<%= product.image %>" class="avatar me-3" alt="food image" data-image-load-anim>
                             </div>
                             <div class="d-flex flex-column justify-content-center">
                               <h6 class="mb-0 text-sm"><%= product.foodId %></h6>
@@ -118,13 +118,13 @@
                           </span>
                         </td>
                         <td class="align-middle">
-                          <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editFoodModal" onclick="foodModal('<%= product.foodId %>', '<%= product.title %>', '<%= product.description %>', '<%= product.price %>', '<%= product.cate %>')">
+                          <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editFoodModal" onclick="foodModal('<%= product.foodId %>', '<%= product.title %>', '<%= product.description %>', '<%= product.price %>', '<%= product.cate %>', '<%= encodeURIComponent(product.image) %>')">
                             Edit
-                          </a>
+                          </a>                          
                         </td>
                       </tr>
                     <% }) %>
-                  </tbody>                      
+                  </tbody>                                     
                 </table>
                 <div id="nav_food" class="d-flex justify-content-center align-items-center mt-3">
                   <div class="arrow" id="prevPage_food">&lt;</div>
@@ -175,7 +175,6 @@
               </div>
             </div>
           </div>
-        
       </div>
       
       <%- include('../layouts/footer') %>
@@ -269,7 +268,7 @@
             <div class="mb-3">
               <label for="foodImage" class="form-label">Image</label>
               <input type="file" class="form-control" id="foodImage" accept="image/*" onchange="previewImage(event, 'imagePreview')">
-              <img id="imagePreview" src="#" alt="Image Preview" style="display:none; max-width: 100%; height: 80%; padding-top: 10px;">
+              <img id="imagePreview" src="" alt="Food Image" style="display:none; max-width: 100%; height: 80%; padding-top: 10px;">
             </div>
           </form>
         </div>
@@ -283,7 +282,7 @@
       </div>
     </div>
   </div>
-
+  
   <!-- JS Handle FUNCTION -->
   <script>
     // Preview image in modal
@@ -300,12 +299,21 @@
     }
 
     // Show data of food in update modal
-    function foodModal(id, title, description,price, cate) {
+    function foodModal(id, title, description, price, cate, image) {
+      console.log("Function called");
+      console.log("Image URL:", decodeURIComponent(image)); // Log URL hình ảnh
+
       document.getElementById('foodId').value = id;
       document.getElementById('foodTitle').value = title;
       document.getElementById('foodDescription').value = description;
       document.getElementById('foodPrice').value = price;
       document.getElementById('foodCate').value = cate;
+
+      var imagePreview = document.getElementById('imagePreview');
+      imagePreview.src = decodeURIComponent(image);
+      imagePreview.style.display = 'block';
+
+      console.log("Image src set to:", imagePreview.src);
     }
 
     function getStoreIdFromUrl() {
@@ -342,14 +350,14 @@
         }
 
         const result = await response.json();
-        console.log('Fetched Store Data:', result); // Kiểm tra dữ liệu trả về
+        console.log('Fetched Store Data:', result);
 
-        // Kiểm tra và cập nhật dữ liệu
-        if (result.datas) {
-          const data = result.datas;
+        if (result) {
+          const data = result;
           document.getElementById('storeName').innerText = data.storeName;
           document.getElementById('totalFoods').innerText = data.totalFoods;
           document.getElementById('totalOrders').innerText = data.totalOrders;
+          document.title = data.storeName + " | NomNom";
         }        
       } catch (error) {
         console.error('Error fetching store data:', error);
