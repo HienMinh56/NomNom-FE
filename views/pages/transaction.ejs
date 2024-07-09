@@ -93,8 +93,8 @@
                                         <p class="text-sm font-weight-bold mb-0"><%= transaction.type %></p>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="badge badge-sm bg-gradient-<%= transaction.status === 1 ? 'success' : 'danger' %>">
-                                            <%= transaction.status === 1 ? 'Active' : 'Inactive' %>
+                                        <span class="badge badge-sm bg-gradient-<%= transaction.status === 1 ? 'success' : 'warning' %>">
+                                            <%= transaction.status === 1 ? 'Success' : 'Pending' %>
                                         </span>
                                     </td>
                                     <td class="align-middle text-center">

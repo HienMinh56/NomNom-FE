@@ -86,7 +86,7 @@
                   </thead>
                   <tbody id="foodTableBody">
                     <% foods.forEach(product => { %>
-                      <tr>                            
+                      <tr style="cursor: pointer;" onClick="window.location.href='/store/<%= product.storeId %>/product/<%= product.foodId %>'">
                         <td>
                           <div class="d-flex px-2 py-1">
                             <div>
@@ -123,7 +123,7 @@
                           </span>
                         </td>
                         <td class="align-middle justify-content-center">
-                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editFoodModal" onclick="foodModal('<%= product.foodId %>', '<%= product.title %>', '<%= product.description %>', '<%= product.price %>', '<%= product.cate %>', '<%= encodeURIComponent(product.image) %>')">
+                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editFoodModal" onclick="event.stopPropagation();  foodModal('<%= product.foodId %>', '<%= product.title %>', '<%= product.description %>', '<%= product.price %>', '<%= product.cate %>', '<%= encodeURIComponent(product.image) %>')">
                             Edit
                           </a>                          
                         </td>
@@ -530,7 +530,7 @@
         const foodCate = document.getElementById('foodCate').value;
         const foodImage = document.getElementById('foodImage').files[0];
 
-        if (!foodTitle || !foodDescription || !foodPrice || !foodCate || !foodImage) {
+        if (!foodTitle || !foodDescription || !foodPrice || !foodCate) {
           alert('Please fill in all required fields.');
           return;
         }
