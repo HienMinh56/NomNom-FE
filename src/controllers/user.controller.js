@@ -10,7 +10,6 @@ const userApi = require('../api/user.api');
 const campusApi = require('../api/campus.api');
 
 async function getUsers(req, res) {
-    // const { userId } = req.params;
     const { userId, Name, email, phone, status, campusName } = req.query;
     
     const filters = {};
@@ -51,6 +50,7 @@ async function getUserDetail(req, res) {
         if (userData.error || campusData.error) {
             res.render('./pages/user_detail', { text: 'Profile', user: {}, campus: [] });
         } else {
+            console.log(userData.users[0]);
             res.render('./pages/user_detail', { text: 'Profile', user: userData.users[0], campuses: campusData.campuses });
         }
     } catch (error) {

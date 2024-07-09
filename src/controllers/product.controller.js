@@ -13,9 +13,10 @@ const storage = multer.memoryStorage(); // Use memory storage instead of disk st
 const upload = multer({ storage: storage });
 
 async function getProducts(req, res) {
-  const { storeId, cate } = req.query;
+  const { storeId, foodId, cate } = req.query;
 
   const filters = {};
+  if (foodId !== undefined) filters.foodId = foodId;
   if (cate !== undefined) filters.cate = cate;
 
   try {
@@ -29,6 +30,28 @@ async function getProducts(req, res) {
   } catch (error) {
     console.error('Error fetching products:', error);
     res.render('./pages/store_detail', { text: 'Store', foods: [] });
+  }
+}
+
+async function getProductDetail(req, res) {
+  let { storeId, foodId } = req.params;
+  let { cate } = req.query;
+
+  let filters = {};
+  if (cate !== undefined) filters.cate = cate;
+
+  try {
+    const productData = await foodApi.getProducts(storeId, foodId, filters);
+
+    if (productData.error) {
+      res.render('./pages/product_detail', { text: 'Store', food: [] });
+    } else {
+      const food = productData.foods.find(food => food.foodId === foodId);
+      res.render('./pages/product_detail', { text: 'Store', food: food || [] });
+    }
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.render('./pages/product_detail', { text: 'Store', food: [] });
   }
 }
 
@@ -86,7 +109,7 @@ async function updateProduct(req, res) {
   const { Title, Description, Price, Cate } = req.body;
   const imageFile = req.file;
 
-  if (!Title || !Description || !Price || !Cate || !imageFile) {
+  if (!Title || !Description || !Price || !Cate) {
     return res.status(400).json({
       type: 'https://tools.ietf.org/html/rfc7231#section-6.5.1',
       title: 'One or more validation errors occurred.',
@@ -96,8 +119,7 @@ async function updateProduct(req, res) {
         Title: Title ? undefined : ["Title is required"],
         Description: Description ? undefined : ["Description is required"],
         Price: Price ? undefined : ["Price is required"],
-        Cate: Cate ? undefined : ["Cate is required"],
-        Image: imageFile ? undefined : ["The image field is required."]
+        Cate: Cate ? undefined : ["Cate is required"]
       }
     });
   }
@@ -130,4 +152,4 @@ async function deleteProduct(req, res) {
   }
 }
 
-module.exports = { getProducts, addProduct, updateProduct, deleteProduct, getStoreData };
+module.exports = { getProducts, addProduct, updateProduct, deleteProduct, getStoreData, getProductDetail };

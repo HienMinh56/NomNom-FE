@@ -13,6 +13,7 @@ const productController = require('../controllers/product.controller');
 
 router.get('/', storeController.getStores);
 router.get('/:storeId', productController.getProducts);
+router.get('/:storeId/product/:foodId', productController.getProductDetail);
 router.post('/addStore', storeController.addStore);
 router.put('/updateStore', storeController.updateStore);
 router.delete('/deleteStore', storeController.deleteStore);

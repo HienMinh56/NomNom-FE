@@ -12,12 +12,16 @@ const apiConfig = require('../config/api.config');
 const authManager = require('../config/auth.config');
 const FormData = require('form-data');
 
-async function getProducts(storeId, filters = {}) {
+async function getProducts(storeId, foodId, filters = {}) {
   try {
     const accessToken = authManager.getAccessToken();
     const queryParams = new URLSearchParams(filters).toString();
-    const response = await axios.get(
-      `${apiConfig.BASE_URL}/food?storeId=${storeId}&${queryParams}`, {
+
+    const url = foodId
+      ? `${apiConfig.BASE_URL}/food?storeId=${storeId}&${queryParams}`
+      : `${apiConfig.BASE_URL}/food?storeId=${storeId}&foodId=${foodId}&${queryParams}`;
+      
+      const response = await axios.get(url, {
         httpsAgent: agent,
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -74,10 +78,16 @@ async function updateProduct(foodId, foodData, imageFile) {
   try {
     const accessToken = authManager.getAccessToken();
     const formData = new FormData();
+
+    // Append all keys from foodData to formData
     for (const key in foodData) {
       formData.append(key, foodData[key]);
     }
-    formData.append('Image', imageFile.buffer, imageFile.originalname); // Append image file
+
+    // Append image file if it exists
+    if (imageFile) {
+      formData.append('Image', imageFile.buffer, imageFile.originalname);
+    }
 
     const response = await axios.put(
       `${apiConfig.BASE_URL}/food/${foodId}`,

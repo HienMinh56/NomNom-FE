@@ -109,8 +109,8 @@
                                         <p class="text-sm font-weight-bold mb-0"><%= order.storeName %></p>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="badge badge-sm bg-gradient-<%= order.status === 1 ? 'success' : 'danger' %>">
-                                            <%= order.status === 1 ? 'Active' : 'Inactive' %>
+                                        <span class="badge badge-sm bg-gradient-<%= order.status === 2 ? 'success' : 'danger' %>">
+                                            <%= order.status === 2 ? 'Done' : 'Canceled' %>
                                         </span>
                                     </td>
                                     <td class="align-middle text-center">
