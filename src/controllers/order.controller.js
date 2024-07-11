@@ -10,7 +10,7 @@ const orderApi = require('../api/order.api');
 
 
 async function getOrders(req, res) {
-    const { userName, createdDate, status, storeName, sessionId } = req.query;
+    const { userName, createdDate, status, storeName, sessionId, campusName, areaName } = req.query;
 
     const filters = {};
     if (userName !== undefined) filters.userName = userName;
@@ -18,6 +18,8 @@ async function getOrders(req, res) {
     if (status !== undefined) filters.status = status;
     if (storeName !== undefined) filters.storeName = storeName;
     if (sessionId !== undefined) filters.sessionId = sessionId;
+    if (campusName !== undefined) filters.campusName = campusName;
+    if (areaName !== undefined) filters.areaName = areaName;
 
     try {
         const orderData = await orderApi.getOrders(filters);
@@ -94,5 +96,15 @@ async function getDataDashboard(req, res) {
     }
 }
 
+async function endOfDay(req, res) {
+    try {
+        const data = await orderApi.endOfDay();
+        res.json(data);
+    } catch (error) {
+        console.error('Error getting getDataDashboard:', error);
+        res.status(500).json({ error: 'An error occurred while getting getDataDashboard' });
+    }
+}
 
-module.exports = { getOrders, getOrderDetail, getTotalEarn, dataChart, getDataDashboard }
+
+module.exports = { getOrders, getOrderDetail, getTotalEarn, dataChart, getDataDashboard, endOfDay }

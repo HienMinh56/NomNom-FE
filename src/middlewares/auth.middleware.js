@@ -32,8 +32,8 @@ const authenticatedUser = async (req, res, next) => {
         const newAccessToken = response.data.data.accessTokenToken;
         const newRefreshToken = response.data.data.refreshToken;
         const newExpiredAt = new Date(response.data.data.expiredAt);
-        const accessTokenMaxAge = 15 * 60 * 1000; // 15 minutes
-        const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 1 week
+        const accessTokenMaxAge = 60 * 60 * 1000;
+        const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000;
 
         res.cookie('accessToken', newAccessToken, {
           maxAge: accessTokenMaxAge,
