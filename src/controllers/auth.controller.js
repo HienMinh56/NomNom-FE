@@ -18,7 +18,7 @@ async function auth(req, res) {
 
     if (result.success) {
       if (result.userInfo.Role == "1") {
-        const accessTokenMaxAge = 15 * 60 * 1000; // 15 minutes in milliseconds
+        const accessTokenMaxAge = 60 * 60 * 1000;
         const ONE_WEEK = 604800000;
         const accessToken = jwt.sign({ user: result.userInfo }, process.env.SECRET_KEY, { expiresIn: '15m' });
 

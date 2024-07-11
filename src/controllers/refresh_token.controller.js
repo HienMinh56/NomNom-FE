@@ -18,7 +18,7 @@ async function refreshToken(req, res) {
       const accessToken = result.accessToken;
       const newRefreshToken = result.refreshToken;
       const expiredAt = new Date(result.expiredAt);
-      const accessTokenMaxAge = 15 * 60 * 1000; // 15 minutes in milliseconds
+      const accessTokenMaxAge = 60 * 60 * 1000; 
       const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
 
       res.cookie('accessToken', accessToken, {

@@ -57,19 +57,28 @@
                           <label for="storeNameInput" class="form-label">Store Name</label>
                           <input type="text" id="storeNameInput" class="form-control" placeholder="Enter store name">
                         </div>
-                        <div class="col-3">
+                        <div class="col-2">
+                          <label for="campusNameInput" class="form-label">Campus</label>
+                          <input type="text" id="campusNameInput" class="form-control" placeholder="Enter campus name">
+                        </div>
+                        <div class="col-2">
+                          <label for="areaNameInput" class="form-label">Area</label>
+                          <input type="text" id="areaNameInput" class="form-control" placeholder="Enter area name">
+                        </div> 
+                        <div class="col-2">
                             <label for="createdDateInput" class="form-label">Created Date</label>
                             <input type="date" id="createdDateInput" class="form-control">
                         </div>
-                        <div class="col-3">
+                        <div class="col-1">
                             <label for="statusInput" class="form-label">Status</label>
                             <select id="statusInput" class="form-select">
                                 <option value="">All</option>
-                                <option value="1">Active</option>
-                                <option value="2">Inactive</option>
+                                <option value="2">Success</option>
+                                <option value="1">Canceled</option>
+                                <option value="3">Waiting</option>
                             </select>
-                        </div>                        
-                        <div class="col-2" style="margin: 45px 0 0 0 ; padding: 0;">
+                        </div>                                             
+                        <div class="col-1" style="margin: 45px 0 0 0 ; padding: 0;">
                           <button class="btn btn-primary w-100 " style="height: 40px;" onclick="applyFilters()">Apply Filters</button>
                         </div>
                       </div>                    
@@ -77,9 +86,11 @@
                         <thead>
                             <tr>
                                 <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-4">OrderId</th>
-                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Total</th>
-                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Quantity</th>
+                                <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Total</th>
+                                <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Quantity</th>
                                 <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">StoreName</th>
+                                <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Campus</th>
+                                <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Area</th>
                                 <th class="col-2 text-center text-secondary text-xxs font-weight-bolder opacity-10 ps-4">Status</th>
                                 <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CreatedDate</th>
                                 <th class="col-1 text-secondary opacity-7"></th>
@@ -108,10 +119,22 @@
                                     <td>
                                         <p class="text-sm font-weight-bold mb-0"><%= order.storeName %></p>
                                     </td>
+                                    <td>
+                                      <p class="text-sm font-weight-bold mb-0"><%= order.campusName %></p>
+                                    </td>
+                                    <td>
+                                      <p class="text-sm font-weight-bold mb-0"><%= order.areaName %></p>
+                                    </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="badge badge-sm bg-gradient-<%= order.status === 2 ? 'success' : 'danger' %>">
-                                            <%= order.status === 2 ? 'Done' : 'Canceled' %>
-                                        </span>
+                                      <span class="badge badge-sm bg-gradient-<% if (order.status === 1) { %>danger<% } else if (order.status === 2) { %>success<% } else if (order.status === 3) { %>warning<% } %>">
+                                        <% if (order.status === 1) { %>
+                                          Canceled
+                                        <% } else if (order.status === 2) { %>
+                                          Success
+                                        <% } else if (order.status === 3) { %>
+                                          Waiting
+                                        <% } %>
+                                      </span>
                                     </td>
                                     <td class="align-middle text-center">
                                         <span class="text-secondary text-xs font-weight-bold" style="margin-left: -20px">
@@ -148,10 +171,7 @@
             <%- include('../layouts/footer') %>
   
           </div>
-        </main>
-  
-      <!-- Edit Store Modal -->
-      
+        </main>      
   
       <!-- JS Handle FUNCTION -->
       <script>
@@ -173,11 +193,15 @@
           const createdDate = document.getElementById('createdDateInput').value;
           const status = document.getElementById('statusInput').value;
           const storeName = document.getElementById('storeNameInput').value;
+          const campusName = document.getElementById('campusNameInput').value;
+          const areaName = document.getElementById('areaNameInput').value;
 
           filterState.userName = userName;
           filterState.status = status;
           filterState.storeName = storeName;
           filterState.createdDate = createdDate;
+          filterState.campusName = campusName;
+          filterState.areaName = areaName;
           console.log('Filters applied:', filterState);
           pageIndex = 0;
           fetchOrders(filterState);

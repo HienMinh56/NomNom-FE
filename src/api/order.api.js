@@ -120,4 +120,20 @@ async function getDataDashboard() {
 }
 
 
-module.exports = { getOrders, getTotalEarn, getOrderDetail, dataChart, getDataDashboard }
+async function endOfDay() {
+    try {
+        const response = await axios.put(`${apiConfig.BASE_URL}/order/AllStatuses`,{} , { httpsAgent: agent });
+
+        if (response.data.isSuccess) {
+            return response.data;
+        } else {
+            return { error: 'Failed to end shift of day' };
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return { error: 'An error occurred while end shift of day' };
+    }
+}
+
+
+module.exports = { getOrders, getTotalEarn, getOrderDetail, dataChart, getDataDashboard, endOfDay }
