@@ -18,9 +18,10 @@ async function getOrders(filters = {}) {
 
         if (response.data.isSuccess) {
             let orders = response.data.data;
+            const totalOrderToday = response.data.totalOrderToday;
             orders = orders.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
 
-            return { orders };
+            return { orders, totalOrderToday };
         } else {
             return { error: 'Failed to fetch orders' };
         }

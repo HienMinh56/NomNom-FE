@@ -42,7 +42,9 @@ async function getItems(req, res) {
                 return orderDate >= startOfDay && orderDate <= endOfDay;
             });
 
-            res.render('./pages/dashboard', { text: 'Dashboard', stores: activeStores, orders: todayOrders });
+            const orderCount = todayOrders.length;
+
+            res.render('./pages/dashboard', { text: 'Dashboard', stores: activeStores, orders: todayOrders, orderCount });
         }
     } catch (error) {
         console.error('Error fetching stores:', error);
