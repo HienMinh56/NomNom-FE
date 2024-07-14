@@ -292,10 +292,13 @@
             <div class="col-lg-5">
               <div class="card">
                 <div class="card-header pb-0 p-3">
-                  <div class="d-flex justify-content-between"  style="height: 50px;">
+                  <div class="d-flex justify-content-between"  style="height: 50px; margin-bottom: -30px;">
                     <h6 class="mb-2" style="line-height: 40px;">Orders Today</h6>
                     <h6 class="flex-end table_btn" id="End_shift" style="line-height: 40px; padding: 0px 5px">End Of Shift</h6>
-                  </div>                  
+                  </div>
+                  <div class="d-flex align-items-center mt-3" style="margin-bottom: 10px;">
+                    <span>Total Order Today:</span> <div class="text-xs font-weight-bold mb-0" style="margin-left: 10px"><%=orderCount%></div>
+                  </div>              
                 </div>
                 <div class="table-responsive" style="max-height: 300px; min-height: 200px; overflow-y: auto;">
                   <table class="table align-items-center ">
@@ -331,6 +334,9 @@
                       <% }) %>                   
                     </tbody>
                   </table>
+                  <div class="d-flex justify-content-center align-items-center mt-3 flex-end">
+                      Totals: <div class="text-xs font-weight-bold mb-0"><%=orderCount%></div>
+                  </div>
                 </div>
               </div>
             </div>
