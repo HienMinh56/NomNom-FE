@@ -78,7 +78,7 @@
                       <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-7">Name</th>
                       <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Description</th>
                       <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Price</th>
-                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Category</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Category</th>
                       <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10" style="padding: 12px;">Status</th>
                       <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">CreatedDate</th>
                       <th class="col-1 text-secondary opacity-7"></th>
@@ -105,7 +105,15 @@
                           <p class="text-sm font-weight-bold mb-0"><%= product.price %></p>
                         </td>
                         <td>
-                          <p class="text-sm text-center font-weight-bold mb-0"><%= product.cate %></p>
+                          <p class="text-sm font-weight-bold mb-0">
+                            <% if (product.cate === 1) { %>
+                              Món Khô
+                            <% } else if (product.cate === 2) { %>
+                              Món Nước
+                            <% } else if (product.cate === 3) { %>
+                              Nước uống
+                            <% } %>
+                          </p>
                         </td>
                         <td class="align-middle text-center text-sm ">
                           <span class="badge badge-sm bg-gradient-<%= product.status === 1 ? 'success' : 'danger' %>">
