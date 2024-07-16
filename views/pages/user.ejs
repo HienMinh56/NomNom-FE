@@ -109,7 +109,7 @@
                   </thead>
                   <tbody id="userTableBody">
                     <% adminsAndShippers.forEach(user => { %>
-                      <tr style="cursor: pointer;" onClick="window.location.href='/user/<%= user.userId %>'">
+                      <tr class="custom" style="cursor: pointer;" onClick="window.location.href='/user/<%= user.userId %>'">
                         <td>
                           <div class="d-flex px-2 py-1">
                             <div>
@@ -225,7 +225,7 @@
                   </thead>
                   <tbody id="customerTableBody">
                     <% customers.forEach(user => { %>
-                      <tr style="cursor: pointer;" onClick="window.location.href='/user/<%= user.userId %>'">
+                      <tr class="custom" style="cursor: pointer;" onClick="window.location.href='/user/<%= user.userId %>'">
                         <td>
                           <div class="d-flex px-2">
                             <div>

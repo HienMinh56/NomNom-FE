@@ -98,7 +98,7 @@
                         </thead>
                         <tbody id="orderTableBody">
                             <% orders.forEach(order => { %>
-                                <tr style="cursor: pointer;" onClick="window.location.href='/order/<%= order.orderId %>'">
+                                <tr class="custom" style="cursor: pointer;" onClick="window.location.href='/order/<%= order.orderId %>'">
                                     <td>
                                         <div class="d-flex px-2 py-1">
                                             <div>

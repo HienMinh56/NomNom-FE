@@ -255,7 +255,7 @@
                   <table class="table align-items-center">
                     <tbody>
                       <% stores.forEach(store => { %>
-                        <tr style="cursor: pointer;" onClick="window.location.href='/store/<%= store.storeId %>'">
+                        <tr class="custom" style="cursor: pointer;" onClick="window.location.href='/store/<%= store.storeId %>'">
                           <td class="w-30">
                             <div class="d-flex px-2 py-1 align-items-center">
                               <div class="">
@@ -304,7 +304,7 @@
                   <table class="table align-items-center ">
                     <tbody>
                       <% orders.forEach(order => { %>
-                        <tr>
+                        <tr class="custom">
                           <td class="w-30">
                             <div class="d-flex px-2 py-1 align-items-center">
                               <div class="">
