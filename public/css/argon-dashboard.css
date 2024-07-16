@@ -26934,3 +26934,12 @@ pre[class*="language-"] {
 }
 
 /*# sourceMappingURL=dashboard-free.css.map */
+
+.custom {
+  background: #fff;
+  transition: background-color 2s ease-out 100ms;
+}
+
+.custom:hover {
+  background-color: #FFB6C1;
+}

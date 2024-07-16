@@ -86,7 +86,7 @@
                   </thead>
                   <tbody id="foodTableBody">
                     <% foods.forEach(product => { %>
-                      <tr style="cursor: pointer;" onClick="window.location.href='/store/<%= product.storeId %>/product/<%= product.foodId %>'">
+                      <tr class="custom" style="cursor: pointer;" onClick="window.location.href='/store/<%= product.storeId %>/product/<%= product.foodId %>'">
                         <td>
                           <div class="d-flex px-2 py-1">
                             <div>
@@ -207,7 +207,7 @@
             </div>
             <div class="mb-3">
               <label for="foodDescription-add" class="form-label">Description</label>
-              <input type="text" class="form-control" id="foodDescription-add" required>
+              <textarea class="form-control" id="foodDescription-add" required></textarea>
             </div>
             <div class="mb-3">
               <label for="foodPrice-add" class="form-label">Price</label>
@@ -256,7 +256,7 @@
             </div>
             <div class="mb-3">
               <label for="foodDescription" class="form-label">Description</label>
-              <input type="text" class="form-control" id="foodDescription" required>
+              <textarea class="form-control" id="foodDescription" required></textarea>
             </div>
             <div class="mb-3">
               <label for="foodPrice" class="form-label">Price</label>
