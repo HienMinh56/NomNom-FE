@@ -409,36 +409,6 @@
     </div>
   </div>
 
-  <!-- JS Form Alert -->
-  <script>
-    document.getElementById('addUserForm').addEventListener('submit', function(event) {
-      const userName = document.getElementById('userName-add').value || document.getElementById('userName').value;
-      const name = document.getElementById('name-add').value || document.getElementById('name').value;
-      const phone = document.getElementById('userPhone-add').value || document.getElementById('userPhone').value;
-    
-      const specialCharPattern = /[^a-zA-Z0-9 ]/g;
-      const phonePattern = /^\d{12}$/;
-    
-      if (specialCharPattern.test(userName)) {
-        alert('UserName should not contain special characters.');
-        event.preventDefault();
-        return;
-      }
-    
-      if (specialCharPattern.test(name)) {
-        alert('Name should not contain special characters.');
-        event.preventDefault();
-        return;
-      }
-    
-      if (!phonePattern.test(phone)) {
-        alert('Phone number should be exactly 12 digits.');
-        event.preventDefault();
-        return;
-      }
-    });
-  </script>
-
   <!-- JS Handle FUNCTION -->
   <script>
     // Get selected user
