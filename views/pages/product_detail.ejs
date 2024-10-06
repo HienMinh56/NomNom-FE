@@ -44,7 +44,8 @@
               <div class="card-header pb-0">
                 <div class="d-flex align-items-center">
                   <p class="mb-0">Edit Product</p>
-                  <button type="submit" id="updateBtn" class="btn btn-primary btn-sm ms-auto">Save changes</button>
+                  <button type="submit" id="deleteBtn" class="btn btn-primary btn-sm ms-auto" style="margin-right: 10px; background-color: red">Delete</button>
+                  <button type="submit" id="updateBtn" class="btn btn-primary btn-sm">Save changes</button>
                 </div>
               </div>
               <div class="card-body">
@@ -210,6 +211,29 @@
             alert('An error occurred: ' + error.message);
           }
         });
+
+        // Delete foods
+      document.getElementById('deleteBtn').addEventListener('click', async function () {
+        const foodId = document.getElementById('foodId').value;
+
+        const response = await fetch('/food/deleteFood', {
+          method: 'DELETE',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            foodId: foodId
+          })
+        });
+
+        const deleteResult = await response.json();
+        if (!deleteResult.error) {
+          alert("Food deleted successfully!");
+          location.reload();
+        } else {
+          alert("Failed to delete food: " + deleteResult.error);
+        }
+      });
       });
     </script>
      

@@ -27,6 +27,7 @@ const storeRoutes = require('./src/routes/store.route');
 const productRoutes = require('./src/routes/product.route');
 const orderRoutes = require('./src/routes/order.route');
 const transactionRoutes = require('./src/routes/transaction.route');
+const otherRoutes = require('./src/routes/other.route');
 const authManager = require('./src/config/auth.config');
 
 
@@ -130,6 +131,12 @@ app.use('/food', productRoutes);
   #Order Pages
 \*-----------------------------------*/
 app.use('/order', orderRoutes);
+
+
+/*-----------------------------------*\
+  #Other Pages
+\*-----------------------------------*/
+app.use('/other', otherRoutes);
 
 
 /*-----------------------------------*\
