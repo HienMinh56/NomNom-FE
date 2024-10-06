@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <%- include('../layouts/head', { title: 'Other | Nom Nom' }) %>
+
+  <style>
+    .dropdown-item.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .align-middle .btn {
+      padding: 0.25rem 1rem;
+      font-size: 0.75rem;
+      margin-bottom: 0;
+    }
+    #nav_area,
+    #nav_campus,
+    #nav_voucher {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #nav_area .arrow,
+    #nav_campus .arrow,
+    #nav_voucher .arrow{
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      background-color: #6a0dad;
+      color: #fff;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #pageSelect_area,
+    #pageSelect_campus,
+    #pageSelect_voucher {
+      padding: 5px;
+      font-size: 1rem;
+      text-align: center;
+    }
+  </style>
+
+</head>
+<body class="g-sidenav-show bg-gray-100">
+  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  
+  <%- include('../partials/sidebar') %>
+  
+  <main class="main-content position-relative border-radius-lg ">
+    <%- include('../partials/navbar') %>
+
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-6">
+          <div class="card mb-4" style="min-height: 400px;">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+              <h6>Areas table</h6>
+              <a href="javascript:;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAreaFormModal">
+                Add <i class="ni ni-fat-add fs-7"></i>
+              </a>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <!-- <div class="row ps-4 align-items-center w-100">
+                    <div class="col-2">
+                      <label for="areaIdInput" class="form-label">AreaId</label>
+                      <input type="text" id="areaIdInput" class="form-control" placeholder="Enter areaId">
+                    </div>
+                    <div class="col-2">
+                      <label for="areaNameInput" class="form-label">Area Name</label>
+                      <input type="text" id="areaNameInput" class="form-control" placeholder="Enter area name">
+                    </div>
+                    <div class="col-2">
+                        <label for="statusInputArea" class="form-label">Status</label>
+                        <select id="statusInputArea" class="form-select">
+                            <option value="">All</option>
+                            <option value="1">Active</option>
+                            <option value="2">Inactive</option>
+                        </select>
+                    </div>                     
+                    <div class="col-2" style="margin: 45px 0 0 0 ; padding: 0;">
+                      <button class="btn btn-primary w-100 " style="height: 40px;" onclick="applyFiltersAreas()">Apply Filters</button>
+                    </div>
+                  </div> -->
+                  <thead>
+                    <tr>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">AreaId</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10" style="padding-left: 20px;">Name</th>
+                      <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 " style="padding-left: 60px;">Status</th>
+                      <th class="col-1 text-secondary opacity-7"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="areaTableBody">
+                    <% areas.forEach(area => { %>
+                      <tr>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0" style="padding-left: 10px;"><%= area.areaId %></p>
+                        </td>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0" style="padding-left: -10px;"><%= area.name %></p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="badge badge-sm bg-gradient-<%= area.status === 1 ? 'success' : 'danger' %>">
+                            <%= area.status === 1 ? 'Active' : 'Inactive' %>
+                          </span>
+                        </td>
+                        <td class="align-middle">
+                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editAreaModal" 
+                            onclick="event.stopPropagation(); areaModal('<%= area.areaId %>', '<%= area.name %>', '<%= area.status %>')">
+                            Edit
+                          </a>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+                <div id="nav_area" class="d-flex justify-content-center align-items-center mt-3">
+                  <div class="arrow" id="prevPage_area">&lt;</div>
+                  <select id="pageSelect_area" class="form-select mx-2" style="width: 100px;"></select>
+                  <div class="arrow" id="nextPage_area">&gt;</div>
+                </div>                
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card mb-4" style="min-height: 400px;">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+              <h6>Campus table</h6>
+              <a href="javascript:;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCampusFormModal">
+                Add <i class="ni ni-fat-add fs-7"></i>
+              </a>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <!-- <div class="row ps-4 align-items-center w-100">
+                    <div class="col-2">
+                      <label for="campusIdInput" class="form-label">CampusId</label>
+                      <input type="text" id="campusIdInput" class="form-control" placeholder="Enter campusId">
+                    </div>
+                    <div class="col-2">
+                      <label for="areaIdInput" class="form-label">AreaId</label>
+                      <input type="text" id="areaIdInput" class="form-control" placeholder="Enter areaId">
+                    </div>
+                    <div class="col-2">
+                      <label for="campusNameInput" class="form-label">Name</label>
+                      <input type="text" id="campusNameInput" class="form-control" placeholder="Enter name">
+                    </div>
+                    <div class="col-2">
+                        <label for="campusStatusInput" class="form-label">Status</label>
+                        <select id="campusStatusInput" class="form-select">
+                            <option value="">All</option>
+                            <option value="1">Active</option>
+                            <option value="2">Inactive</option>
+                        </select>
+                    </div>                     
+                    <div class="col-2" style="margin: 45px 0 0 0 ; padding: 0;">
+                      <button class="btn btn-primary w-100 " style="height: 40px;" onclick="applyFiltersCampus()">Apply Filters</button>
+                    </div>
+                  </div> -->
+                  <thead>
+                    <tr>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">CampusId</th>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">AreaId</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Name</th>
+                      <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Status</th>
+                      <th class="col-1 text-secondary opacity-7"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="userTableBody">
+                    <% campuses.forEach(campus => { %>
+                      <tr>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0" style="padding-left: 15px;"><%= campus.campusId %></p>
+                        </td>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0" style="padding-left: 10px;"><%= campus.areaId %></p>
+                        </td>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0"><%= campus.name %></p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="badge badge-sm bg-gradient-<%= campus.status === 1 ? 'success' : 'danger' %>">
+                            <%= campus.status === 1 ? 'Active' : 'Inactive' %>
+                          </span>
+                        </td>
+                        <td class="align-middle justify-content-center">
+                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editCampusModal" 
+                            onclick="event.stopPropagation(); campusModal('<%= campus.campusId %>', '<%= campus.areaId %>', '<%= campus.name %>', '<%= campus.status %>')">
+                            Edit
+                          </a>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+                <div id="nav_campus" class="d-flex justify-content-center align-items-center mt-3">
+                  <div class="arrow" id="prevPage_campus">&lt;</div>
+                  <select id="pageSelect_campus" class="form-select mx-2" style="width: 100px;"></select>
+                  <div class="arrow" id="nextPage_campus">&gt;</div>
+                </div>                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+              <h6>Voucher table</h6>
+              <a href="javascript:;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVoucherFormModal">
+                Add <i class="ni ni-fat-add fs-7"></i>
+              </a>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0">
+                  <!-- <div class="row ps-4 align-items-center w-100">
+                    <div class="col-2">
+                      <label for="voucherCodeInput" class="form-label">Voucher Code</label>
+                      <input type="text" id="voucherCodeInput" class="form-control" placeholder="Enter voucherCode">
+                    </div>
+                    <div class="col-2">
+                        <label for="voucherStatusInput" class="form-label">Status</label>
+                        <select id="voucherStatusInput" class="form-select">
+                            <option value="">All</option>
+                            <option value="1">Active</option>
+                            <option value="2">Inactive</option>
+                        </select>
+                    </div>                    
+                    <div class="col-2" style="margin: 45px 0 0 0 ; padding: 0;">
+                      <button class="btn btn-primary w-100 " style="height: 40px;" onclick="applyFiltersVouchers()">Apply Filters</button>
+                    </div>
+                  </div> -->
+                  <thead>
+                    <tr>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">VoucherId</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">VoucherCode</th>
+                      <th class="col-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Discount</th>
+                      <th class="col-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Apply Amount</th>
+                      <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Status</th>
+                      <th class="col-2 text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Start Date</th>
+                      <th class="col-3 text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">End Date</th>
+                      <th class="col-1 text-secondary opacity-7"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="voucherTableBody">
+                    <% vouchers.forEach(voucher => { %>
+                      <tr>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0" style="padding-left: 10px;"><%= voucher.voucherId %></p>
+                        </td>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0" style="padding-left: 10px;"><%= voucher.voucherCode %></p>
+                        </td>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0" style="padding-left: 15px;"><%= voucher.discountAmount %></p>
+                        </td>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0" style="padding-left: 25px;"><%= voucher.minOrderAmount %></p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="badge badge-sm bg-gradient-<%= voucher.status === 1 ? 'success' : 'danger' %>">
+                            <%= voucher.status === 1 ? 'Active' : 'Inactive' %>
+                          </span>
+                        </td>
+                        <td class="align-middle text-center">
+                          <p class="text-sm font-weight-bold mb-0">
+                            <%
+                              var date = voucher.validityStartDate.split('T')[0];
+                              var parts = date.split('-');
+                              var formattedDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+                            %>
+                            <%= formattedDate %>
+                          </p>
+                        </td>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0" style="margin-left: -10px;">
+                            <%
+                              var date = voucher.validityEndDate.split('T')[0];
+                              var parts = date.split('-');
+                              var formattedDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+                            %>
+                            <%= formattedDate %>
+                          </p>
+                        </td>
+                        <td class="align-middle justify-content-center">
+                          <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editVoucherModal" 
+                            onclick="event.stopPropagation(); voucherModal('<%= voucher.voucherId %>', '<%= voucher.voucherCode %>', '<%= voucher.discountAmount %>', '<%= voucher.minOrderAmount %>', '<%= voucher.status %>', '<%= voucher.validityStartDate %>', '<%= voucher.validityEndDate %>')">
+                            Edit
+                          </a>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+                <div id="nav_voucher" class="d-flex justify-content-center align-items-center mt-3">
+                  <div class="arrow" id="prevPage_voucher">&lt;</div>
+                  <select id="pageSelect_voucher" class="form-select mx-2" style="width: 100px;"></select>
+                  <div class="arrow" id="nextPage_voucher">&gt;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%- include('../layouts/footer') %>
+
+    </div>
+  </main>
+
+  <!-- Add Area Modal -->
+  <div class="modal fade" id="addAreaFormModal" tabindex="-1" aria-labelledby="addAreaFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-bottom">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAreaFormModalLabel">Add New Area</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addAreaForm">
+            <div class="mb-3">
+              <label for="areaName-add" class="form-label">Area Name</label>
+              <input type="text" class="form-control" id="areaName-add" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="saveAreaBtn" class="btn btn-primary" form="addAreaForm">Add Area</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Edit Area Modal -->
+    <div class="modal fade" id="editAreaModal" tabindex="-1" aria-labelledby="editAreaModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-bottom">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editAreaModalLabel">Edit Area</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editAreaForm">
+              <div class="mb-3">
+                <label for="areaId" class="form-label">Area ID</label>
+                <input type="text" class="form-control" id="areaId" readonly>
+              </div>
+              <div class="mb-3">
+                <label for="areaName" class="form-label">Name</label>
+                <input type="text" class="form-control" id="areaName" required>
+              </div>
+              <div class="mb-3">
+                <label for="areaStatus" class="form-label">Status</label>
+                <select class="form-select" id="areaStatus">
+                  <option value="1">Active</option>
+                  <option value="2">Inactive</option>
+                </select>
+              </div>       
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="deleteAreaBtn">Delete</button>
+            <div class="ms-auto">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" id="updateAreaBtn" class="btn btn-primary" form="editAreaForm">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Add Campus Modal -->
+  <div class="modal fade" id="addCampusFormModal" tabindex="-1" aria-labelledby="addCampusFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-bottom">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCampusFormModalLabel">Add New Area</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addCampusForm">
+            <div class="mb-3">
+              <label for="areaId-add" class="form-label">AreaId</label>
+              <input type="text" class="form-control" id="areaId-add" required>
+            </div>
+            <div class="mb-3">
+              <label for="campusName" class="form-label">CampusName</label>
+              <input type="text" class="form-control" id="campusName-add" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="saveCampusBtn" class="btn btn-primary" form="addCampusForm">Add Campus</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Campus Modal -->
+  <div class="modal fade" id="editCampusModal" tabindex="-1" aria-labelledby="editCampusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-bottom">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editCampusModalLabel">Edit Campus</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editCampusForm">
+            <div class="mb-3">
+              <label for="campusId" class="form-label">Campus ID</label>
+              <input type="text" class="form-control" id="campusId" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="campusAreaId" class="form-label">Area ID</label>
+              <input type="text" class="form-control" id="campusAreaId" required>
+            </div>
+            <div class="mb-3">
+              <label for="campusName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="campusName" required>
+            </div>
+            <div class="mb-3">
+              <label for="campusStatus" class="form-label">Status</label>
+              <select class="form-select" id="campusStatus">
+                <option value="1">Active</option>
+                <option value="2">Inactive</option>
+              </select>
+            </div>       
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="deleteCampusBtn">Delete</button>
+          <div class="ms-auto">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" id="updateCampusBtn" class="btn btn-primary" form="editCampusForm">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Add Voucher Modal -->
+<div class="modal fade" id="addVoucherFormModal" tabindex="-1" aria-labelledby="addVoucherFormModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-bottom">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addVoucherFormModalLabel">Add New Voucher</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addVoucherForm">
+          <div class="mb-3">
+            <label for="voucherCode-add" class="form-label">VoucherCode</label>
+            <input type="text" class="form-control" id="voucherCode-add" required>
+          </div>
+          <div class="mb-3">
+            <label for="discountAmount-add" class="form-label">Discount</label>
+            <input type="text" class="form-control" id="discountAmount-add" required>
+          </div>
+          <div class="mb-3">
+            <label for="minOrderAmount-add" class="form-label">Apply Price</label>
+            <input type="text" class="form-control" id="minOrderAmount-add" required>
+          </div>
+          <div class="mb-3">
+            <label for="startTime-add" class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="startTime-add">
+          </div>
+          <div class="mb-3">
+            <label for="endTime-add" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="endTime-add">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" id="saveVoucherBtn" class="btn btn-primary" form="addVoucherForm">Add Voucher</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Voucher Modal -->
+<div class="modal fade" id="editVoucherModal" tabindex="-1" aria-labelledby="editVoucherModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-bottom">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editVoucherModalLabel">Edit Voucher</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editVoucherForm">
+          <div class="mb-3">
+            <label for="voucherId" class="form-label">Voucher ID</label>
+            <input type="text" class="form-control" id="voucherId" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="voucherCode" class="form-label">voucherCode</label>
+            <input type="text" class="form-control" id="voucherCode" required>
+          </div>
+          <div class="mb-3">
+            <label for="discountAmount" class="form-label">discountAmount</label>
+            <input type="text" class="form-control" id="discountAmount" required>
+          </div>
+          <div class="mb-3">
+            <label for="minOrderAmount" class="form-label">Apply Price</label>
+            <input type="text" class="form-control" id="minOrderAmount" required>
+          </div>
+          <div class="mb-3">
+            <label for="voucherStatus" class="form-label">Status</label>
+            <select class="form-select" id="voucherStatus">
+              <option value="1">Active</option>
+              <option value="2">Inactive</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="validityStartDate" class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="validityStartDate">
+          </div>
+          <div class="mb-3">
+            <label for="validityEndDate" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="validityEndDate">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="deleteVoucherBtn">Delete</button>
+        <div class="ms-auto">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="updateVoucherBtn" class="btn btn-primary" form="editVoucherForm">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- JS Handle FUNCTION -->
+  <script>
+    // Get selected user
+    function areaModal(id, name, status) {
+      document.getElementById('areaId').value = id;
+      document.getElementById('areaName').value = name;
+      document.getElementById('areaStatus').value = status;
+    }
+
+    function campusModal(id, area, name, status) {      
+      document.getElementById('campusId').value = id;
+      document.getElementById('campusAreaId').value = area;
+      document.getElementById('campusName').value = name;
+      document.getElementById('campusStatus').value = status;
+    }
+
+    function voucherModal(voucherId, voucherCode, discountAmount, minOrderAmount, status, validityStartDate, validityEndDate) {      
+      document.getElementById('voucherId').value = voucherId;
+      document.getElementById('voucherCode').value = voucherCode;
+      document.getElementById('discountAmount').value = discountAmount;
+      document.getElementById('minOrderAmount').value = minOrderAmount;
+      document.getElementById('status').value = status;
+      document.getElementById('validityStartDate').value = validityStartDate;
+      document.getElementById('validityEndDate').value = validityEndDate;
+    }
+
+    const areaFilterState = {
+      areaId: null,
+      areaName: null,
+      areaStatus: null,
+    };
+
+    const campusFilterState = {
+      campusId : null,
+      areaId: null,
+      campusName: null,
+      campusStatus: null,
+    };
+
+    const voucherFilterState = {
+      voucherCode: null,
+      status: null,
+    };
+
+    const navArea = document.getElementById('nav_area');
+    const navCampus = document.getElementById('nav_campus');
+    const naVoucher = document.getElementById('nav_voucher');
+    const tbodyArea = document.getElementById('areaTableBody');
+    const tbodyCampus = document.getElementById('campusTableBody');
+    const tbodyVoucher = document.getElementById('voucherTableBody');
+    let pageIndex = 0;
+    let itemsPerPage = 10;
+    let isLoading_area = false;
+    let isLoading_campus = false;
+    let isLoading_voucher = false;
+
+    // AREA    
+    function applyFiltersAreas() {
+      const areaId = document.getElementById('areaIdInput').value;
+      const Name = document.getElementById('areaNameInput').value;
+      const status = document.getElementById('statusInputArea').value;
+      areaFilterState.areaId = areaId;
+      areaFilterState.areaName = Name;
+      areaFilterState.areaStatus = status;
+      console.log('Filters applied:', areaFilterState);
+      pageIndex = 0;
+      fetchAreas(areaFilterState);
+    }
+
+    async function fetchAreas(filters = {}) {
+      if (isLoading_area) return;
+      isLoading_area = true;
+
+      const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
+      );
+
+      const queryParams = new URLSearchParams(validFilters).toString();
+
+      try {
+        const response = await fetch(`/other?${queryParams}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        tbodyArea.innerHTML = '';
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+
+        const newTbody = doc.getElementById('areaTableBody');
+        if (newTbody) {
+          const areas = Array.from(newTbody.childNodes);
+          const paginatedAreas = areas.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
+
+          paginatedAreas.forEach(area => {
+            tbodyArea.appendChild(area);
+          });
+
+          loadPageNavArea(areas, navArea);
+        } else {
+          console.error('New tbody not found in fetched data');
+        }
+      } catch (error) {
+        console.error('Error fetching areas:', error);
+      } finally {
+        isLoading_area = false;
+      }
+    }
+
+    function loadPageNavArea(areas, navArea) {
+      const prevPage = document.getElementById('prevPage_area');
+      const nextPage = document.getElementById('nextPage_area');
+      const pageSelect = document.getElementById('pageSelect_area');
+
+      pageSelect.innerHTML = "";
+      const totalItems = areas.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      for (let i = 0; i < totalPages; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.innerHTML = `Page ${i + 1}`;
+        pageSelect.appendChild(option);
+      }
+
+      pageSelect.value = pageIndex;
+
+      pageSelect.addEventListener('change', (e) => {
+        const selectedPageIndex = parseInt(e.target.value, 10);
+        if (selectedPageIndex !== pageIndex) {
+          pageIndex = selectedPageIndex;
+          fetchAreas(areaFilterState);
+        }
+      });
+
+      prevPage.addEventListener('click', () => {
+        if (pageIndex > 0 && !isLoading_area) {
+          pageIndex--;
+          fetchAreas(areaFilterState);
+          pageSelect.value = pageIndex;
+        }
+      });
+
+      nextPage.addEventListener('click', () => {
+        if (pageIndex < totalPages - 1 && !isLoading_area) {
+          pageIndex++;
+          fetchAreas(areaFilterState);
+          pageSelect.value = pageIndex;
+        }
+      });
+    }
+
+    // CAMPUS
+    function applyFiltersCampus() {
+      const campusId = document.getElementById('campusIdInput').value;
+      const areaId = document.getElementById('areaIdInput').value;
+      const Name = document.getElementById('campusNameInput').value;
+      const status = document.getElementById('campusStatusInput').value;
+      campusFilterState.campusId = campusId;
+      campusFilterState.areaId = areaId;
+      campusFilterState.campusName = Name;
+      campusFilterState.campusStatus = status;
+      console.log('Filters applied:', areaFilterState);
+      pageIndex = 0;
+      fetchCampus(areaFilterState);
+    }
+
+    async function fetchCampuses(filters = {}) {
+      if (isLoading_campus) return;
+      isLoading_campus = true;
+
+      const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
+      );
+
+      const queryParams = new URLSearchParams(validFilters).toString();
+
+      try {
+        const response = await fetch(`/other?${queryParams}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        tbodyCampus.innerHTML = '';
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+
+        const newTbody = doc.getElementById('areaTableBody');
+        if (newTbody) {
+          const campuses = Array.from(newTbody.childNodes);
+          const paginatedCampuses = areas.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
+
+          paginatedCampuses.forEach(campus => {
+            tbodyCampus.appendChild(campus);
+          });
+
+          loadPageNavCampus(campuses, navCampus);
+        } else {
+          console.error('New tbody not found in fetched data');
+        }
+      } catch (error) {
+        console.error('Error fetching campuses:', error);
+      } finally {
+        isLoading_campus = false;
+      }
+    }
+
+    function loadPageNavCampus(campuses, navCampus) {
+      const prevPage = document.getElementById('prevPage_campus');
+      const nextPage = document.getElementById('nextPage_campus');
+      const pageSelect = document.getElementById('pageSelect_campus');
+
+      pageSelect.innerHTML = "";
+      const totalItems = campuses.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      for (let i = 0; i < totalPages; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.innerHTML = `Page ${i + 1}`;
+        pageSelect.appendChild(option);
+      }
+
+      pageSelect.value = pageIndex;
+
+      pageSelect.addEventListener('change', (e) => {
+        const selectedPageIndex = parseInt(e.target.value, 10);
+        if (selectedPageIndex !== pageIndex) {
+          pageIndex = selectedPageIndex;
+          fetchCampuses(campusFilterState);
+        }
+      });
+
+      prevPage.addEventListener('click', () => {
+        if (pageIndex > 0 && !isLoading_campus) {
+          pageIndex--;
+          fetchCampuses(campusFilterState);
+          pageSelect.value = pageIndex;
+        }
+      });
+
+      nextPage.addEventListener('click', () => {
+        if (pageIndex < totalPages - 1 && !isLoading_campus) {
+          pageIndex++;
+          fetchCampuses(campusFilterState);
+          pageSelect.value = pageIndex;
+        }
+      });
+    }
+
+    // Voucher
+    function applyFiltersVouchers() {
+      const status = document.getElementById('voucherStatusInput').value;
+      const voucherCode = document.getElementById('voucherInput').value;
+      voucherFilterState.voucherCode = voucherCode;
+      voucherFilterState.status = status;
+      console.log('Filters applied:', voucherFilterState);
+      pageIndex = 0;
+      fetchVouchers(voucherFilterState);
+    }    
+
+    async function fetchVouchers(filters = {}) {
+      if (isLoading_voucher) return;
+      isLoading_voucher = true;
+
+      const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([key, value]) => value !== undefined && value !== null)
+      );
+
+      const queryParams = new URLSearchParams(validFilters).toString();
+
+      try {
+        const response = await fetch(`/other?${queryParams}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.text();
+        tbodyVoucher.innerHTML = '';
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+
+        const newTbody = doc.getElementById('voucherTableBody');
+        if (newTbody) {
+          const vouchers = Array.from(newTbody.childNodes);
+          const paginatedVouchers = vouchers.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
+          
+          paginatedVouchers.forEach(voucher => {
+            tbodyVoucher.appendChild(voucher);
+          });
+
+          loadPageNavVoucher(vouchers, navVoucher);
+        } else {
+          console.error('New tbody not found in fetched data');
+        }
+      } catch (error) {
+        console.error('Error fetching vouchers:', error);
+      } finally {
+        isLoading_voucher = false;
+      }
+    }
+
+    function loadPageNavVoucher(vouchers, navVoucher) {
+      const prevPage = document.getElementById('prevPage_voucher');
+      const nextPage = document.getElementById('nextPage_voucher');
+      const pageSelect = document.getElementById('pageSelect_voucher');
+  
+      pageSelect.innerHTML = "";
+      const totalItems = vouchers.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      for (let i = 0; i < totalPages; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.innerHTML = `Page ${i + 1}`;
+        pageSelect.appendChild(option);
+      }
+
+      pageSelect.value = pageIndex;
+
+      pageSelect.addEventListener('change', (e) => {
+        const selectedPageIndex = parseInt(e.target.value, 10);
+        if (selectedPageIndex !== pageIndex) {
+          pageIndex = selectedPageIndex;
+          fetchVouchers(voucherFilterState);
+        }
+      });
+
+      prevPage.addEventListener('click', () => {
+        if (pageIndex > 0 && !isLoading_voucher) {
+          pageIndex--;
+          fetchVouchers(voucherFilterState);
+          pageSelect.value = pageIndex;
+        }
+      });
+
+      nextPage.addEventListener('click', () => {
+        if (pageIndex < totalPages - 1 && !isLoading_voucher) {
+          pageIndex++;
+          fetchVouchers(voucherFilterState);
+          pageSelect.value = pageIndex;
+        }
+      });
+    }
+
+    // OTHERS
+    function updateDropdownSelection(dropdownId, value) {
+      const dropdownButton = document.getElementById(dropdownId);
+      const dropdownItems = dropdownButton.nextElementSibling.querySelectorAll('.dropdown-item');
+
+      dropdownItems.forEach(item => {
+        item.classList.remove('active');
+        const itemValueMatch = item.getAttribute('onclick').match(/\(([^)]+)\)/);
+        if (itemValueMatch) {
+          const itemValue = itemValueMatch[1].replace(/['"]+/g, '');
+          if (itemValue === String(value) || (itemValue === 'null' && value === null)) {
+            item.classList.add('active');
+          }
+        }
+      });
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+      fetchAreas();
+      fetchCampuses();
+      fetchVouchers();
+      // Add area
+      document.getElementById('addAreaForm').addEventListener('submit', async function(event) {        
+        event.preventDefault();
+
+        const areaData = {
+          areaId: "AREA123",
+          name: document.getElementById('areaName-add').value,
+          status: 1
+        };
+
+        try {
+          const response = await fetch('/other/addArea', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(areaData)
+          });
+
+          if (response.ok) {
+            const addResult = await response.json();
+              if (addResult.isSuccess) {
+                alert('Area added successfully!');
+                location.reload();
+              } else {
+                alert('Failed to add area: ' + (addResult.data ? addResult.data.message : addResult.error));
+              }
+          } else {
+            alert('Failed to connect to the server. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
+        }
+      });
+
+      // Update area
+      document.getElementById('updateAreaBtn').addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        const areaId = document.getElementById('areaId').value;
+        const areaName = document.getElementById('areaName').value;
+        const status = document.getElementById('areaStatus').value;
+
+        const areaData = {
+          name: areaName,
+          status: status
+        };
+
+        try {
+          const response = await fetch(`/other/updateArea?areaId=${areaId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(areaData)
+          });
+
+          if (response.ok) {
+            const updateResult = await response.json();
+            if (updateResult.isSuccess) {
+              alert('Area updated successfully!');
+              location.reload();
+            } else {
+              alert('Failed to update area: ' + (updateResult.data ? updateResult.data.message : updateResult.error));
+            }
+          } else {
+            alert('Failed to connect to the server. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
+        }
+      });
+  
+      // Delete area
+      document.getElementById("deleteAreaBtn").addEventListener("click", async function() {
+        event.preventDefault();
+        const areaId = document.getElementById('areaId').value;
+  
+        const response = await fetch(`/other/deleteArea?areaId=${areaId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log(areaId);
+  
+        const deleteResult = await response.json();
+        if (deleteResult.isSuccess) {
+          alert("Area deleted successfully!");
+          location.reload();
+        } else {
+          alert("Failed to delete area: " + deleteResult.error);
+        }
+      });
+
+      // Add campus
+      document.getElementById('addCampusForm').addEventListener('submit', async function(event) {        
+        event.preventDefault();
+
+        const campusData = {
+          campusId: "CAMPUS123",
+          areaId: document.getElementById('areaId-add').value,
+          name: document.getElementById('campusName-add').value,
+          status: 1
+        };
+
+        try {
+          const response = await fetch('/other/addCampus', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(campusData)
+          });
+
+          if (response.ok) {
+            const addResult = await response.json();
+              if (addResult.isSuccess) {
+                alert('Campus added successfully!');
+                location.reload();
+              } else {
+                alert('Failed to add campus: ' + (addResult.data ? addResult.data.message : addResult.error));
+              }
+          } else {
+            alert('Failed to connect to the server. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
+        }
+      });
+
+      // Update campus
+      document.getElementById('updateCampusBtn').addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        const campusId = document.getElementById('campusId').value;
+        const areaId = document.getElementById('campusAreaId').value;
+        const campusName = document.getElementById('campusName').value;
+        const status = document.getElementById('campusStatus').value;
+
+        const campusData = {
+          areaId: areaId,
+          name: campusName,
+          status: status
+        };
+
+        try {
+          const response = await fetch(`/other/updateCampus?campusId=${campusId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(campusData)
+          });
+
+          if (response.ok) {
+            const updateResult = await response.json();
+            if (updateResult.isSuccess) {
+              alert('Campus updated successfully!');
+              location.reload();
+            } else {
+              alert('Failed to update campus: ' + (updateResult.data ? updateResult.data.message : updateResult.error));
+            }
+          } else {
+            alert('Failed to connect to the server. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
+        }
+      });
+  
+      // Delete campus
+      document.getElementById("deleteCampusBtn").addEventListener("click", async function() {
+        event.preventDefault();
+        const campusId = document.getElementById('campusId').value;
+  
+        const response = await fetch(`/other/deleteCampus?campusId=${campusId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log(areaId);
+  
+        const deleteResult = await response.json();
+        if (deleteResult.isSuccess) {
+          alert("Campus deleted successfully!");
+          location.reload();
+        } else {
+          alert("Failed to delete campus: " + deleteResult.error);
+        }
+      });
+    
+      // Add voucher
+      document.getElementById('addVoucherForm').addEventListener('submit', async function(event) {        
+        event.preventDefault();
+
+        const voucherData = {
+          voucherCode: document.getElementById('voucherCode-add').value,
+          discountAmount: document.getElementById('discountAmount-add').value,
+          minOrderAmount: document.getElementById('minOrderAmount-add').value,
+          validityStartDate: document.getElementById('startTime-add').value,
+          validityEndDate: document.getElementById('endTime-add').value,
+          status: 1
+        };
+
+        try {
+          const response = await fetch('/other/addVoucher', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(voucherData)
+          });
+
+          if (response.ok) {
+            const addResult = await response.json();
+              if (addResult.isSuccess) {
+                alert('Voucher added successfully!');
+                location.reload();
+              } else {
+                alert('Failed to add campus: ' + (addResult.data ? addResult.data.message : addResult.error));
+              }
+          } else {
+            alert('Failed to connect to the server. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
+        }
+      });
+
+      // Update campus
+      document.getElementById('updateVoucherBtn').addEventListener('click', async function(event) {
+        event.preventDefault();
+        const voucherId = document.getElementById('voucherId').value;
+        const voucherCode = document.getElementById('voucherCode').value;
+        const discountAmount = document.getElementById('discountAmount').value;
+        const minOrderAmount = document.getElementById('minOrderAmount').value;
+        const voucherStatus = document.getElementById('voucherStatus').value;
+        const startTime = document.getElementById('validityStartDate').value;
+        const endTime = document.getElementById('validityEndDate').value;
+
+        const voucherData = {
+          voucherCode: voucherCode,
+          discountAmount: discountAmount,
+          minOrderAmount: minOrderAmount,
+          status: voucherStatus,
+          validityStartDate: startTime,
+          validityEndDate: endTime
+        };
+
+        try {
+          const response = await fetch(`/other/updateVoucher?voucherId=${voucherId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(voucherData)
+          });
+
+          if (response.ok) {
+            const updateResult = await response.json();
+            if (updateResult.isSuccess) {
+              alert('Voucher updated successfully!');
+              location.reload();
+            } else {
+              alert('Failed to update voucher: ' + (updateResult.data ? updateResult.data.message : updateResult.error));
+            }
+          } else {
+            alert('Failed to connect to the server. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred: ' + error.message);
+        }
+      });
+  
+      // Delete voucher
+      document.getElementById("deleteVoucherBtn").addEventListener("click", async function() {
+        event.preventDefault();
+        const voucherId = document.getElementById('voucherId').value;
+  
+        const response = await fetch(`/other/deleteVoucher?voucherId=${voucherId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+  
+        const deleteResult = await response.json();
+        if (deleteResult.isSuccess) {
+          alert("Voucher deleted successfully!");
+          location.reload();
+        } else {
+          alert("Failed to delete voucher: " + deleteResult.error);
+        }
+      });
+    });
+  </script>
+
+  <!--   Core JS Files   -->
+  <%- include('../layouts/script') %>
+</body>
+</html>

@@ -14,26 +14,26 @@ const authManager = require('../config/auth.config');
 
 const accessToken = authManager.getAccessToken();
 
-async function getCampus() {
+async function getVouchers() {
     try {
-        const response = await axios.get(`${apiConfig.BASE_URL}/campus`, { httpsAgent: agent });
-        const campuses = response.data.data;
+        const response = await axios.get(`${apiConfig.BASE_URL}/voucher`, { httpsAgent: agent });
+        const vouchers = response.data.data;
         if (response.data.isSuccess) {
-            return { campuses };
+            return { vouchers };
         } else {
-            return { error: 'Failed to fetch campuses' };
+            return { error: 'Failed to fetch vouchers' };
         }
     } catch (error) {
-        console.error('Error fetching campuses:', error);
-        return { error: 'An error occurred while fetching campuses' };
+        console.error('Error fetching vouchers:', error);
+        return { error: 'An error occurred while fetching vouchers' };
     }
 }
 
-async function addCampus(campusData) {
+async function addVoucher(voucherData) {
     try {
         const response = await axios.post(
-            `${apiConfig.BASE_URL}/campus`,
-            campusData,
+            `${apiConfig.BASE_URL}/voucher`,
+            voucherData,
             {
                 httpsAgent: agent,
                 headers: {
@@ -45,19 +45,19 @@ async function addCampus(campusData) {
         if (response.data.isSuccess) {
           return response.data;
         } else {
-          return { error: 'Failed to add campus' };
+          return { error: 'Failed to add voucher' };
         }
     } catch (error) {
-        console.error('Error adding campus:', error);
-        return { error: 'An error occurred while adding the campus' };
+        console.error('Error adding voucher:', error);
+        return { error: 'An error occurred while adding the voucher' };
     }
 }
 
-async function updateCampus(campusId, campusData) {
+async function updateVoucher(voucherId, voucherData) {
     try {
       const response = await axios.put(
-        `${apiConfig.BASE_URL}/campus/${campusId}`,
-        campusData,
+        `${apiConfig.BASE_URL}/voucher/${voucherId}`,
+        voucherData,
         {
           httpsAgent: agent,
           headers: {
@@ -69,17 +69,17 @@ async function updateCampus(campusId, campusData) {
       if (response.data.isSuccess) {
         return response.data;
       } else {
-        return { error: 'Failed to update' };
+        return { error: 'Failed to update voucher' };
       }
     } catch (error) {
-      console.error('Error updating campus:', error);
-      return { error: 'An error occurred while updating the campus' };
+      console.error('Error updating voucher:', error);
+      return { error: 'An error occurred while updating the voucher' };
     }
   }
 
-async function deleteCampus(campusId) {
+async function deleteVoucher(voucherId) {
     try {
-      const response = await axios.delete(`${apiConfig.BASE_URL}/campus/${campusId}`, {
+      const response = await axios.delete(`${apiConfig.BASE_URL}/voucher/${voucherId}`, {
         httpsAgent: agent,
         headers: {
           'Content-Type': 'application/json',
@@ -90,13 +90,13 @@ async function deleteCampus(campusId) {
       if (response.data.isSuccess) {
         return response.data;
       } else {
-        return { error: 'Failed to delete campus' };
+        return { error: 'Failed to delete voucher' };
       }
     } catch (error) {
-      console.error('Error deleting campus:', error);
-      return { error: 'An error occurred while deleting the campus' };
+      console.error('Error deleting voucher:', error);
+      return { error: 'An error occurred while deleting the voucher' };
     }
   }
 
 
-module.exports = { getCampus, addCampus, updateCampus, deleteCampus }
+module.exports = { getVouchers, addVoucher, updateVoucher, deleteVoucher };
