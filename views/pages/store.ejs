@@ -168,7 +168,9 @@
                 <label for="area-add" class="form-label">Area</label>
                 <select class="form-select" id="area-add">
                   <% areas.forEach((area, index) => { %>
-                    <option value="<%= area.areaId %>"  <%= index === 0 ? 'selected' : '' %>><%= area.name %></option>
+                    <% if (area.status == 1) { %>
+                      <option value="<%= area.areaId %>" <%= index === 0 ? 'selected' : '' %>><%= area.name %></option>
+                    <% } %>
                   <% }); %>
                 </select>
               </div>
@@ -247,7 +249,9 @@
                 <label for="storeArea" class="form-label">Area</label>
                 <select class="form-select" id="storeArea">
                   <% areas.forEach((area, index) => { %>
-                    <option value="<%= area.areaId %>"  <%= index === 0 ? 'selected' : '' %>><%= area.name %></option>
+                    <% if (area.status == 1) { %>
+                      <option value="<%= area.areaId %>" <%= index === 0 ? 'selected' : '' %>><%= area.name %></option>
+                    <% } %>
                   <% }); %>
                 </select>
               </div>
