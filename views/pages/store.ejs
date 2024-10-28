@@ -130,7 +130,7 @@
                             </td>
                             <td class="align-middle justify-content-center">
                               <a href="javascript:;" class="btn btn-sm btn-secondary btn-custom font-weight-bold text-xs" style="margin-right: 20px;" data-bs-toggle="modal" data-bs-target="#editStoreModal" 
-                                onclick="event.stopPropagation(); storeModal('<%= store.storeId %>', '<%= store.name %>', '<%= store.address %>', '<%= store.phone %>', '<%= store.openTime %>', '<%= store.closeTime %>', '<%= store.status %>')">
+                                onclick="event.stopPropagation(); storeModal('<%= store.storeId %>', '<%= store.name %>', '<%= store.address %>', '<%= store.phone %>', '<%= store.openTime %>', '<%= store.closeTime %>', '<%= store.status %>', '<%= store.areaName %>')">
                                 Edit
                               </a>
                             </td>
@@ -248,9 +248,9 @@
               <div class="mb-3">
                 <label for="storeArea" class="form-label">Area</label>
                 <select class="form-select" id="storeArea">
-                  <% areas.forEach((area, index) => { %>
+                  <% areas.forEach((area) => { %>
                     <% if (area.status == 1) { %>
-                      <option value="<%= area.areaId %>" <%= index === 0 ? 'selected' : '' %>><%= area.name %></option>
+                      <option value="<%= area.areaId %>"><%= area.name %></option>
                     <% } %>
                   <% }); %>
                 </select>
@@ -271,7 +271,7 @@
     <!-- JS Handle FUNCTION -->
     <script>
       // Get selected store
-      function storeModal(id, name, address, phone, openTime, closeTime, status) {
+      function storeModal(id, name, address, phone, openTime, closeTime, status, areaName) {
           document.getElementById('storeId').value = id;
           document.getElementById('storeName').value = name;
           document.getElementById('storeAddress').value = address;
@@ -279,6 +279,10 @@
           document.getElementById('storeOpenTime').value = openTime;
           document.getElementById('storeCloseTime').value = closeTime;
           document.getElementById('storeStatus').value = status;
+          const storeAreaSelect = document.getElementById('storeArea');
+          Array.from(storeAreaSelect.options).forEach(option => {
+            option.selected = option.text === areaName;
+          });
       }
 
       const filterState = {

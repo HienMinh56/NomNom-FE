@@ -387,13 +387,22 @@
                 <input type="number" class="form-control" id="userBalance">
             </div>
             <div class="mb-3">
+              <label for="userStatus" class="form-label">Status</label>
+              <select class="form-select" id="userStatus">
+                <option value="1">Active</option>
+                <option value="2">Inactive</option>
+              </select>
+            </div>
+            <div class="mb-3">
               <label for="userCampus" class="form-label">Campus</label>
               <select class="form-select" id="userCampus">
-                <% campuses.forEach((campus, index) => { %>
-                  <option value="<%= campus.campusId %>"  <%= index === 0 ? 'selected' : '' %>><%= campus.name %></option>
+                <% campuses.forEach((campus) => { %>
+                  <% if (campus.status == 1) { %>
+                    <option value="<%= campus.campusId %>"><%= campus.name %></option>
+                  <% } %>
                 <% }); %>
               </select>
-            </div>           
+            </div>
           </form>
         </div>
         <div class="modal-footer">
@@ -410,7 +419,7 @@
   <!-- JS Handle FUNCTION -->
   <script>
     // Get selected user
-    function userModal(id, name, email, phone, role, balance, status) {
+    function userModal(id, name, email, phone, role, balance, status) {      
       document.getElementById('userId').value = id;
       document.getElementById('userName').value = name;
       document.getElementById('userEmail').value = email;
