@@ -17,6 +17,7 @@ const accessToken = authManager.getAccessToken();
 async function getAreas() {
     try {
         const response = await axios.get(`${apiConfig.BASE_URL}/area`, { httpsAgent: agent });
+
         const areas = response.data.data;
         if (response.data.isSuccess) {
             return { areas };
