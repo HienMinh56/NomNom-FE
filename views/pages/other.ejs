@@ -43,6 +43,9 @@
       font-size: 1rem;
       text-align: center;
     }
+    .hidden {
+      display: none;
+    }
   </style>
 
 </head>
@@ -175,7 +178,7 @@
                       <th class="col-1 text-secondary opacity-7"></th>
                     </tr>
                   </thead>
-                  <tbody id="userTableBody">
+                  <tbody id="campusTableBody">
                     <% campuses.forEach(campus => { %>
                       <tr>
                         <td>
@@ -592,7 +595,7 @@
 
     const navArea = document.getElementById('nav_area');
     const navCampus = document.getElementById('nav_campus');
-    const naVoucher = document.getElementById('nav_voucher');
+    const navVoucher = document.getElementById('nav_voucher');
     const tbodyArea = document.getElementById('areaTableBody');
     const tbodyCampus = document.getElementById('campusTableBody');
     const tbodyVoucher = document.getElementById('voucherTableBody');
@@ -632,30 +635,31 @@
         }
 
         const data = await response.text();
-        tbodyArea.innerHTML = '';
+    tbodyArea.innerHTML = ''; // Xóa nội dung hiện tại
 
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data, 'text/html');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data, 'text/html');
 
-        const newTbody = doc.getElementById('areaTableBody');
-        if (newTbody) {
-          const areas = Array.from(newTbody.childNodes);
-          const paginatedAreas = areas.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
+    const newTbody = doc.getElementById('areaTableBody');
+    if (newTbody) {
+      const areas = Array.from(newTbody.childNodes);
+      const paginatedAreas = areas.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
 
-          paginatedAreas.forEach(area => {
-            tbodyArea.appendChild(area);
-          });
+      paginatedAreas.forEach(area => {
+        tbodyArea.appendChild(area);
+      });
 
-          loadPageNavArea(areas, navArea);
-        } else {
-          console.error('New tbody not found in fetched data');
-        }
-      } catch (error) {
-        console.error('Error fetching areas:', error);
-      } finally {
-        isLoading_area = false;
-      }
+      loadPageNavArea(areas, navArea);
+    } else {
+      console.error('New tbody not found in fetched data');
     }
+  } catch (error) {
+    console.error('Error fetching areas:', error);
+  } finally {
+    isLoading_area = false;
+  }
+}
+
 
     function loadPageNavArea(areas, navArea) {
       const prevPage = document.getElementById('prevPage_area');
@@ -737,10 +741,10 @@
         const parser = new DOMParser();
         const doc = parser.parseFromString(data, 'text/html');
 
-        const newTbody = doc.getElementById('areaTableBody');
+        const newTbody = doc.getElementById('campusTableBody');
         if (newTbody) {
           const campuses = Array.from(newTbody.childNodes);
-          const paginatedCampuses = areas.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
+          const paginatedCampuses = campuses.slice(pageIndex * itemsPerPage, (pageIndex * itemsPerPage) + itemsPerPage);
 
           paginatedCampuses.forEach(campus => {
             tbodyCampus.appendChild(campus);
@@ -912,10 +916,28 @@
       });
     }
     
+    async function loadData() {
+  // Ẩn tất cả các bảng trước khi tải dữ liệu
+  tbodyArea.classList.add('hidden');
+  tbodyCampus.classList.add('hidden');
+  tbodyVoucher.classList.add('hidden');
+
+  try {
+    // Chạy cả ba hàm `fetch` đồng thời
+    await Promise.all([fetchAreas(), fetchCampuses(), fetchVouchers()]);
+  } catch (error) {
+    console.error('Error loading data:', error);
+  } finally {
+    // Hiện tất cả các bảng khi đã tải xong
+    tbodyArea.classList.remove('hidden');
+    tbodyCampus.classList.remove('hidden');
+    tbodyVoucher.classList.remove('hidden');
+  }
+}
+
     document.addEventListener("DOMContentLoaded", function() {
-      fetchAreas();
-      fetchCampuses();
-      fetchVouchers();
+      loadData();
+
       // Add area
       document.getElementById('addAreaForm').addEventListener('submit', async function(event) {        
         event.preventDefault();
